@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robinhood AI Trading Bot</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <h1>🤖 Robinhood AI Trading Bot</h1>
+        <div class="status-badge">
+            <div id="statusIndicator" class="status-dot"></div>
+            <span id="statusText">Stopped</span>
+            <span style="margin: 0 6px; color: var(--text-muted);">|</span>
+            <span id="currentMode">DEMO</span>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Activity Log - Top Priority -->
+        <div class="activity-log">
+            <h3>$ activity.log</h3>
+            <div id="logContainer" class="log-entries">
+                <div class="log-entry info">
+                    <span class="timestamp">[--:--:--]</span>
+                    <span>Waiting for bot to start...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Control Panel -->
+        <div class="control-panel">
+            <div class="control-group">
+                <button id="startBtn" class="primary">▶ Start</button>
+                <button id="stopBtn" class="danger" disabled>■ Stop</button>
+            </div>
+            <div class="control-group">
+                <label>Mode:</label>
+                <button class="mode-btn active" data-mode="demo">Demo</button>
+                <button class="mode-btn" data-mode="manual">Manual</button>
+                <button class="mode-btn" data-mode="auto">Auto</button>
+            </div>
+        </div>
+
+        <!-- Dashboard Stats -->
+        <div class="dashboard">
+            <div class="stat-card">
+                <h3>portfolio_value</h3>
+                <div class="value" id="portfolioValue">$0.00</div>
+            </div>
+            <div class="stat-card">
+                <h3>buying_power</h3>
+                <div class="value" id="buyingPower">$0.00</div>
+            </div>
+            <div class="stat-card">
+                <h3>total_pl</h3>
+                <div class="value" id="totalPL">$0.00</div>
+            </div>
+        </div>
+
+        <!-- Portfolio & Chart -->
+        <div class="grid">
+            <div class="panel">
+                <h3>portfolio.holdings</h3>
+                <div class="panel-content">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Symbol</th>
+                                <th>Qty</th>
+                                <th>Price</th>
+                                <th>Avg</th>
+                                <th>P&L</th>
+                            </tr>
+                        </thead>
+                        <tbody id="portfolioBody">
+                            <tr>
+                                <td colspan="5" class="empty-state">No positions</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3>portfolio.distribution</h3>
+                <div class="chart-container">
+                    <canvas id="portfolioChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trade History -->
+        <div class="panel">
+            <h3>trade.history</h3>
+            <div class="panel-content">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Symbol</th>
+                            <th>Action</th>
+                            <th>Qty</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tradeHistoryBody">
+                        <tr>
+                            <td colspan="5" class="empty-state">No trades yet</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+
+</html>

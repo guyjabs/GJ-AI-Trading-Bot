@@ -5,7 +5,7 @@ from datetime import datetime
 from pytz import timezone
 import pandas as pd
 
-from . import onepassword
+from . import op_utils
 from ..utils import auth
 from ..utils import logger
 from config import MODE, ROBINHOOD_USERNAME, ROBINHOOD_PASSWORD
@@ -21,7 +21,7 @@ async def login_to_robinhood():
 
         # If no MFA secret, try 1Password
         if not mfa_code and OP_SERVICE_ACCOUNT_NAME and OP_SERVICE_ACCOUNT_TOKEN and OP_VAULT_NAME and OP_ITEM_NAME:
-            mfa_code = await onepassword.get_mfa_code_from_1password()
+            mfa_code = await op_utils.get_mfa_code_from_1password()
 
         try:
             if mfa_code:
@@ -190,7 +190,7 @@ def enrich_with_analyst_ratings(stock_data, ratings_data):
     stock_data["analyst_ratings"] = list(map(lambda rating: {
         "published_at": rating['published_at'],
         "type": rating['type'],
-        "text": rating['text'].decode('utf-8'),
+        "text": rating['text'],
     }, ratings_data['ratings']))
     return stock_data
 
@@ -289,5 +289,69 @@ def buy_stock(symbol, quantity):
     if buy_resp is None:
         raise Exception(f"Error buying {symbol}: No response")
     return buy_resp
+
+
+# Get crypto positions
+def get_crypto_positions():
+    """Fetch all crypto positions"""
+    resp = rh_run_with_retries(rh.crypto.get_crypto_positions)
+    if resp is None:
+        return []
+    
+    # Filter for non-zero quantities
+    positions = []
+    for pos in resp:
+        if float(pos['quantity']) > 0:
+            # Get symbol for this currency
+            currency = rh_run_with_retries(rh.crypto.get_crypto_currency_from_id, pos['currency']['id'])
+            if currency:
+                pos['symbol'] = currency['code']
+                positions.append(pos)
+    return positions
+
+
+# Get crypto quote
+def get_crypto_quote(symbol):
+    """Get current price for a crypto symbol"""
+    resp = rh_run_with_retries(rh.crypto.get_crypto_quote, symbol)
+    if resp is None:
+        raise Exception(f"Error getting crypto quote for {symbol}: No response")
+    return resp
+
+
+# Buy crypto by dollar amount
+def buy_crypto(symbol, amount_in_dollars):
+    """Buy crypto by dollar amount"""
+    if MODE == "demo":
+        return {"id": "demo", "quantity": amount_in_dollars} # Return amount as qty for demo tracking
+
+    if MODE == "manual":
+        confirm = input(f"Confirm buy for {symbol} of ${amount_in_dollars}? (yes/no): ")
+        if confirm.lower() != "yes":
+            return {"id": "cancelled"}
+
+    # Robinhood crypto buy by price (dollar amount)
+    buy_resp = rh_run_with_retries(rh.orders.order_buy_crypto_by_price, symbol, amount_in_dollars)
+    if buy_resp is None:
+        raise Exception(f"Error buying crypto {symbol}: No response")
+    return buy_resp
+
+
+# Sell crypto by dollar amount
+def sell_crypto(symbol, amount_in_dollars):
+    """Sell crypto by dollar amount"""
+    if MODE == "demo":
+        return {"id": "demo", "quantity": amount_in_dollars}
+
+    if MODE == "manual":
+        confirm = input(f"Confirm sell for {symbol} of ${amount_in_dollars}? (yes/no): ")
+        if confirm.lower() != "yes":
+            return {"id": "cancelled"}
+
+    # Robinhood crypto sell by price (dollar amount)
+    sell_resp = rh_run_with_retries(rh.orders.order_sell_crypto_by_price, symbol, amount_in_dollars)
+    if sell_resp is None:
+        raise Exception(f"Error selling crypto {symbol}: No response")
+    return sell_resp
 
 

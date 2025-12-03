@@ -25,5 +25,24 @@ MAX_SELLING_AMOUNT_USD = 10.0               # Maximum sell amount in USD (False 
 MIN_BUYING_AMOUNT_USD = 1.0                 # Minimum buy amount in USD (False - disable setting)
 MAX_BUYING_AMOUNT_USD = 10.0                # Maximum buy amount in USD (False - disable setting)
 
+# Safety & Risk Management 🔒
+ENABLE_BANK_TRANSFERS = False               # CRITICAL: Set to False to prevent ANY bank withdrawals
+MIN_BUYING_POWER_BUFFER = 50.0              # Keep at least $50 in cash (don't spend last penny)
+
 # OpenAI config params
 OPENAI_MODEL_NAME = "gpt-4o-mini"           # OpenAI model name
+
+# Research Bot Configuration
+ENABLE_RESEARCH_BOT = True
+NEWSAPI_KEY = ""                                # NewsAPI.org API key
+ALPHAVANTAGE_API_KEY = ""                       # Alpha Vantage API key
+FINNHUB_API_KEY = ""                            # Finnhub API key (optional)
+REDDIT_CLIENT_ID = ""                           # Reddit API Client ID (optional)
+REDDIT_CLIENT_SECRET = ""                       # Reddit API Client Secret (optional)
+
+# Research Settings
+NEWS_FETCH_INTERVAL_HOURS = 1
+STRATEGY_RESEARCH_INTERVAL_HOURS = 24
+PREDICTION_HORIZON_DAYS = 3
+MIN_NEWS_RELEVANCE_SCORE = 0.6
+ENABLE_STRATEGY_RESEARCH = True
