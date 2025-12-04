@@ -6,7 +6,7 @@ Responsible for ensuring all day trading positions are closed before market clos
 from datetime import datetime, time
 import pytz
 from ..utils import logger
-from ..api import robinhood
+from ..api.alpaca import get_alpaca_client
 
 class EODManager:
     """Manages end-of-day position closing for day trading"""
@@ -66,7 +66,9 @@ class EODManager:
                 if quantity > 0:
                     logger.info(f"📉 Force closing {symbol} ({quantity} shares)")
                     # Execute market sell
-                    robinhood.place_sell_order(symbol, quantity)
+                    alpaca = get_alpaca_client()
+                    if alpaca:
+                        alpaca.sell_stock(symbol, quantity)
                     
             except Exception as e:
                 logger.error(f"❌ Failed to force close {symbol}: {e}")

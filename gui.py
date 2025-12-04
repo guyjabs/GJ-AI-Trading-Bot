@@ -6,14 +6,22 @@ import asyncio
 from datetime import datetime
 
 from config import MODE, LOG_LEVEL, RUN_INTERVAL_SECONDS
-from src.api import robinhood
+from src.api.alpaca import get_alpaca_client
+from config import ALPACA_CONFIG
 from src.utils import logger
 from src.notifications import notifier
 from main import trading_bot, kb, news_agg, trend_analyzer, strategy_researcher
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'robinhood-ai-trading-bot-secret'
+app.config['SECRET_KEY'] = 'alpaca-ai-trading-bot-secret'
 socketio = SocketIO(app, cors_allowed_origins="*")
+
+# Initialize Alpaca Client (aliased as robinhood for compatibility)
+robinhood = get_alpaca_client(
+    api_key=ALPACA_CONFIG.get('api_key'),
+    secret_key=ALPACA_CONFIG.get('secret_key'),
+    paper=ALPACA_CONFIG.get('paper', True)
+)
 
 # Global state
 bot_thread = None
@@ -360,95 +368,9 @@ def get_day_trading_dashboard():
         logger.error(f"Error fetching day trading dashboard: {e}")
         return {'error': str(e)}, 500
 
-@app.route('/api/broker/switch', methods=['POST'])
-def switch_broker():
-    """Switch active broker"""
-    try:
-        data = request.json
-        broker = data.get('broker', 'robinhood')
-        
-        # Update config (in memory for now)
-        global ACTIVE_BROKER
-        from config import ACTIVE_BROKER
-        ACTIVE_BROKER = broker
-        
-        logger.info(f"Switched to broker: {broker}")
-        return {'success': True, 'broker': broker}
-    except Exception as e:
-        logger.error(f"Error switching broker: {e}")
-        return {'error': str(e)}, 500
 
-@app.route('/api/ibkr/dashboard')
-def get_ibkr_dashboard():
-    """Get IBKR dashboard data"""
-    try:
-        from src.api.ibkr import get_ibkr_client
-        from config import IBKR_CONFIG
-        
-        # Get or create IBKR client
-        ibkr = get_ibkr_client(
-            host=IBKR_CONFIG.get('host', '127.0.0.1'),
-            port=IBKR_CONFIG.get('port', 7497),
-            client_id=IBKR_CONFIG.get('client_id', 1)
-        )
-        
-        # Check connection
-        if not ibkr.is_connected():
-            connected = ibkr.connect()
-            if not connected:
-                return {
-                    'error': 'Not connected to IBKR. Make sure TWS/IB Gateway is running.',
-                    'long_count': 0,
-                    'short_count': 0,
-                    'day_pnl_formatted': '$0.00',
-                    'positions': []
-                }
-        
-        # Get portfolio
-        portfolio = ibkr.get_portfolio()
-        
-        # Separate long and short positions
-        long_positions = [p for p in portfolio.values() if p['side'] == 'long']
-        short_positions = [p for p in portfolio.values() if p['side'] == 'short']
-        
-        # Calculate day P/L
-        day_pnl = sum(p.get('unrealized_pnl', 0) for p in portfolio.values())
-        
-        # Format positions for display
-        formatted_positions = []
-        for symbol, pos in portfolio.items():
-            # Mock stop/target for now (would come from managers)
-            entry_price = pos['average_cost']
-            current_price = pos['market_value'] / pos['quantity'] if pos['quantity'] != 0 else 0
-            
-            formatted_positions.append({
-                'symbol': symbol,
-                'side': pos['side'],
-                'entry_price': entry_price,
-                'current_price': current_price,
-                'stop_loss': entry_price * 0.98 if pos['side'] == 'long' else entry_price * 1.02,
-                'target': entry_price * 1.04 if pos['side'] == 'long' else entry_price * 0.96,
-                'pnl': pos.get('unrealized_pnl', 0),
-                'r_multiple': 0.0  # Calculate based on stop/target
-            })
-        
-        return {
-            'long_count': len(long_positions),
-            'short_count': len(short_positions),
-            'day_pnl': day_pnl,
-            'day_pnl_formatted': f"${day_pnl:.2f}",
-            'positions': formatted_positions
-        }
-        
-    except Exception as e:
-        logger.error(f"Error fetching IBKR dashboard: {e}")
-        return {
-            'error': str(e),
-            'long_count': 0,
-            'short_count': 0,
-            'day_pnl_formatted': '$0.00',
-            'positions': []
-        }
+
+
 
 def run_bot_loop():
     """Main bot loop running in background thread"""
@@ -464,13 +386,14 @@ def run_bot_loop():
                 'level': 'info'
             })
             
-            # Check if Robinhood token needs refresh
+            # Check if Alpaca token needs refresh (Mocked)
             if time.time() >= robinhood_token_expiry - 300:
                 socketio.emit('log_message', {
-                    'message': 'Attempting Robinhood login...',
+                    'message': 'Checking Alpaca connection...',
                     'level': 'info'
                 })
-                logger.info("Login to Robinhood...")
+                # logger.info("Checking Alpaca connection...")
+                
                 # Run async login in sync context
                 loop = asyncio.new_event_loop()
                 asyncio.set_event_loop(loop)
@@ -478,11 +401,11 @@ def run_bot_loop():
                 loop.close()
                 
                 if not login_resp or 'expires_in' not in login_resp:
-                    raise Exception("Failed to login to Robinhood")
+                    raise Exception("Failed to connect to Alpaca")
                 robinhood_token_expiry = time.time() + login_resp['expires_in']
-                logger.info(f"Successfully logged in. Token expires in {login_resp['expires_in']} seconds")
+                
                 socketio.emit('log_message', {
-                    'message': f'✅ Robinhood login successful! Token valid for {login_resp["expires_in"]}s',
+                    'message': f'✅ Alpaca connection successful! Session valid for {login_resp["expires_in"]}s',
                     'level': 'success'
                 })
             

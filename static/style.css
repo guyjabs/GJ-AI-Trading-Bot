@@ -314,43 +314,7 @@ button.primary:hover {
     box-shadow: 0 0 16px var(--accent-glow);
 }
 
-/* ==========================================
-   BROKER SELECTION & BADGES
-   ========================================== */
 
-.broker-selection {
-    margin-bottom: 20px;
-}
-
-.broker-tabs {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.broker-tab {
-    flex: 1;
-    padding: 12px 20px;
-    background: var(--bg-card);
-    border: 2px solid var(--border-color);
-    border-radius: 8px;
-    color: var(--text-secondary);
-    font-size: var(--font-size-base);
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.broker-tab:hover {
-    border-color: var(--accent-primary);
-    color: var(--text-primary);
-}
-
-.broker-tab.active {
-    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-    border-color: var(--accent-primary);
-    color: var(--bg-primary);
-}
 
 .broker-badge {
     display: inline-flex;
@@ -374,15 +338,12 @@ button.primary:hover {
     font-size: var(--font-size-sm);
 }
 
-.badge-value.robinhood {
-    background: linear-gradient(135deg, #00C805, #00A804);
-    color: white;
+.badge-value.alpaca {
+    background: rgba(255, 215, 0, 0.15);
+    color: #ffd700;
+    border: 1px solid rgba(255, 215, 0, 0.3);
 }
 
-.badge-value.ibkr {
-    background: linear-gradient(135deg, #0066CC, #004C99);
-    color: white;
-}
 
 .broker-section {
     display: none;

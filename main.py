@@ -4,7 +4,7 @@ import json
 import asyncio
 
 from config import *
-from src.api import robinhood
+from src.api.alpaca import get_alpaca_client
 from src.api import openai
 from src.utils import logger
 from src.screener import screener
@@ -12,6 +12,13 @@ from src.ml_engine import ml_engine
 from src.risk_manager import risk_manager
 from src.notifications import notifier
 from src.research import NewsAggregator, KnowledgeBase, TrendAnalyzer, StrategyResearcher, ResearchScheduler
+
+# Initialize Alpaca Client
+robinhood = get_alpaca_client(
+    api_key=ALPACA_CONFIG.get('api_key'),
+    secret_key=ALPACA_CONFIG.get('secret_key'),
+    paper=ALPACA_CONFIG.get('paper', True)
+)
 
 # Initialize Research Components
 logger.info("Initializing Research Bot components...")
@@ -758,14 +765,15 @@ async def main():
             research_scheduler.run_pending()
 
         try:
-            # Check if Robinhood token needs refresh (refresh 5 minutes before expiry)
+            # Check if Alpaca token needs refresh (Mocked for Alpaca as it uses API keys)
             if time.time() >= robinhood_token_expiry - 300:
-                logger.info("Login to Robinhood...")
+                # logger.info("Checking Alpaca connection...") 
+                # For Alpaca we just ensure client is ready, login_to_robinhood is now a mock compatibility method
                 login_resp = await robinhood.login_to_robinhood()
                 if not login_resp or 'expires_in' not in login_resp:
-                    raise Exception("Failed to login to Robinhood")
+                    raise Exception("Failed to connect to Alpaca")
                 robinhood_token_expiry = time.time() + login_resp['expires_in']
-                logger.info(f"Successfully logged in. Token expires in {login_resp['expires_in']} seconds")
+                logger.info(f"Successfully connected to Alpaca. Session valid for {login_resp['expires_in']} seconds")
 
             if robinhood.is_market_open():
                 run_interval_seconds = RUN_INTERVAL_SECONDS

@@ -7,7 +7,7 @@ import time
 from datetime import datetime
 from typing import Dict, List, Optional, Tuple
 from .utils import logger
-from .api import robinhood
+
 
 class RiskManager:
     def __init__(self, 

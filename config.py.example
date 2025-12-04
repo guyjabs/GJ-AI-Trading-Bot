@@ -1,44 +1,52 @@
-# 1Password Credentials
-OP_SERVICE_ACCOUNT_NAME = ""                # 1Password service account name (for Robinhood MFA secret)
-OP_SERVICE_ACCOUNT_TOKEN = ""               # 1Password service account token (for Robinhood MFA secret)
-OP_VAULT_NAME = ""                          # 1Password vault name (for Robinhood MFA secret)
-OP_ITEM_NAME = ""                           # 1Password item name (for Robinhood MFA secret)
+# ============================================
+# GJ AI TRADING BOT - CONFIGURATION
+# ============================================
 
-# Credentials
-OPENAI_API_KEY = "..."                      # OpenAI API key
-ROBINHOOD_USERNAME = "..."                  # Robinhood username
-ROBINHOOD_PASSWORD = "..."                  # Robinhood password
-ROBINHOOD_MFA_SECRET = ""                   # Robinhood MFA secret (if enabled)
+# Alpaca API Credentials
+ALPACA_CONFIG = {
+    'api_key': '',  # Your Alpaca API Key ID (get from alpaca.markets dashboard)
+    'secret_key': '',  # Your Alpaca Secret Key
+    'paper': True,  # True = paper trading (fake money), False = live trading (real money)
+}
+
+# OpenAI API Key
+OPENAI_API_KEY = "..."  # OpenAI API key for AI trading decisions
+
+# ============================================
+# TRADING PARAMETERS
+# ============================================
 
 # Basic config parameters
-MODE = "demo"                               # Trading mode (demo, auto, manual)
-LOG_LEVEL = "INFO"                          # Log level (DEBUG, INFO, WARNING, ERROR)
-RUN_INTERVAL_SECONDS = 600                  # Trading interval in seconds (if the market is open)
+MODE = "demo"  # Trading mode (demo, auto, manual)
+LOG_LEVEL = "INFO"  # Log level (DEBUG, INFO, WARNING, ERROR)
+RUN_INTERVAL_SECONDS = 600  # Trading interval in seconds (if the market is open)
 
-# Robinhood config parameters
-TRADE_EXCEPTIONS = []                       # List of stocks to exclude from trading (e.g. ["AAPL", "TSLA", "AMZN"])
-WATCHLIST_NAMES = []                        # Watchlist names (can be empty, or "My First List", "My Second List", etc.)
-WATCHLIST_OVERVIEW_LIMIT = 10               # Number of stocks to process in decision-making (e.g. 20)
-PORTFOLIO_LIMIT = 10                        # Number of stocks to hold in the portfolio
-MIN_SELLING_AMOUNT_USD = 1.0                # Minimum sell amount in USD (False - disable setting)
-MAX_SELLING_AMOUNT_USD = 10.0               # Maximum sell amount in USD (False - disable setting)
-MIN_BUYING_AMOUNT_USD = 1.0                 # Minimum buy amount in USD (False - disable setting)
-MAX_BUYING_AMOUNT_USD = 10.0                # Maximum buy amount in USD (False - disable setting)
+# Trading config parameters
+TRADE_EXCEPTIONS = []  # List of stocks to exclude from trading (e.g. ["AAPL", "TSLA", "AMZN"])
+WATCHLIST_NAMES = []  # Watchlist names (can be empty, or "My First List", "My Second List", etc.)
+WATCHLIST_OVERVIEW_LIMIT = 10  # Number of stocks to process in decision-making (e.g. 20)
+PORTFOLIO_LIMIT = 10  # Number of stocks to hold in the portfolio
+MIN_SELLING_AMOUNT_USD = 1.0  # Minimum sell amount in USD (False - disable setting)
+MAX_SELLING_AMOUNT_USD = 10.0  # Maximum sell amount in USD (False - disable setting)
+MIN_BUYING_AMOUNT_USD = 1.0  # Minimum buy amount in USD (False - disable setting)
+MAX_BUYING_AMOUNT_USD = 10.0  # Maximum buy amount in USD (False - disable setting)
 
 # Safety & Risk Management 🔒
-ENABLE_BANK_TRANSFERS = False               # CRITICAL: Set to False to prevent ANY bank withdrawals
-MIN_BUYING_POWER_BUFFER = 50.0              # Keep at least $50 in cash (don't spend last penny)
+MIN_BUYING_POWER_BUFFER = 50.0  # Keep at least $50 in cash (don't spend last penny)
 
 # OpenAI config params
-OPENAI_MODEL_NAME = "gpt-4o-mini"           # OpenAI model name
+OPENAI_MODEL_NAME = "gpt-4o-mini"  # OpenAI model name
 
-# Research Bot Configuration
+# ============================================
+# RESEARCH BOT CONFIGURATION
+# ============================================
+
 ENABLE_RESEARCH_BOT = True
-NEWSAPI_KEY = ""                                # NewsAPI.org API key
-ALPHAVANTAGE_API_KEY = ""                       # Alpha Vantage API key
-FINNHUB_API_KEY = ""                            # Finnhub API key (optional)
-REDDIT_CLIENT_ID = ""                           # Reddit API Client ID (optional)
-REDDIT_CLIENT_SECRET = ""                       # Reddit API Client Secret (optional)
+NEWSAPI_KEY = ""  # NewsAPI.org API key
+ALPHAVANTAGE_API_KEY = ""  # Alpha Vantage API key
+FINNHUB_API_KEY = ""  # Finnhub API key (optional)
+REDDIT_CLIENT_ID = ""  # Reddit API Client ID (optional)
+REDDIT_CLIENT_SECRET = ""  # Reddit API Client Secret (optional)
 
 # Research Settings
 NEWS_FETCH_INTERVAL_HOURS = 1
@@ -46,24 +54,3 @@ STRATEGY_RESEARCH_INTERVAL_HOURS = 24
 PREDICTION_HORIZON_DAYS = 3
 MIN_NEWS_RELEVANCE_SCORE = 0.6
 ENABLE_STRATEGY_RESEARCH = True
-
-# ============================================
-# BROKER SELECTION
-# ============================================
-ACTIVE_BROKER = 'robinhood'  # 'robinhood' or 'ibkr'
-
-# Interactive Brokers Configuration
-IBKR_CONFIG = {
-    'host': '127.0.0.1',
-    'port': 7497,  # 7497 = paper trading, 7496 = live
-    'client_id': 1,
-    'account': 'DU1234567',  # Your IBKR account number
-}
-
-# Advanced Features (IBKR only)
-IBKR_ADVANCED_FEATURES = {
-    'enable_short_selling': True,
-    'enable_bracket_orders': True,
-    'enable_level2_data': True,
-    'enable_extended_hours': True,
-}

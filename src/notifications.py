@@ -1,5 +1,5 @@
 """
-Notification System for Robinhood AI Trading Bot.
+Notification System for GJ AI Trading Bot.
 Sends alerts to Discord and Telegram.
 """
 
@@ -34,7 +34,7 @@ class NotificationSystem:
                 "description": description,
                 "color": color,
                 "timestamp": datetime.utcnow().isoformat(),
-                "footer": {"text": "Robinhood AI Trading Bot 🤖"}
+                "footer": {"text": "GJ AI Trading Bot 🤖"}
             }]
         }
         
