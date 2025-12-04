@@ -124,7 +124,7 @@ class NewsAggregator:
                     'source_name': article.get('source', {}).get('name', 'Unknown')
                 })
             
-            logger.info(f"Fetched {len(articles)} articles from NewsAPI")
+            logger.info(f"✅ NewsAPI: Fetched {len(articles)} articles")
             return articles
             
         except Exception as e:
@@ -185,7 +185,7 @@ class NewsAggregator:
                     'topics': [t.get('topic') for t in item.get('topics', [])]
                 })
             
-            logger.info(f"Fetched {len(articles)} articles from Alpha Vantage")
+            logger.info(f"✅ Alpha Vantage: Fetched {len(articles)} articles with sentiment scores")
             return articles
             
         except Exception as e:
@@ -311,7 +311,8 @@ class NewsAggregator:
             logger.info(f"Using cached news ({len(self.cache['articles'])} articles)")
             return self.cache['articles']
         
-        logger.info("Fetching fresh news from all sources...")
+        logger.info("🔍 Starting news research cycle...")
+        logger.info(f"📰 Fetching fresh news from {sum([1 for k in [self.newsapi_key, self.alphavantage_key, self.finnhub_key] if k])} configured sources")
         all_articles = []
         
         # Fetch from NewsAPI
@@ -345,10 +346,9 @@ class NewsAggregator:
         }
         self._save_cache()
         
-        logger.info(f"Fetched total of {len(all_articles)} unique, relevant articles")
-        logger.info(f"API calls - NewsAPI: {self.api_calls['newsapi']}, "
-                   f"Alpha Vantage: {self.api_calls['alphavantage']}, "
-                   f"Finnhub: {self.api_calls['finnhub']}")
+        logger.info(f"📊 Research Summary: {len(all_articles)} unique, relevant articles collected")
+        logger.info(f"📈 Sentiment breakdown: {self.get_sentiment_summary(all_articles)}")
+        logger.info(f"💾 Saved to cache for future use")
         
         return all_articles
     
@@ -466,3 +466,76 @@ if __name__ == "__main__":
     print(f"Negative: {sentiment['negative']} ({sentiment['negative']/sentiment['total']*100:.1f}%)")
     print(f"Neutral: {sentiment['neutral']} ({sentiment['neutral']/sentiment['total']*100:.1f}%)")
     print(f"Average sentiment: {sentiment['average']:.3f}")
+    def get_catalyst_for_symbol(self, symbol: str, hours: int = 24) -> Dict:
+        """
+        Check if there is a news catalyst for a specific symbol.
+        
+        Args:
+            symbol: Stock symbol
+            hours: Lookback period in hours
+            
+        Returns:
+            Dict with catalyst details
+        """
+        try:
+            # Construct query
+            query = f"{symbol} stock OR {symbol} earnings OR {symbol} news"
+            
+            # Fetch recent news (force refresh for specific symbol check)
+            # We use a shorter lookback for catalyst check
+            from_date = (datetime.now() - timedelta(hours=hours)).strftime('%Y-%m-%d')
+            
+            articles = []
+            
+            # Try Finnhub first for company specific news
+            if self.finnhub_key:
+                # Finnhub company news implementation would go here
+                pass
+                
+            # Fallback to NewsAPI
+            if not articles and self.newsapi_key:
+                url = "https://newsapi.org/v2/everything"
+                params = {
+                    'q': query,
+                    'from': from_date,
+                    'sortBy': 'relevancy',
+                    'language': 'en',
+                    'apiKey': self.newsapi_key
+                }
+                resp = self.session.get(url, params=params)
+                if resp.status_code == 200:
+                    data = resp.json()
+                    articles = data.get('articles', [])
+            
+            if not articles:
+                return {'has_catalyst': False, 'reason': 'No recent news found'}
+                
+            # Analyze top article
+            top_article = articles[0]
+            title = top_article.get('title', '')
+            description = top_article.get('description', '')
+            
+            # Simple keyword check for catalyst type
+            catalyst_type = 'news'
+            text = (title + " " + description).lower()
+            
+            if 'earnings' in text or 'revenue' in text or 'eps' in text:
+                catalyst_type = 'earnings'
+            elif 'upgrade' in text or 'downgrade' in text or 'target' in text:
+                catalyst_type = 'analyst'
+            elif 'fda' in text or 'approval' in text:
+                catalyst_type = 'regulatory'
+            elif 'merger' in text or 'acquisition' in text:
+                catalyst_type = 'merger'
+                
+            return {
+                'has_catalyst': True,
+                'catalyst_type': catalyst_type,
+                'headline': title,
+                'url': top_article.get('url'),
+                'published_at': top_article.get('publishedAt')
+            }
+            
+        except Exception as e:
+            logger.error(f"Error checking catalyst for {symbol}: {e}")
+            return {'has_catalyst': False, 'error': str(e)}

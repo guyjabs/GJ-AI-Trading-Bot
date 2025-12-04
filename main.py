@@ -442,6 +442,132 @@ def trading_bot():
     #         watchlist_overview[symbol] = robinhood.enrich_with_pdt_restrictions(watchlist_overview[symbol], symbol)
 
 
+    # ==========================================
+    # 🌞 DAY TRADING MODE 🌞
+    # ==========================================
+    if TRADING_MODE == 'day':
+        logger.info("🌞 Running Day Trading Cycle...")
+        
+        # Imports (Lazy load to avoid circular deps if any)
+        from src.day_trading.day_screener import day_screener
+        from src.day_trading.entry_manager import entry_manager
+        from src.day_trading.stop_loss_manager import stop_loss_manager
+        from src.day_trading.profit_target_manager import profit_target_manager
+        from src.day_trading.time_exit_manager import time_exit_manager
+        from src.trade_journal import trade_journal
+
+        day_trading_results = {}
+
+        # 1. 🔄 MANAGE EXITS (Priority)
+        # -----------------------------
+        logger.info("1. Checking Exits...")
+        
+        # Get current prices for all positions
+        current_prices = {s: float(d['price']) for s, d in portfolio_overview.items()}
+        
+        # Check Stops
+        stops_hit = stop_loss_manager.check_stops(current_prices)
+        for symbol in stops_hit:
+            qty = float(portfolio_overview[symbol]['quantity'])
+            logger.info(f"🚨 EXECUTING STOP LOSS: {symbol} ({qty} shares)")
+            resp = robinhood.sell_stock(symbol, qty)
+            if resp:
+                trade_journal.log_trade({'symbol': symbol, 'action': 'sell', 'reason': 'stop_loss', 'price': current_prices[symbol], 'qty': qty})
+                stop_loss_manager.clear_stop(symbol)
+                profit_target_manager.clear_target(symbol)
+                time_exit_manager.clear_entry(symbol)
+                day_trading_results[symbol] = {'decision': 'sell', 'reason': 'stop_loss'}
+
+        # Check Targets
+        targets_hit = profit_target_manager.check_targets(current_prices)
+        for symbol, action in targets_hit.items():
+            if action['action'] == 'sell':
+                qty = float(portfolio_overview[symbol]['quantity']) # Full exit for now
+                logger.info(f"🎯 EXECUTING PROFIT TARGET: {symbol} ({qty} shares)")
+                resp = robinhood.sell_stock(symbol, qty)
+                if resp:
+                    trade_journal.log_trade({'symbol': symbol, 'action': 'sell', 'reason': 'target_reached', 'price': current_prices[symbol], 'qty': qty})
+                    stop_loss_manager.clear_stop(symbol)
+                    profit_target_manager.clear_target(symbol)
+                    time_exit_manager.clear_entry(symbol)
+                    day_trading_results[symbol] = {'decision': 'sell', 'reason': 'target_reached'}
+        
+        # Check Time Exits
+        for symbol in list(portfolio_overview.keys()):
+            pnl_pct = (current_prices[symbol] - float(portfolio_overview[symbol]['average_buy_price'])) / float(portfolio_overview[symbol]['average_buy_price'])
+            if time_exit_manager.check_stagnation(symbol, pnl_pct):
+                qty = float(portfolio_overview[symbol]['quantity'])
+                logger.info(f"⏰ EXECUTING TIME EXIT: {symbol} ({qty} shares)")
+                resp = robinhood.sell_stock(symbol, qty)
+                if resp:
+                    trade_journal.log_trade({'symbol': symbol, 'action': 'sell', 'reason': 'time_exit', 'price': current_prices[symbol], 'qty': qty})
+                    stop_loss_manager.clear_stop(symbol)
+                    profit_target_manager.clear_target(symbol)
+                    time_exit_manager.clear_entry(symbol)
+                    day_trading_results[symbol] = {'decision': 'sell', 'reason': 'time_exit'}
+
+        # Update Trailing Stops
+        stop_loss_manager.update_trailing_stops(current_prices)
+
+
+        # 2. 🔍 SCAN & ENTER
+        # ------------------
+        logger.info("2. Scanning for Entries...")
+        
+        # Get candidates
+        candidates = day_screener.get_top_candidates()
+        
+        for cand in candidates:
+            symbol = cand['symbol']
+            
+            # Skip if we already own it
+            if symbol in portfolio_overview:
+                continue
+                
+            # Evaluate Entry
+            decision = entry_manager.evaluate_entry(symbol)
+            
+            if decision['enter']:
+                shares = decision['shares']
+                limit_price = decision['entry_price']
+                
+                # Check Buying Power
+                cost = shares * limit_price
+                if float(account_info['buying_power']) < cost:
+                    logger.warning(f"🛑 Insufficient BP for {symbol} (Need ${cost:.2f})")
+                    continue
+                    
+                logger.info(f"🚀 EXECUTING DAY TRADE ENTRY: {symbol} ({shares} shares)")
+                
+                # Execute Buy
+                resp = robinhood.buy_stock(symbol, shares) # Market buy for speed, or add limit logic
+                
+                if resp:
+                    # Register Exit Managers
+                    stop_loss_manager.set_stop_loss(symbol, decision['stop_loss'])
+                    profit_target_manager.set_target(symbol, limit_price, decision['stop_loss'])
+                    time_exit_manager.register_entry(symbol)
+                    
+                    # Log
+                    trade_journal.log_trade({
+                        'symbol': symbol, 
+                        'action': 'buy', 
+                        'price': limit_price, 
+                        'qty': shares,
+                        'setup': decision['setup_type'],
+                        'stop': decision['stop_loss'],
+                        'target': decision['target']
+                    })
+                    
+                    day_trading_results[symbol] = {'decision': 'buy', 'details': decision}
+                    notifier.notify_trade(symbol, "BUY", shares, limit_price, f"Day Trade ({decision['setup_type']})")
+
+        return day_trading_results
+
+    # ==========================================
+    # 🌙 SWING TRADING MODE (Legacy) 🌙
+    # ==========================================
+    
     if len(portfolio_overview) == 0 and len(watchlist_overview) == 0:
         logger.warning("No stocks to analyze, skipping AI-based decision-making...")
         return {}
@@ -550,6 +676,12 @@ def trading_bot():
                     quantity = amount / current_price if current_price > 0 else 0
                 else:
                     # Stock buy logic
+                    
+                    # 🚫 NO AVERAGING DOWN RULE (Day Trading Mode)
+                    if TRADING_MODE == 'day' and symbol in portfolio_overview:
+                        logger.warning(f"⚠️ NO AVERAGING DOWN: Already own {symbol}, skipping buy.")
+                        continue
+                        
                     estimated_cost = current_price * quantity
                     
                     if account_buying_power < (estimated_cost + MIN_BUYING_POWER_BUFFER):
@@ -597,6 +729,34 @@ def trading_bot():
 # Run trading bot in a loop
 async def main():
     robinhood_token_expiry = 0
+    
+    # Initialize Day Trading Components
+    from src.day_trading.eod_manager import EODManager
+    eod_manager = EODManager(
+        market_close_time="16:00",
+        force_close_buffer_minutes=10
+    )
+    
+    logger.info(f"🚀 Bot starting in {TRADING_MODE.upper()} mode")
+
+    while True:
+        try:
+            # 1. Check EOD Force Close (Day Trading Mode Only)
+            if TRADING_MODE == 'day' and DAY_TRADING_CONFIG.get('force_eod_exit'):
+                if eod_manager.should_force_close():
+                    logger.warning("⏰ EOD Force Close Window Active!")
+                    # Fetch current portfolio
+                    portfolio = robinhood.get_portfolio_overview()
+                    # Force close all positions
+                    eod_manager.close_all_positions(portfolio)
+                    
+                    logger.info("💤 Sleeping until market close...")
+                    time.sleep(600) # Sleep 10 mins
+                    continue
+
+            # Check if Robinhood token needs refresh (every 30 mins)
+            if time.time() >= robinhood_token_expiry - 300:
+                logger.info("Login to Robinhood...")
 
     while True:
         # Run pending research tasks

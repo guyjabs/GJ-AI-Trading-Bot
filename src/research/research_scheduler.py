@@ -13,6 +13,8 @@ from .news_aggregator import NewsAggregator
 from .knowledge_base import KnowledgeBase
 from .trend_analyzer import TrendAnalyzer
 from .strategy_researcher import StrategyResearcher
+from .research_archiver import ResearchArchiver
+
 
 
 class ResearchScheduler:
@@ -39,28 +41,39 @@ class ResearchScheduler:
         
         self.is_running = False
         self.last_run_times = {}
+        self.archiver = ResearchArchiver()
     
     def hourly_news_fetch(self):
         """Fetch and analyze news every hour."""
         try:
-            logger.info("=== Hourly News Fetch Started ===")
+            logger.info("🔍 === Hourly News Research Started ===")
             
             # Fetch fresh news
+            logger.info("📡 Fetching latest market news...")
             articles = self.news_aggregator.fetch_all_news(force_refresh=True)
-            logger.info(f"Fetched {len(articles)} news articles")
+            logger.info(f"✅ Collected {len(articles)} news articles")
+            
+            # Archive news snapshot
+            self.archiver.save_news_snapshot(articles)
             
             # Detect emerging trends
+            logger.info("🔎 Analyzing news for emerging trends...")
             trends = self.trend_analyzer.detect_emerging_trends(min_articles=3)
-            logger.info(f"Detected {len(trends)} emerging trends")
+            logger.info(f"📊 Detected {len(trends)} emerging market trends")
+            
+            # Archive trends
+            if trends:
+                self.archiver.save_trends(trends)
             
             # Extract insights from news
+            logger.info("🧠 Extracting trading insights from articles...")
             insights = self.trend_analyzer.extract_insights_from_news(max_articles=20)
-            logger.info(f"Extracted {len(insights)} insights")
+            logger.info(f"💡 Extracted {len(insights)} actionable insights")
             
             # Update last run time
             self.last_run_times['news_fetch'] = datetime.now()
             
-            logger.info("=== Hourly News Fetch Complete ===")
+            logger.info("✅ === Hourly News Research Complete ===")
             
             return {
                 'articles': len(articles),
@@ -69,7 +82,7 @@ class ResearchScheduler:
             }
             
         except Exception as e:
-            logger.error(f"Error in hourly news fetch: {e}")
+            logger.error(f"❌ Error in hourly news fetch: {e}")
             return None
     
     def daily_strategy_research(self):
@@ -95,27 +108,33 @@ class ResearchScheduler:
     def daily_prediction_generation(self, symbols: list):
         """Generate predictions for tracked symbols daily."""
         try:
-            logger.info("=== Daily Prediction Generation Started ===")
+            logger.info("🔮 === Daily Prediction Generation Started ===")
+            logger.info(f"📈 Generating predictions for {len(symbols)} symbols...")
             
             predictions = []
             
             for symbol in symbols:
                 try:
+                    logger.info(f"🎯 Analyzing {symbol}...")
                     prediction = self.trend_analyzer.generate_prediction(symbol, timeframe_days=3)
                     predictions.append(prediction)
-                    logger.info(f"Generated prediction for {symbol}: {prediction['direction']} ({prediction['confidence']:.0%})")
+                    logger.info(f"✅ {symbol}: {prediction['direction']} (Confidence: {prediction['confidence']:.0%})")
                 except Exception as e:
-                    logger.error(f"Error generating prediction for {symbol}: {e}")
+                    logger.error(f"❌ Error generating prediction for {symbol}: {e}")
+            
+            # Archive predictions
+            if predictions:
+                self.archiver.save_predictions(predictions)
             
             # Update last run time
             self.last_run_times['prediction_generation'] = datetime.now()
             
-            logger.info(f"=== Daily Prediction Generation Complete ({len(predictions)} predictions) ===")
+            logger.info(f"✅ === Generated {len(predictions)} Predictions ===")
             
             return predictions
             
         except Exception as e:
-            logger.error(f"Error in daily prediction generation: {e}")
+            logger.error(f"❌ Error in daily prediction generation: {e}")
             return []
     
     def weekly_prediction_evaluation(self, current_prices: Dict[str, float]):

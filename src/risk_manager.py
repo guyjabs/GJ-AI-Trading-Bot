@@ -120,5 +120,31 @@ class RiskManager:
                 
         return actions
 
+    def calculate_position_size_by_risk(
+        self,
+        entry_price: float,
+        stop_price: float,
+        risk_pct: float = 1.0
+    ) -> int:
+        """
+        Calculate position size based on risk percentage.
+        
+        Formula: shares = (account_value * risk_pct) / (entry_price - stop_price)
+        """
+        if self.daily_starting_balance <= 0:
+            logger.warning("Starting balance not set, using default $1000 for sizing")
+            account_value = 1000.0
+        else:
+            account_value = self.daily_starting_balance
+            
+        risk_amount = account_value * (risk_pct / 100)
+        price_risk = abs(entry_price - stop_price)
+        
+        if price_risk == 0:
+            return 0
+        
+        shares = int(risk_amount / price_risk)
+        return max(1, shares)  # At least 1 share
+
 # Global instance
 risk_manager = RiskManager()

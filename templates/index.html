@@ -13,109 +13,282 @@
 <body>
     <!-- Header -->
     <header class="header">
-        <h1>🤖 Robinhood AI Trading Bot</h1>
+        <h1>Market Status: <span id="marketStatus" class="positive">✓ Open</span></h1>
         <div class="status-badge">
+            <span>Balance: <span class="value" id="headerBalance">$0.00</span></span>
+            <span id="headerPL" class="positive">+$0.00 (+0.00%)</span>
+            <span style="margin: 0 8px; color: var(--text-muted);">|</span>
             <div id="statusIndicator" class="status-dot"></div>
             <span id="statusText">Stopped</span>
-            <span style="margin: 0 6px; color: var(--text-muted);">|</span>
-            <span id="currentMode">DEMO</span>
+            <span style="margin: 0 8px; color: var(--text-muted);">|</span>
+            <select id="modeSelector" class="mode-select"
+                style="background: transparent; border: 1px solid var(--border-color); color: var(--text-primary); padding: 2px 6px; border-radius: 4px;">
+                <option value="swing">Swing Mode</option>
+                <option value="day">Day Trading</option>
+            </select>
         </div>
     </header>
 
+    <!-- Ticker Bar -->
+    <div id="tickerBar" class="ticker-bar">
+        <div class="ticker-item">
+            <span class="ticker-symbol">AAPL</span>
+            <span class="ticker-price">$178.42</span>
+            <span class="ticker-change positive">+1.33%</span>
+        </div>
+    </div>
+
     <div class="container">
-        <!-- Activity Log - Top Priority -->
-        <div class="activity-log">
-            <h3>$ activity.log</h3>
-            <div id="logContainer" class="log-entries">
-                <div class="log-entry info">
-                    <span class="timestamp">[--:--:--]</span>
-                    <span>Waiting for bot to start...</span>
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-view="trading">Trading Dashboard</button>
+            <button class="nav-tab" data-view="day-trading">Day Trading ⚡</button>
+            <button class="nav-tab" data-view="research">Research & Insights</button>
+        </div>
+
+        <!-- DAY TRADING VIEW -->
+        <div id="day-trading-view" class="view-section" style="display: none;">
+            <!-- Intraday Stats -->
+            <div class="dashboard">
+                <div class="stat-card">
+                    <h3>day.pnl</h3>
+                    <div class="value" id="dayPnL">$0.00</div>
+                    <div class="sub-label">Today's Realized</div>
+                </div>
+                <div class="stat-card">
+                    <h3>trades.today</h3>
+                    <div class="value" id="dayTradesCount">0</div>
+                    <div class="sub-label">Win Rate: <span id="dayWinRate">0%</span></div>
+                </div>
+                <div class="stat-card">
+                    <h3>market.context</h3>
+                    <div class="value" id="spyTrend">--</div>
+                    <div class="sub-label">SPY Trend</div>
+                </div>
+            </div>
+
+            <div class="grid">
+                <!-- Active Day Trades -->
+                <div class="panel">
+                    <h3>⚡ active.day.trades</h3>
+                    <div class="panel-content">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Symbol</th>
+                                    <th>Entry</th>
+                                    <th>Current</th>
+                                    <th>Stop</th>
+                                    <th>Target</th>
+                                    <th>P&L</th>
+                                    <th>R-Mult</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dayTradesBody">
+                                <tr>
+                                    <td colspan="7" class="empty-state">No active day trades</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Intraday Scanner -->
+                <div class="panel">
+                    <h3>📡 intraday.scanner</h3>
+                    <div class="panel-content">
+                        <div class="scanner-section">
+                            <h4>Gappers (>3%)</h4>
+                            <ul id="gappersList" class="scanner-list">
+                                <li class="empty-state">Scanning...</li>
+                            </ul>
+                        </div>
+                        <div class="scanner-section" style="margin-top: 15px;">
+                            <h4>Momentum (High RVOL)</h4>
+                            <ul id="momentumList" class="scanner-list">
+                                <li class="empty-state">Scanning...</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Control Panel -->
-        <div class="control-panel">
-            <div class="control-group">
-                <button id="startBtn" class="primary">▶ Start</button>
-                <button id="stopBtn" class="danger" disabled>■ Stop</button>
+        <!-- TRADING VIEW -->
+        <div id="trading-view" class="view-section active">
+            <!-- Activity Log - Top Priority -->
+            <div class="activity-log">
+                <h3>$ activity.log</h3>
+                <div id="logContainer" class="log-entries">
+                    <div class="log-entry info">
+                        <span class="timestamp">[--:--:--]</span>
+                        <span>Waiting for bot to start...</span>
+                    </div>
+                </div>
             </div>
-            <div class="control-group">
-                <label>Mode:</label>
-                <button class="mode-btn active" data-mode="demo">Demo</button>
-                <button class="mode-btn" data-mode="manual">Manual</button>
-                <button class="mode-btn" data-mode="auto">Auto</button>
-            </div>
-        </div>
 
-        <!-- Dashboard Stats -->
-        <div class="dashboard">
-            <div class="stat-card">
-                <h3>portfolio_value</h3>
-                <div class="value" id="portfolioValue">$0.00</div>
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <div class="control-group">
+                    <button id="startBtn" class="primary">▶ Start</button>
+                    <button id="stopBtn" class="danger" disabled>■ Stop</button>
+                </div>
+                <div class="control-group">
+                    <label>Mode:</label>
+                    <button class="mode-btn active" data-mode="demo">Demo</button>
+                    <button class="mode-btn" data-mode="manual">Manual</button>
+                    <button class="mode-btn" data-mode="auto">Auto</button>
+                </div>
             </div>
-            <div class="stat-card">
-                <h3>buying_power</h3>
-                <div class="value" id="buyingPower">$0.00</div>
-            </div>
-            <div class="stat-card">
-                <h3>total_pl</h3>
-                <div class="value" id="totalPL">$0.00</div>
-            </div>
-        </div>
 
-        <!-- Portfolio & Chart -->
-        <div class="grid">
+            <!-- Dashboard Stats -->
+            <div class="dashboard">
+                <div class="stat-card">
+                    <h3>portfolio_value</h3>
+                    <div class="value" id="portfolioValue">$0.00</div>
+                </div>
+                <div class="stat-card">
+                    <h3>buying_power</h3>
+                    <div class="value" id="buyingPower">$0.00</div>
+                </div>
+                <div class="stat-card">
+                    <h3>total_pl</h3>
+                    <div class="value" id="totalPL">$0.00</div>
+                </div>
+            </div>
+
+            <!-- Portfolio & Chart -->
+            <div class="grid">
+                <div class="panel">
+                    <h3>portfolio.holdings</h3>
+                    <div class="panel-content">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Symbol</th>
+                                    <th>Qty</th>
+                                    <th>Price</th>
+                                    <th>Avg</th>
+                                    <th>P&L</th>
+                                </tr>
+                            </thead>
+                            <tbody id="portfolioBody">
+                                <tr>
+                                    <td colspan="5" class="empty-state">No positions</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h3>>> Portfolio Overview</h3>
+                    <div class="chart-container">
+                        <canvas id="portfolioChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trade History -->
             <div class="panel">
-                <h3>portfolio.holdings</h3>
+                <h3>trade.history</h3>
                 <div class="panel-content">
                     <table>
                         <thead>
                             <tr>
+                                <th>Time</th>
                                 <th>Symbol</th>
+                                <th>Action</th>
                                 <th>Qty</th>
-                                <th>Price</th>
-                                <th>Avg</th>
-                                <th>P&L</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
-                        <tbody id="portfolioBody">
+                        <tbody id="tradeHistoryBody">
                             <tr>
-                                <td colspan="5" class="empty-state">No positions</td>
+                                <td colspan="5" class="empty-state">No trades yet</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-
-            <div class="panel">
-                <h3>portfolio.distribution</h3>
-                <div class="chart-container">
-                    <canvas id="portfolioChart"></canvas>
-                </div>
-            </div>
         </div>
 
-        <!-- Trade History -->
-        <div class="panel">
-            <h3>trade.history</h3>
-            <div class="panel-content">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Time</th>
-                            <th>Symbol</th>
-                            <th>Action</th>
-                            <th>Qty</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tradeHistoryBody">
-                        <tr>
-                            <td colspan="5" class="empty-state">No trades yet</td>
-                        </tr>
-                    </tbody>
-                </table>
+        <!-- RESEARCH VIEW -->
+        <div id="research-view" class="view-section" style="display: none;">
+            <!-- Manual Research Control -->
+            <div class="control-panel" style="margin-bottom: 20px;">
+                <div style="flex: 1;">
+                    <h3 style="margin: 0 0 8px 0; color: var(--accent-primary); font-size: var(--font-size-base);">🔍
+                        Manual Research</h3>
+                    <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                        <label style="display: flex; align-items: center; gap: 6px;">
+                            <input type="checkbox" id="sourceNewsAPI" checked>
+                            <span>NewsAPI</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 6px;">
+                            <input type="checkbox" id="sourceAlphaVantage" checked>
+                            <span>Alpha Vantage</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 6px;">
+                            <input type="checkbox" id="sourceFinnhub">
+                            <span>Finnhub</span>
+                        </label>
+                    </div>
+                </div>
+                <button id="forceResearchBtn" class="primary">
+                    🚀 Force Research Now
+                </button>
+            </div>
+
+            <!-- Research Summary -->
+            <div class="dashboard">
+                <div class="stat-card">
+                    <h3>market.sentiment</h3>
+                    <div class="value" id="marketSentiment">--</div>
+                    <div class="sub-label" id="sentimentBreakdown">Neutral</div>
+                </div>
+                <div class="stat-card">
+                    <h3>news.volume</h3>
+                    <div class="value" id="newsVolume">0</div>
+                    <div class="sub-label">Articles (24h)</div>
+                </div>
+                <div class="stat-card">
+                    <h3>prediction.accuracy</h3>
+                    <div class="value" id="predictionAccuracy">--%</div>
+                    <div class="sub-label">30-day avg</div>
+                </div>
+            </div>
+
+            <div class="grid">
+                <!-- Active Predictions -->
+                <div class="panel">
+                    <h3>ai.predictions</h3>
+                    <div class="panel-content">
+                        <div id="predictionsList" class="list-container">
+                            <div class="empty-state">No active predictions</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Emerging Trends -->
+                <div class="panel">
+                    <h3>market.trends</h3>
+                    <div class="panel-content">
+                        <div id="trendsList" class="list-container">
+                            <div class="empty-state">No trends detected</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Latest News -->
+            <div class="panel">
+                <h3>news.feed</h3>
+                <div class="panel-content">
+                    <div id="newsFeed" class="news-grid">
+                        <div class="empty-state">Loading news...</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
