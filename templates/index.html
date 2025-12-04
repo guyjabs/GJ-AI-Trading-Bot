@@ -39,6 +39,18 @@
     </div>
 
     <div class="container">
+        <!-- Broker Selection -->
+        <div class="broker-selection">
+            <div class="broker-tabs">
+                <button class="broker-tab active" data-broker="robinhood">
+                    🏦 Robinhood (Basic)
+                </button>
+                <button class="broker-tab" data-broker="ibkr">
+                    🚀 IBKR (Advanced)
+                </button>
+            </div>
+        </div>
+
         <!-- Navigation Tabs -->
         <div class="nav-tabs">
             <button class="nav-tab active" data-view="trading">Trading Dashboard</button>
@@ -112,6 +124,110 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+    </div>
+
+    <!-- IBKR ADVANCED SECTION -->
+    <div id="ibkr-section" class="broker-section" style="display: none;">
+        <div class="broker-badge">
+            <span class="badge-label">Active Broker:</span>
+            <span class="badge-value ibkr">Interactive Brokers (Advanced)</span>
+        </div>
+
+        <!-- Advanced Stats -->
+        <div class="dashboard">
+            <div class="stat-card">
+                <h3>long.positions</h3>
+                <div class="value" id="ibkrLongCount">0</div>
+                <div class="sub-label">Active Longs</div>
+            </div>
+            <div class="stat-card">
+                <h3>short.positions</h3>
+                <div class="value" id="ibkrShortCount">0</div>
+                <div class="sub-label">Active Shorts</div>
+            </div>
+            <div class="stat-card">
+                <h3>day.pnl</h3>
+                <div class="value" id="ibkrDayPnL">$0.00</div>
+                <div class="sub-label">Today's P/L</div>
+            </div>
+        </div>
+
+        <!-- Advanced Features Panel -->
+        <div class="panel">
+            <h3>🚀 Advanced Features</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>📉 Short Selling</h4>
+                    <p>Trade both directions for maximum opportunity</p>
+                    <label>
+                        <input type="checkbox" id="enableShorts" checked>
+                        Enable short signals
+                    </label>
+                </div>
+                <div class="feature-card">
+                    <h4>🎯 Bracket Orders</h4>
+                    <p>Auto-set stop loss and take profit on entry</p>
+                    <label>
+                        <input type="checkbox" id="autoBracket" checked>
+                        Enable auto-bracket
+                    </label>
+                </div>
+                <div class="feature-card">
+                    <h4>📊 Level 2 Data</h4>
+                    <p>Real-time order book depth</p>
+                    <button onclick="toggleLevel2()" class="secondary">View Level 2</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Positions (Long + Short) -->
+        <div class="panel">
+            <h3>⚡ Active Positions</h3>
+            <div class="panel-content">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Symbol</th>
+                            <th>Side</th>
+                            <th>Entry</th>
+                            <th>Current</th>
+                            <th>Stop</th>
+                            <th>Target</th>
+                            <th>P/L</th>
+                            <th>R-Mult</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ibkrPositionsBody">
+                        <tr>
+                            <td colspan="8" class="empty-state">No active positions</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ROBINHOOD SECTION (Existing content wrapped) -->
+    <div id="robinhood-section" class="broker-section active">
+        <div class="broker-badge">
+            <span class="badge-label">Active Broker:</span>
+            <span class="badge-value robinhood">Robinhood (Basic)</span>
+        </div>
+
+        <!-- Feature Limitations Warning -->
+        <div class="feature-limitations">
+            <h4>⚠️ Robinhood Limitations:</h4>
+            <ul>
+                <li>❌ No short selling</li>
+                <li>❌ No bracket orders</li>
+                <li>❌ No Level 2 data</li>
+                <li>❌ Limited pre-market/after-hours</li>
+            </ul>
+            <button onclick="switchToIBKR()" class="upgrade-btn">
+                Upgrade to IBKR for Advanced Features →
+            </button>
         </div>
 
         <!-- TRADING VIEW -->
@@ -293,6 +409,7 @@
         </div>
     </div>
 
+    <script src="/static/broker_switching.js"></script>
     <script src="/static/app.js"></script>
 </body>
 

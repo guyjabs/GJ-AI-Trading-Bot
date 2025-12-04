@@ -11,7 +11,8 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from src.research import NewsAggregator, KnowledgeBase, TrendAnalyzer, ResearchScheduler, ResearchArchiver
 from src.utils import logger
-from config import NEWSAPI_KEY, ALPHAVANTAGE_API_KEY, FINNHUB_API_KEY
+from src.utils import logger
+import config
 
 def main():
     print("=" * 60)
@@ -23,9 +24,9 @@ def main():
     logger.info("🚀 Initializing research bot components...")
     
     news_agg = NewsAggregator(
-        newsapi_key=NEWSAPI_KEY if NEWSAPI_KEY else None,
-        alphavantage_key=ALPHAVANTAGE_API_KEY if ALPHAVANTAGE_API_KEY else None,
-        finnhub_key=FINNHUB_API_KEY if FINNHUB_API_KEY else None
+        newsapi_key=getattr(config, 'NEWSAPI_KEY', None),
+        alphavantage_key=getattr(config, 'ALPHAVANTAGE_API_KEY', None),
+        finnhub_key=getattr(config, 'FINNHUB_API_KEY', None)
     )
     
     kb = KnowledgeBase()

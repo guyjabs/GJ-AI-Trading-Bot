@@ -46,3 +46,24 @@ STRATEGY_RESEARCH_INTERVAL_HOURS = 24
 PREDICTION_HORIZON_DAYS = 3
 MIN_NEWS_RELEVANCE_SCORE = 0.6
 ENABLE_STRATEGY_RESEARCH = True
+
+# ============================================
+# BROKER SELECTION
+# ============================================
+ACTIVE_BROKER = 'robinhood'  # 'robinhood' or 'ibkr'
+
+# Interactive Brokers Configuration
+IBKR_CONFIG = {
+    'host': '127.0.0.1',
+    'port': 7497,  # 7497 = paper trading, 7496 = live
+    'client_id': 1,
+    'account': 'DU1234567',  # Your IBKR account number
+}
+
+# Advanced Features (IBKR only)
+IBKR_ADVANCED_FEATURES = {
+    'enable_short_selling': True,
+    'enable_bracket_orders': True,
+    'enable_level2_data': True,
+    'enable_extended_hours': True,
+}

@@ -41,6 +41,13 @@ function setupEventListeners() {
         forceResearchBtn.addEventListener('click', forceResearch);
     }
 
+    // Broker tabs
+    document.querySelectorAll('.broker-tab').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            switchBroker(e.target.dataset.broker);
+        });
+    });
+
     // Socket events
     socket.on('connect', () => {
         console.log('Connected to server');

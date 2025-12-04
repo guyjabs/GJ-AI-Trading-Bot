@@ -360,6 +360,96 @@ def get_day_trading_dashboard():
         logger.error(f"Error fetching day trading dashboard: {e}")
         return {'error': str(e)}, 500
 
+@app.route('/api/broker/switch', methods=['POST'])
+def switch_broker():
+    """Switch active broker"""
+    try:
+        data = request.json
+        broker = data.get('broker', 'robinhood')
+        
+        # Update config (in memory for now)
+        global ACTIVE_BROKER
+        from config import ACTIVE_BROKER
+        ACTIVE_BROKER = broker
+        
+        logger.info(f"Switched to broker: {broker}")
+        return {'success': True, 'broker': broker}
+    except Exception as e:
+        logger.error(f"Error switching broker: {e}")
+        return {'error': str(e)}, 500
+
+@app.route('/api/ibkr/dashboard')
+def get_ibkr_dashboard():
+    """Get IBKR dashboard data"""
+    try:
+        from src.api.ibkr import get_ibkr_client
+        from config import IBKR_CONFIG
+        
+        # Get or create IBKR client
+        ibkr = get_ibkr_client(
+            host=IBKR_CONFIG.get('host', '127.0.0.1'),
+            port=IBKR_CONFIG.get('port', 7497),
+            client_id=IBKR_CONFIG.get('client_id', 1)
+        )
+        
+        # Check connection
+        if not ibkr.is_connected():
+            connected = ibkr.connect()
+            if not connected:
+                return {
+                    'error': 'Not connected to IBKR. Make sure TWS/IB Gateway is running.',
+                    'long_count': 0,
+                    'short_count': 0,
+                    'day_pnl_formatted': '$0.00',
+                    'positions': []
+                }
+        
+        # Get portfolio
+        portfolio = ibkr.get_portfolio()
+        
+        # Separate long and short positions
+        long_positions = [p for p in portfolio.values() if p['side'] == 'long']
+        short_positions = [p for p in portfolio.values() if p['side'] == 'short']
+        
+        # Calculate day P/L
+        day_pnl = sum(p.get('unrealized_pnl', 0) for p in portfolio.values())
+        
+        # Format positions for display
+        formatted_positions = []
+        for symbol, pos in portfolio.items():
+            # Mock stop/target for now (would come from managers)
+            entry_price = pos['average_cost']
+            current_price = pos['market_value'] / pos['quantity'] if pos['quantity'] != 0 else 0
+            
+            formatted_positions.append({
+                'symbol': symbol,
+                'side': pos['side'],
+                'entry_price': entry_price,
+                'current_price': current_price,
+                'stop_loss': entry_price * 0.98 if pos['side'] == 'long' else entry_price * 1.02,
+                'target': entry_price * 1.04 if pos['side'] == 'long' else entry_price * 0.96,
+                'pnl': pos.get('unrealized_pnl', 0),
+                'r_multiple': 0.0  # Calculate based on stop/target
+            })
+        
+        return {
+            'long_count': len(long_positions),
+            'short_count': len(short_positions),
+            'day_pnl': day_pnl,
+            'day_pnl_formatted': f"${day_pnl:.2f}",
+            'positions': formatted_positions
+        }
+        
+    except Exception as e:
+        logger.error(f"Error fetching IBKR dashboard: {e}")
+        return {
+            'error': str(e),
+            'long_count': 0,
+            'short_count': 0,
+            'day_pnl_formatted': '$0.00',
+            'positions': []
+        }
+
 def run_bot_loop():
     """Main bot loop running in background thread"""
     global bot_running, stop_bot_flag

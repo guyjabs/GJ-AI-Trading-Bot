@@ -740,25 +740,19 @@ async def main():
     logger.info(f"🚀 Bot starting in {TRADING_MODE.upper()} mode")
 
     while True:
-        try:
-            # 1. Check EOD Force Close (Day Trading Mode Only)
-            if TRADING_MODE == 'day' and DAY_TRADING_CONFIG.get('force_eod_exit'):
-                if eod_manager.should_force_close():
-                    logger.warning("⏰ EOD Force Close Window Active!")
-                    # Fetch current portfolio
-                    portfolio = robinhood.get_portfolio_overview()
-                    # Force close all positions
-                    eod_manager.close_all_positions(portfolio)
-                    
-                    logger.info("💤 Sleeping until market close...")
-                    time.sleep(600) # Sleep 10 mins
-                    continue
+        # 1. Check EOD Force Close (Day Trading Mode Only)
+        if TRADING_MODE == 'day' and DAY_TRADING_CONFIG.get('force_eod_exit'):
+            if eod_manager.should_force_close():
+                logger.warning("⏰ EOD Force Close Window Active!")
+                # Fetch current portfolio
+                portfolio = robinhood.get_portfolio_overview()
+                # Force close all positions
+                eod_manager.close_all_positions(portfolio)
+                
+                logger.info("💤 Sleeping until market close...")
+                time.sleep(600) # Sleep 10 mins
+                continue
 
-            # Check if Robinhood token needs refresh (every 30 mins)
-            if time.time() >= robinhood_token_expiry - 300:
-                logger.info("Login to Robinhood...")
-
-    while True:
         # Run pending research tasks
         if globals().get('ENABLE_RESEARCH_BOT', False):
             research_scheduler.run_pending()

@@ -163,3 +163,10 @@ cython_debug/
 
 # User data
 config.py
+
+# Data Cache
+data/cache/
+data/knowledge_base/
+data/research_archive/
+data/screening_results.json
+data/performance_history.json

@@ -314,6 +314,184 @@ button.primary:hover {
     box-shadow: 0 0 16px var(--accent-glow);
 }
 
+/* ==========================================
+   BROKER SELECTION & BADGES
+   ========================================== */
+
+.broker-selection {
+    margin-bottom: 20px;
+}
+
+.broker-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.broker-tab {
+    flex: 1;
+    padding: 12px 20px;
+    background: var(--bg-card);
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-secondary);
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.broker-tab:hover {
+    border-color: var(--accent-primary);
+    color: var(--text-primary);
+}
+
+.broker-tab.active {
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    border-color: var(--accent-primary);
+    color: var(--bg-primary);
+}
+
+.broker-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 16px;
+    background: var(--bg-elevated);
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.badge-label {
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+}
+
+.badge-value {
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: var(--font-size-sm);
+}
+
+.badge-value.robinhood {
+    background: linear-gradient(135deg, #00C805, #00A804);
+    color: white;
+}
+
+.badge-value.ibkr {
+    background: linear-gradient(135deg, #0066CC, #004C99);
+    color: white;
+}
+
+.broker-section {
+    display: none;
+}
+
+.broker-section.active {
+    display: block;
+}
+
+.feature-limitations {
+    background: #FFF3CD;
+    border-left: 4px solid #FFC107;
+    padding: 16px;
+    margin: 20px 0;
+    border-radius: 4px;
+}
+
+.feature-limitations h4 {
+    color: #856404;
+    margin-bottom: 10px;
+}
+
+.feature-limitations ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 10px 0;
+}
+
+.feature-limitations li {
+    color: #856404;
+    padding: 4px 0;
+}
+
+.upgrade-btn {
+    background: linear-gradient(135deg, #0066CC, #004C99);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+}
+
+.upgrade-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.feature-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 15px;
+}
+
+.feature-card h4 {
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    font-size: var(--font-size-base);
+}
+
+.feature-card p {
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    margin-bottom: 10px;
+}
+
+.feature-card label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-primary);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+}
+
+.feature-card input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.badge.long {
+    background: var(--success);
+    color: var(--bg-primary);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: var(--font-size-xs);
+    font-weight: bold;
+}
+
+.badge.short {
+    background: var(--error);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: var(--font-size-xs);
+    font-weight: bold;
+}
+
 button.danger {
     background: var(--error);
     color: white;
@@ -644,40 +822,6 @@ tr:hover {
     .view-section {
         padding: 16px;
     }
-}
-
-
-/* Terminal Colors */
---terminal-bg: #1e1e1e;
---terminal-text: #d4d4d4;
---terminal-green: #4ec9b0;
---terminal-blue: #569cd6;
---terminal-yellow: #dcdcaa;
---terminal-red: #f48771;
---terminal-purple: #c586c0;
---terminal-orange: #ce9178;
-
-/* UI Colors */
---border-color: #3e3e42;
---text-primary: #d4d4d4;
---text-secondary: #858585;
---text-muted: #6a6a6a;
-
-/* Status Colors */
---success: #4ec9b0;
---error: #f48771;
---warning: #dcdcaa;
---info: #569cd6;
-
-/* Font */
---font-mono: 'Consolas',
-'Monaco',
-'Courier New',
-monospace;
---font-size-xs: 11px;
---font-size-sm: 12px;
---font-size-base: 13px;
---font-size-lg: 14px;
 }
 
 * {
