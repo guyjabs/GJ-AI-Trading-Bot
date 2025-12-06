@@ -9,6 +9,7 @@ import os
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional
 import time
+import concurrent.futures
 
 from ..utils import logger
 
@@ -175,21 +176,27 @@ class StockDataProvider:
     
     def fetch_multiple(self, symbols: List[str], delay: float = 0.1) -> Dict[str, Dict]:
         """
-        Fetch data for multiple symbols with rate limiting.
+        Fetch data for multiple symbols in parallel.
         Returns dict mapping symbol to data.
         """
         results = {}
         total = len(symbols)
         
-        for i, symbol in enumerate(symbols):
-            logger.info(f"Fetching data for {symbol} ({i+1}/{total})")
-            data = self.fetch_stock_data(symbol)
-            if data:
-                results[symbol] = data
+        # Use ThreadPoolExecutor for parallel processing
+        # yfinance is IO bound, so threads work well
+        with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
+            # Create a future for each symbol
+            future_to_symbol = {executor.submit(self.fetch_stock_data, symbol): symbol for symbol in symbols}
             
-            # Rate limiting
-            if i < total - 1:  # Don't delay after last symbol
-                time.sleep(delay)
+            for i, future in enumerate(concurrent.futures.as_completed(future_to_symbol)):
+                symbol = future_to_symbol[future]
+                try:
+                    data = future.result()
+                    if data:
+                        results[symbol] = data
+                    logger.debug(f"Fetched {symbol} ({i+1}/{total})")
+                except Exception as e:
+                    logger.error(f"Error fetching {symbol}: {e}")
         
         return results
     

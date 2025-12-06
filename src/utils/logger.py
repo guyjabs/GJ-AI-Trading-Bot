@@ -3,12 +3,13 @@ from config import LOG_LEVEL
 
 # Print log message
 def log(level, msg):
-    log_levels = {"DEBUG": 1, "INFO": 2, "WARNING": 3, "ERROR": 4}
+    log_levels = {"DEBUG": 1, "INFO": 2, "WARNING": 3, "ERROR": 4, "CRITICAL": 5}
     level_color_codes = {
         "DEBUG": "\033[94m",
         "INFO": "\033[92m",
         "WARNING": "\033[93m",
-        "ERROR": "\033[91m"
+        "ERROR": "\033[91m",
+        "CRITICAL": "\033[91m\033[1m"  # Red + Bold
     }
     timestamp_color_code = "\033[96m"
     reset_color_code = "\033[0m"
@@ -29,10 +30,12 @@ def info(msg):
 
 
 # Print warning log message
-def warning(msg):
-    log("WARNING", msg)
+def warning(message):
+    log("WARNING", message)
 
+def critical(message):
+    log("CRITICAL", message)
 
 # Print error log message
-def error(msg):
-    log("ERROR", msg)
+def error(message):
+    log("ERROR", message)

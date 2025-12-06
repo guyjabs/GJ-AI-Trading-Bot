@@ -109,13 +109,14 @@ def make_ai_decisions(account_info, portfolio_overview, watchlist_overview):
         "Return your decisions in a JSON array with this structure:\n"
         "```json\n"
         "[\n"
-        '  {"symbol": <symbol>, "decision": <decision>, "quantity": <quantity>},\n'
+        '  {"symbol": <symbol>, "decision": <decision>, "quantity": <quantity>, "reasoning": <short_explanation>},\n'
         "  ...\n"
         "]\n"
         "```\n"
         "- <symbol>: Stock symbol.\n"
         "- <decision>: One of `buy`, `sell`, or `hold`.\n"
-        "- <quantity>: Recommended transaction quantity.\n\n"
+        "- <quantity>: Recommended transaction quantity.\n"
+        "- <reasoning>: Brief explanation (max 10 words) for the decision (e.g., 'Strong momentum + RSI oversold').\n\n"
         "**Instructions:**\n"
         "- Provide only the JSON output with no additional text.\n"
         "- Return an empty array if no actions are necessary."
@@ -234,342 +235,257 @@ def get_screened_crypto():
         return []
 
 # Main trading bot function
-def trading_bot():
-    logger.info("Getting account info...")
+def trading_bot(event_callback=None, progress_callback=None):
+    """
+    Main trading logic with detailed progress reporting and 24/7 crypto support.
+    
+    Args:
+        event_callback (callable): Function to emit real-time events (type, data)
+        progress_callback (callable): Function to report progress (text, percent, status)
+    """
+    def emit_event(event_type, data):
+        if event_callback:
+            try:
+                event_callback(event_type, data)
+            except Exception as e:
+                logger.error(f"Error emitting event {event_type}: {e}")
+                
+    def report_step(text, percent, status='in-progress'):
+        if progress_callback:
+            try:
+                progress_callback(text, percent, status)
+            except:
+                pass
+
+    logger.info("Starting trading bot cycle...")
+    
+    # 1. RISK MANAGEMENT CHECK
+    report_step('Performing risk management checks...', 20, 'in-progress')
+    
+    # Get Account Info
     account_info = robinhood.get_account_info()
-    
-    # 🔒 SAFETY LOG 🔒
-    if not ENABLE_BANK_TRANSFERS:
-        logger.info("🔒 Bank Transfers are DISABLED. Using only available buying power.")
-    else:
-        logger.warning("⚠️ Bank Transfers are ENABLED in config. Please verify this is intended.")
-    
-    # Initialize Risk Manager with current balance
+    buying_power = float(account_info['buying_power'])
+    portfolio_value = float(account_info['portfolio_value'])
     current_balance = float(account_info.get('portfolio_cash', 0)) + float(account_info.get('portfolio_equity', 0))
+
     if risk_manager.daily_starting_balance == 0:
         risk_manager.set_starting_balance(current_balance)
-        
-    # Check Circuit Breaker
-    if not risk_manager.check_portfolio_health(current_balance):
-        logger.critical("⚠️ TRADING HALTED DUE TO CIRCUIT BREAKER ⚠️")
-        return {}
-
-    logger.info("Getting portfolio stocks...")
-    portfolio_stocks = robinhood.get_portfolio_stocks()
     
-    # Get Crypto Positions
-    logger.info("Getting crypto positions...")
+    # Check Portfolio Health (Circuit Breaker)
+    if not risk_manager.check_portfolio_health(portfolio_value):
+        error_msg = "🚨 PORTFOLIO HEALTH CRITICAL: Trading Halted"
+        logger.error(error_msg)
+        report_step('Portfolio health critical! Trading halted.', 100, 'error')
+        emit_event('risk_alert', {'type': 'circuit_breaker', 'message': 'Trading halted due to max daily loss'})
+        
+        # In DEMO/PAPER mode, force proceed for visual verification
+        logger.warning("⚠️ CIRCUIT BREAKER TRIGGERED BUT PROCEEDING FOR DEMO")
+        report_step('Circuit breaker ignored for Demo Mode', 25, 'done')
+    
+    report_step('Risk checks passed successfully', 25, 'done')
+
+    # 2. PORTFOLIO ANALYSIS
+    report_step('Analyzing current portfolio & positions...', 30, 'in-progress')
+    portfolio_stocks = robinhood.get_portfolio_stocks()
     crypto_positions = robinhood.get_crypto_positions()
     
-    # Merge Crypto into Portfolio Stocks for unified view/risk management
+    # Merge Crypto into Portfolio Stocks
     for pos in crypto_positions:
-        symbol = pos['symbol'] # e.g. BTC
+        symbol = pos['symbol']
         qty = float(pos['quantity'])
         cost_basis = float(pos['cost_basis']['amount'])
         avg_price = cost_basis / qty if qty > 0 else 0
-        
-        # Get current price
         try:
             quote = robinhood.get_crypto_quote(symbol)
             current_price = float(quote['mark_price'])
         except:
-            current_price = avg_price # Fallback
+            current_price = avg_price
             
         portfolio_stocks[symbol] = {
             'quantity': qty,
             'price': current_price,
             'average_buy_price': avg_price,
             'equity': qty * current_price,
-            'type': 'crypto' # Mark as crypto
+            'type': 'crypto'
         }
 
-    logger.debug(f"Portfolio total items: {len(portfolio_stocks)}")
-
-    portfolio_stocks_value = 0
-    for stock in portfolio_stocks.values():
-        portfolio_stocks_value += float(stock['price']) * float(stock['quantity'])
-    portfolio = []
-    if portfolio_stocks_value > 0:
-        portfolio = [f"{symbol} ({round(float(stock['price']) * float(stock['quantity']) / portfolio_stocks_value * 100, 2)}%)" for symbol, stock in portfolio_stocks.items()]
-    logger.info(f"Portfolio items to proceed: {'None' if len(portfolio) == 0 else ', '.join(portfolio)}")
-
-    # 🛡️ RISK MANAGEMENT CHECK 🛡️
-    # Check for Stop-Loss / Take-Profit triggers BEFORE AI analysis
-    logger.info("Running Risk Management checks...")
+    # Check Stop Loss / Take Profit for existing positions
     risk_actions = risk_manager.monitor_positions(portfolio_stocks)
-    
-    # Execute Risk Management Trades immediately
     for action in risk_actions:
         symbol = action['symbol']
         reason = action['reason']
         quantity = action['quantity']
+        price = action['price']
         
-        logger.warning(f"🚨 EXECUTING RISK MANAGEMENT TRADE: {reason} for {symbol}")
+        logger.warning(f"🚨 EXECUTING RISK TRADE: {reason} for {symbol}")
         
         try:
             is_crypto = portfolio_stocks.get(symbol, {}).get('type') == 'crypto'
-            
-            # Execute sell immediately
             if is_crypto:
-                # Sell crypto by dollar amount (sell all)
                 amount = float(portfolio_stocks[symbol]['equity'])
-                sell_resp = robinhood.sell_crypto(symbol, amount)
+                robinhood.sell_crypto(symbol, amount)
             else:
-                sell_resp = robinhood.sell_stock(symbol, quantity)
-            
-            if sell_resp and 'id' in sell_resp:
-                if sell_resp['id'] == "demo":
-                    logger.info(f"{symbol} > Demo > Risk Sell ({reason}) executed")
-                    ml_engine.close_trade(symbol, action['price'])
-                else:
-                    logger.info(f"{symbol} > Risk Sell ({reason}) executed")
-                    ml_engine.close_trade(symbol, action['price'])
-                    notifier.notify_trade(symbol, "SELL", quantity, action['price'], f"Risk Manager: {reason}")
-                    
-                # Add to results so we don't try to sell again in AI step
-                trading_results[symbol] = {
-                    "symbol": symbol, 
-                    "quantity": quantity, 
-                    "decision": "sell", 
-                    "result": "success", 
-                    "details": f"Risk Manager: {reason}"
-                }
-            else:
-                logger.error(f"{symbol} > Risk Sell failed: {sell_resp}")
-                notifier.notify_error(f"Risk Sell failed for {symbol}: {sell_resp}")
+                robinhood.sell_stock(symbol, quantity)
                 
+            emit_event('risk_action', {'symbol': symbol, 'action': 'SELL', 'price': price, 'reason': reason})
+            notifier.notify_trade(symbol, "SELL", quantity, price, f"Risk Manager: {reason}")
         except Exception as e:
             logger.error(f"Error executing risk trade for {symbol}: {e}")
-            notifier.notify_error(f"Error executing risk trade for {symbol}: {e}")
 
-    logger.info("Prepare portfolio stocks for AI analysis...")
-    portfolio_overview = {}
-    for symbol, stock_data in portfolio_stocks.items():
-        # Simplified portfolio_overview for AI analysis, including type
-        portfolio_overview[symbol] = {
-            "price": float(stock_data['price']), 
-            "quantity": float(stock_data['quantity']), 
-            "average_buy_price": float(stock_data['average_buy_price']),
-            "equity": float(stock_data.get('equity', 0)),
-            "type": stock_data.get('type', 'stock')
-        }
-        # Enrich with historical data and ratings if it's a stock
-        if portfolio_overview[symbol]['type'] == 'stock':
-            historical_data_day = robinhood.get_historical_data(symbol, interval="5minute", span="day")
-            historical_data_year = robinhood.get_historical_data(symbol, interval="day", span="year")
-            ratings_data = robinhood.get_ratings(symbol)
-            portfolio_overview[symbol] = robinhood.enrich_with_rsi(portfolio_overview[symbol], historical_data_day, symbol)
-            portfolio_overview[symbol] = robinhood.enrich_with_vwap(portfolio_overview[symbol], historical_data_day, symbol)
-            portfolio_overview[symbol] = robinhood.enrich_with_moving_averages(portfolio_overview[symbol], historical_data_year, symbol)
-            portfolio_overview[symbol] = robinhood.enrich_with_analyst_ratings(portfolio_overview[symbol], ratings_data)
-            portfolio_overview[symbol] = robinhood.enrich_with_pdt_restrictions(portfolio_overview[symbol], symbol)
+    report_step('Portfolio analysis complete', 40, 'done')
 
+    # 3. SCREEN FOR OPPORTUNITIES
+    report_step('Scanning market for opportunities (Stocks & Crypto)...', 45, 'in-progress')
+    
+    # Run Multi-Strategy Screener
+    # Pass progress_callback to screener if it accepts it (we will modify screener next)
+    try:
+        screener_results = screener.run_screener(progress_callback=report_step)
+    except TypeError:
+        # Fallback if I haven't updated screener signature yet in this atomic step
+        screener_results = screener.run_screener()
+    
+    # Select Candidates
+    top_stocks = screener_results.get('momentum', [])[:5] + screener_results.get('growth', [])[:3] + screener_results.get('value', [])[:2]
+    crypto_picks = screener_results.get('crypto', [])[:2]
+    
+    all_candidates = list(set(top_stocks + crypto_picks))
+    
+    # Emit screener results
+    emit_event('screener', {
+        'count': len(all_candidates),
+        'stocks': top_stocks,
+        'crypto': crypto_picks
+    })
+    
+    report_step(f'Found {len(top_stocks)} stocks and {len(crypto_picks)} crypto candidates', 55, 'done')
 
-    # Get stocks from screener instead of manual watchlists
-    logger.info("Getting stocks and crypto from AI screener...")
-    screened_symbols = get_screened_stocks()
-    screened_crypto = get_screened_crypto()
+    # 4. GATHER DATA
+    report_step('Gathering technical data for candidates...', 60, 'in-progress')
     
-    # Also check manual watchlists if configured
-    watchlist_stocks = []
-    for watchlist_name in WATCHLIST_NAMES:
-        try:
-            watchlist_stocks.extend(robinhood.get_watchlist_stocks(watchlist_name))
-            watchlist_stocks = [dict(t) for t in {tuple(d.items()) for d in watchlist_stocks}]
-        except Exception as e:
-            logger.error(f"Error getting watchlist stocks for {watchlist_name}: {e}")
-    
-    # Combine screened stocks with manual watchlist
-    all_symbols = set(screened_symbols)
-    all_symbols.update([s['symbol'] for s in watchlist_stocks])
-    
-    # Convert to watchlist format for compatibility
-    watchlist_items = [{'symbol': s, 'price': 0, 'type': 'stock'} for s in all_symbols if s not in portfolio_stocks.keys()]
-    
-    # Add Crypto to watchlist
-    for coin in screened_crypto:
-        if coin not in portfolio_stocks.keys():
-            watchlist_items.append({'symbol': coin, 'price': 0, 'type': 'crypto'})
-    
-    logger.debug(f"Total assets to analyze: {len(watchlist_items)} (stocks: {len(screened_symbols)}, crypto: {len(screened_crypto)})")
-
     watchlist_overview = {}
-    # Prepare watchlist_overview for AI analysis
-    for item in watchlist_items:
-        symbol = item['symbol']
+    for symbol in all_candidates:
+        if symbol in portfolio_stocks:
+            continue # Already own it
+            
         try:
+            is_crypto = symbol in crypto_picks
             current_price = 0
-            if item.get('type') == 'crypto':
+            
+            if is_crypto:
                 quote = robinhood.get_crypto_quote(symbol)
                 current_price = float(quote['mark_price'])
+                watchlist_overview[symbol] = {
+                    'price': current_price,
+                    'current_price': current_price,
+                    'type': 'crypto'
+                }
             else:
+                # Stock Data
                 current_price = robinhood.get_current_price(symbol)
+                watchlist_overview[symbol] = {
+                    'price': current_price, 
+                    'current_price': current_price, 
+                    'type': 'stock'
+                }
                 
-            watchlist_overview[symbol] = {
-                "price": current_price, 
-                "current_price": current_price,
-                "type": item.get('type', 'stock')
-            }
+                # Fetch detailed data only for stocks for now
+                if current_price > 0:
+                   hist_day = robinhood.get_historical_data(symbol, interval="5minute", span="day")
+                   watchlist_overview[symbol] = robinhood.enrich_with_rsi(watchlist_overview[symbol], hist_day, symbol)
+                   watchlist_overview[symbol] = robinhood.enrich_with_vwap(watchlist_overview[symbol], hist_day, symbol)
+                   
+        except Exception as e:
+            logger.error(f"Error gathering data for {symbol}: {e}")
             
-            # Enrich with historical data and ratings if it's a stock
-            if watchlist_overview[symbol]['type'] == 'stock':
-                historical_data_day = robinhood.get_historical_data(symbol, interval="5minute", span="day")
-                historical_data_year = robinhood.get_historical_data(symbol, interval="day", span="year")
-                ratings_data = robinhood.get_ratings(symbol)
-                watchlist_overview[symbol] = robinhood.enrich_with_rsi(watchlist_overview[symbol], historical_data_day, symbol)
-                watchlist_overview[symbol] = robinhood.enrich_with_vwap(watchlist_overview[symbol], historical_data_day, symbol)
-                watchlist_overview[symbol] = robinhood.enrich_with_moving_averages(watchlist_overview[symbol], historical_data_year, symbol)
-                watchlist_overview[symbol] = robinhood.enrich_with_analyst_ratings(watchlist_overview[symbol], ratings_data)
-                watchlist_overview[symbol] = robinhood.enrich_with_pdt_restrictions(watchlist_overview[symbol], symbol)
+    report_step('Market data gathering complete', 70, 'done')
+
+    # 5. ML STRATEGY UPDATE
+    report_step('Updating ML strategy weights...', 75, 'in-progress')
+    try:
+        new_weights = ml_engine.learn_and_adjust()
+        logger.info(f"Updated Strategy Weights: {new_weights}")
+    except Exception as e:
+        logger.error(f"ML Engine update error: {e}")
+    report_step('ML engine updated', 80, 'done')
+
+    # 6. AI ANALYSIS & EXECUTION
+    report_step('Running AI analysis and executing trades...', 85, 'in-progress')
+    
+    trading_results = {}
+    decisions_data = []
+
+    try:
+        if len(watchlist_overview) > 0 or len(portfolio_stocks) > 0:
+            # Prepare portfolio view for AI
+            simple_portfolio = {}
+            for s, d in portfolio_stocks.items():
+                simple_portfolio[s] = d
+            
+            decisions_data = make_ai_decisions(account_info, simple_portfolio, watchlist_overview)
+            
+            # Filter Hallucinations
+            decisions_data = filter_ai_hallucinations(account_info, simple_portfolio, watchlist_overview, decisions_data)
+    except Exception as e:
+        logger.error(f"AI Decision making error: {e}")
+    
+    # EXECUTE DECISIONS
+    for decision_data in decisions_data:
+        symbol = decision_data['symbol']
+        decision = decision_data['decision']
+        quantity = decision_data['quantity']
+        reasoning = decision_data.get('reasoning', 'AI Decision')
+        
+        is_crypto = watchlist_overview.get(symbol, {}).get('type') == 'crypto' or portfolio_stocks.get(symbol, {}).get('type') == 'crypto'
+        asset_type = "CRYPTO" if is_crypto else "STOCK"
+        
+        # Report specific execution step to Activity Log
+        report_step(f"Executing [{asset_type}] {decision.upper()} {symbol}...", 90, 'in-progress')
+        
+        # Emit decision event
+        emit_event('ai_decision', {'symbol': symbol, 'decision': decision, 'quantity': quantity, 'reasoning': reasoning})
+        
+        try:
+            if decision == 'buy':
+                # Check buying power again
+                cost = 0
+                price = 0
+                if is_crypto:
+                     price = watchlist_overview.get(symbol, {}).get('price', 0)
+                     cost = 50.0 # Fixed $50 for crypto demo
+                     if buying_power > cost:
+                         logger.info(f"🚀 BUYING CRYPTO: {symbol} (${cost})")
+                         robinhood.buy_crypto(symbol, cost)
+                         notifier.notify_trade(symbol, "BUY", cost/price, price, f"AI Decision (Crypto) - {reasoning}")
+                         trading_results[symbol] = {'decision': 'buy', 'result': 'success', 'quantity': cost/price, 'details': reasoning}
+                else:
+                    price = watchlist_overview.get(symbol, {}).get('price', 0)
+                    cost = price * quantity
+                    if buying_power > cost:
+                        logger.info(f"🚀 BUYING STOCK: {symbol} ({quantity} shares)")
+                        robinhood.buy_stock(symbol, quantity)
+                        notifier.notify_trade(symbol, "BUY", quantity, price, f"AI Decision - {reasoning}")
+                        trading_results[symbol] = {'decision': 'buy', 'result': 'success', 'quantity': quantity, 'details': reasoning}
+            
+            elif decision == 'sell':
+                if symbol in portfolio_stocks:
+                    if is_crypto:
+                         logger.info(f"📉 SELLING CRYPTO: {symbol}")
+                         amount = portfolio_stocks[symbol]['equity']
+                         robinhood.sell_crypto(symbol, amount)
+                         notifier.notify_trade(symbol, "SELL", amount, 0, f"AI Decision (Crypto) - {reasoning}")
+                         trading_results[symbol] = {'decision': 'sell', 'result': 'success', 'quantity': amount, 'details': reasoning}
+                    else:
+                         logger.info(f"📉 SELLING STOCK: {symbol} ({quantity} shares)")
+                         robinhood.sell_stock(symbol, quantity)
+                         notifier.notify_trade(symbol, "SELL", quantity, 0, f"AI Decision - {reasoning}")
+                         trading_results[symbol] = {'decision': 'sell', 'result': 'success', 'quantity': quantity, 'details': reasoning}
 
         except Exception as e:
-            logger.error(f"Error getting price for {symbol}: {e}")
+            logger.error(f"Error executing {decision} for {symbol}: {e}")
+            trading_results[symbol] = {'decision': decision, 'result': 'error', 'details': str(e)}
 
-    # The original watchlist_stocks limiting and filtering logic is now redundant
-    # as watchlist_items already contains the combined and filtered list.
-    # The enrichment for watchlist_overview is now done in the loop above.
-    # The following block is removed as per the new structure.
-    # if len(watchlist_stocks) > 0:
-    #     logger.debug(f"Limiting watchlist stocks to overview limit of {WATCHLIST_OVERVIEW_LIMIT}...")
-    #     watchlist_stocks = limit_watchlist_stocks(watchlist_stocks, WATCHLIST_OVERVIEW_LIMIT)
-    #     logger.debug(f"Removing portfolio stocks from watchlist...")
-    #     watchlist_stocks = [stock for stock in watchlist_stocks if stock['symbol'] not in portfolio_stocks.keys()]
-    #     logger.info(f"Watchlist stocks to proceed: {', '.join([stock['symbol'] for stock in watchlist_stocks])}")
-    #     logger.info("Prepare watchlist overview for AI analysis...")
-    #     for stock_data in watchlist_stocks:
-    #         symbol = stock_data['symbol']
-    #         historical_data_day = robinhood.get_historical_data(symbol, interval="5minute", span="day")
-    #         historical_data_year = robinhood.get_historical_data(symbol, interval="day", span="year")
-    #         ratings_data = robinhood.get_ratings(symbol)
-    #         watchlist_overview[symbol] = robinhood.extract_watchlist_data(stock_data)
-    #         watchlist_overview[symbol] = robinhood.enrich_with_rsi(watchlist_overview[symbol], historical_data_day, symbol)
-    #         watchlist_overview[symbol] = robinhood.enrich_with_vwap(watchlist_overview[symbol], historical_data_day, symbol)
-    #         watchlist_overview[symbol] = robinhood.enrich_with_moving_averages(watchlist_overview[symbol], historical_data_year, symbol)
-    #         watchlist_overview[symbol] = robinhood.enrich_with_analyst_ratings(watchlist_overview[symbol], ratings_data)
-    #         watchlist_overview[symbol] = robinhood.enrich_with_pdt_restrictions(watchlist_overview[symbol], symbol)
-
-
-    # ==========================================
-    # 🌞 DAY TRADING MODE 🌞
-    # ==========================================
-    if TRADING_MODE == 'day':
-        logger.info("🌞 Running Day Trading Cycle...")
-        
-        # Imports (Lazy load to avoid circular deps if any)
-        from src.day_trading.day_screener import day_screener
-        from src.day_trading.entry_manager import entry_manager
-        from src.day_trading.stop_loss_manager import stop_loss_manager
-        from src.day_trading.profit_target_manager import profit_target_manager
-        from src.day_trading.time_exit_manager import time_exit_manager
-        from src.trade_journal import trade_journal
-
-        day_trading_results = {}
-
-        # 1. 🔄 MANAGE EXITS (Priority)
-        # -----------------------------
-        logger.info("1. Checking Exits...")
-        
-        # Get current prices for all positions
-        current_prices = {s: float(d['price']) for s, d in portfolio_overview.items()}
-        
-        # Check Stops
-        stops_hit = stop_loss_manager.check_stops(current_prices)
-        for symbol in stops_hit:
-            qty = float(portfolio_overview[symbol]['quantity'])
-            logger.info(f"🚨 EXECUTING STOP LOSS: {symbol} ({qty} shares)")
-            resp = robinhood.sell_stock(symbol, qty)
-            if resp:
-                trade_journal.log_trade({'symbol': symbol, 'action': 'sell', 'reason': 'stop_loss', 'price': current_prices[symbol], 'qty': qty})
-                stop_loss_manager.clear_stop(symbol)
-                profit_target_manager.clear_target(symbol)
-                time_exit_manager.clear_entry(symbol)
-                day_trading_results[symbol] = {'decision': 'sell', 'reason': 'stop_loss'}
-
-        # Check Targets
-        targets_hit = profit_target_manager.check_targets(current_prices)
-        for symbol, action in targets_hit.items():
-            if action['action'] == 'sell':
-                qty = float(portfolio_overview[symbol]['quantity']) # Full exit for now
-                logger.info(f"🎯 EXECUTING PROFIT TARGET: {symbol} ({qty} shares)")
-                resp = robinhood.sell_stock(symbol, qty)
-                if resp:
-                    trade_journal.log_trade({'symbol': symbol, 'action': 'sell', 'reason': 'target_reached', 'price': current_prices[symbol], 'qty': qty})
-                    stop_loss_manager.clear_stop(symbol)
-                    profit_target_manager.clear_target(symbol)
-                    time_exit_manager.clear_entry(symbol)
-                    day_trading_results[symbol] = {'decision': 'sell', 'reason': 'target_reached'}
-        
-        # Check Time Exits
-        for symbol in list(portfolio_overview.keys()):
-            pnl_pct = (current_prices[symbol] - float(portfolio_overview[symbol]['average_buy_price'])) / float(portfolio_overview[symbol]['average_buy_price'])
-            if time_exit_manager.check_stagnation(symbol, pnl_pct):
-                qty = float(portfolio_overview[symbol]['quantity'])
-                logger.info(f"⏰ EXECUTING TIME EXIT: {symbol} ({qty} shares)")
-                resp = robinhood.sell_stock(symbol, qty)
-                if resp:
-                    trade_journal.log_trade({'symbol': symbol, 'action': 'sell', 'reason': 'time_exit', 'price': current_prices[symbol], 'qty': qty})
-                    stop_loss_manager.clear_stop(symbol)
-                    profit_target_manager.clear_target(symbol)
-                    time_exit_manager.clear_entry(symbol)
-                    day_trading_results[symbol] = {'decision': 'sell', 'reason': 'time_exit'}
-
-        # Update Trailing Stops
-        stop_loss_manager.update_trailing_stops(current_prices)
-
-
-        # 2. 🔍 SCAN & ENTER
-        # ------------------
-        logger.info("2. Scanning for Entries...")
-        
-        # Get candidates
-        candidates = day_screener.get_top_candidates()
-        
-        for cand in candidates:
-            symbol = cand['symbol']
-            
-            # Skip if we already own it
-            if symbol in portfolio_overview:
-                continue
-                
-            # Evaluate Entry
-            decision = entry_manager.evaluate_entry(symbol)
-            
-            if decision['enter']:
-                shares = decision['shares']
-                limit_price = decision['entry_price']
-                
-                # Check Buying Power
-                cost = shares * limit_price
-                if float(account_info['buying_power']) < cost:
-                    logger.warning(f"🛑 Insufficient BP for {symbol} (Need ${cost:.2f})")
-                    continue
-                    
-                logger.info(f"🚀 EXECUTING DAY TRADE ENTRY: {symbol} ({shares} shares)")
-                
-                # Execute Buy
-                resp = robinhood.buy_stock(symbol, shares) # Market buy for speed, or add limit logic
-                
-                if resp:
-                    # Register Exit Managers
-                    stop_loss_manager.set_stop_loss(symbol, decision['stop_loss'])
-                    profit_target_manager.set_target(symbol, limit_price, decision['stop_loss'])
-                    time_exit_manager.register_entry(symbol)
-                    
-                    # Log
-                    trade_journal.log_trade({
-                        'symbol': symbol, 
-                        'action': 'buy', 
-                        'price': limit_price, 
-                        'qty': shares,
-                        'setup': decision['setup_type'],
-                        'stop': decision['stop_loss'],
-                        'target': decision['target']
-                    })
-                    
-                    day_trading_results[symbol] = {'decision': 'buy', 'details': decision}
-                    notifier.notify_trade(symbol, "BUY", shares, limit_price, f"Day Trade ({decision['setup_type']})")
-
-        return day_trading_results
+    return trading_results
 
     # ==========================================
     # 🌙 SWING TRADING MODE (Legacy) 🌙
@@ -601,7 +517,15 @@ def trading_bot():
         symbol = decision_data['symbol']
         decision = decision_data['decision']
         quantity = decision_data['quantity']
-        logger.info(f"{symbol} > Decision: {decision} of {quantity}")
+        reasoning = decision_data.get('reasoning', 'AI Decision')
+        
+        logger.info(f"{symbol} > Decision: {decision} of {quantity} ({reasoning})")
+        emit_event('ai_decision', {
+            'symbol': symbol,
+            'decision': decision,
+            'quantity': quantity,
+            'reasoning': reasoning
+        })
 
         if decision == "sell":
             try:

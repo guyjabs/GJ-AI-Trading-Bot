@@ -3,6 +3,7 @@ from flask_socketio import SocketIO, emit
 import threading
 import time
 import asyncio
+import os
 from datetime import datetime
 
 from config import MODE, LOG_LEVEL, RUN_INTERVAL_SECONDS
@@ -13,7 +14,10 @@ from src.notifications import notifier
 from main import trading_bot, kb, news_agg, trend_analyzer, strategy_researcher
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'alpaca-ai-trading-bot-secret'
+# Security: Load SECRET_KEY from environment variable
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', os.urandom(24).hex())
+if not os.environ.get('SECRET_KEY'):
+    logger.warning('SECRET_KEY not set in environment! Using random key (sessions will not persist across restarts)')
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 # Initialize Alpaca Client (aliased as robinhood for compatibility)
@@ -55,6 +59,17 @@ ws_logger = WebSocketLogger()
 def index():
     return render_template('index.html')
 
+@app.route('/health')
+def health():
+    """Health check endpoint for load balancers"""
+    from src.utils.health import health_check
+    from flask import jsonify
+    
+    health_status = health_check.check_all()
+    status_code = 200 if health_status['status'] in ['healthy', 'degraded'] else 503
+    
+    return jsonify(health_status), status_code
+
 @socketio.on('connect')
 def handle_connect():
     logger.info('Client connected to GUI')
@@ -71,6 +86,19 @@ def handle_disconnect():
 def handle_start_bot(data):
     global bot_thread, bot_running, bot_mode, stop_bot_flag
     
+    # Validate input
+    from src.utils.validators import StartBotSchema, sanitize_input
+    from marshmallow import ValidationError
+    
+    try:
+        validated_data = sanitize_input(data, StartBotSchema())
+    except ValidationError as e:
+        emit('log_message', {
+            'message': f'Invalid input: {str(e)}',
+            'level': 'error'
+        })
+        return
+    
     if bot_running:
         emit('log_message', {
             'message': 'Bot is already running',
@@ -78,7 +106,7 @@ def handle_start_bot(data):
         })
         return
     
-    bot_mode = data.get('mode', 'demo')
+    bot_mode = validated_data['mode']
     stop_bot_flag = False
     bot_running = True
     
@@ -238,9 +266,18 @@ def get_research_summary():
 @app.route('/api/research/force', methods=['POST'])
 def force_research():
     """Manually trigger research with selected sources"""
+    from flask import request
+    from src.utils.validators import ForceResearchSchema, sanitize_input
+    from marshmallow import ValidationError
+    
     try:
-        data = request.json
-        sources = data.get('sources', {})
+        # Validate input
+        try:
+            validated_data = sanitize_input(request.json or {}, ForceResearchSchema())
+        except ValidationError as e:
+            return {'error': f'Invalid input: {str(e)}'}, 400
+        
+        sources = validated_data['sources']
         
         logger.info("🚀 Manual research triggered by user")
         logger.info(f"📋 Selected sources: {', '.join([k for k, v in sources.items() if v])}")
@@ -291,8 +328,6 @@ def force_research():
         
     except Exception as e:
         logger.error(f"❌ Error in manual research: {e}")
-        return {'error': str(e)}, 500
-
         return {'error': str(e)}, 500
 
 @app.route('/api/day-trading/dashboard')
@@ -409,12 +444,46 @@ def run_bot_loop():
                     'level': 'success'
                 })
             
-            if robinhood.is_market_open():
+            # Allow running if market is open OR if we are in demo mode (for testing)
+            if robinhood.is_market_open() or bot_mode == 'demo':
                 run_interval_seconds = RUN_INTERVAL_SECONDS
-                logger.info(f"Market is open, running trading bot in {bot_mode} mode...")
+                logger.info(f"Running trading bot in {bot_mode} mode (Market Open: {robinhood.is_market_open()})...")
                 
-                # Run trading bot
-                trading_results = trading_bot()
+                # Define progress callback for detailed activity log
+                def report_progress(text, percent, status='in-progress'):
+                    # Emit step
+                    socketio.emit('activity_step', {'text': text, 'status': status})
+                    # Update progress
+                    socketio.emit('activity_progress', {'percent': percent})
+                
+                # Define event callback for transparency
+                def emit_decision_event(event_type, data):
+                    socketio.emit('decision_update', {
+                        'type': event_type,
+                        'data': data,
+                        'timestamp': datetime.now().isoformat()
+                    })
+                
+                # Emit activity start
+                socketio.emit('activity_start', {
+                    'title': 'Trading Cycle Started',
+                    'icon': '🔄',
+                    'type': 'info'
+                })
+                
+                # Initial steps
+                report_progress('Checking market status...', 5, 'done')
+                report_progress('Fetching account information...', 10, 'done')
+
+                # Run trading bot with callbacks
+                trading_results = trading_bot(
+                    event_callback=emit_decision_event,
+                    progress_callback=report_progress
+                )
+                
+                # Complete activity
+                socketio.emit('activity_progress', {'percent': 100})
+                socketio.emit('activity_complete', {'success': True})
                 
                 # Emit trade results
                 for symbol, result in trading_results.items():

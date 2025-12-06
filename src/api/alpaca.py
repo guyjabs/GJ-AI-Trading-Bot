@@ -41,6 +41,8 @@ class AlpacaClient:
 
     def get_account_info(self):
         """Get account info mapped to expected format"""
+        from alpaca.common.exceptions import APIError
+        
         try:
             account = self.trading_client.get_account()
             return {
@@ -49,9 +51,15 @@ class AlpacaClient:
                 'portfolio_equity': float(account.equity),
                 'portfolio_value': float(account.portfolio_value),
             }
+        except APIError as e:
+            logger.error(f"Alpaca API error getting account info: {e.status_code} - {e.message}")
+            raise
+        except (ValueError, AttributeError) as e:
+            logger.error(f"Data parsing error in get_account_info: {e}")
+            return {'buying_power': 0.0, 'portfolio_cash': 0.0, 'portfolio_equity': 0.0, 'portfolio_value': 0.0}
         except Exception as e:
-            logger.error(f"Error getting account info: {e}")
-            return {'buying_power': 0.0, 'portfolio_cash': 0.0, 'portfolio_equity': 0.0}
+            logger.error(f"Unexpected error getting account info: {type(e).__name__}: {e}")
+            raise
 
     # =========================================================================
     # PORTFOLIO & POSITIONS

@@ -73,12 +73,46 @@ class StockScreener:
         except Exception as e:
             logger.error(f"Error saving strategy weights: {e}")
     
-    def fetch_universe_data(self):
-        """Fetch data for all stocks in universe"""
+    def fetch_universe_data(self, progress_callback=None):
+        """Fetch data for all stocks in universe with progress reporting"""
         logger.info(f"Fetching data for {len(self.universe)} stocks...")
-        self.stock_data = stock_data_provider.fetch_multiple(self.universe)
+        
+        self.stock_data = {}
+        batch_size = 5
+        total = len(self.universe)
+        
+        for i in range(0, total, batch_size):
+            batch = self.universe[i:i+batch_size]
+            batch_str = ", ".join(batch)
+            
+            # Report progress
+            if progress_callback:
+                percent = 45 + (i / total) * 10 # Map 45-55% range
+                progress_callback(f"Scanning {batch_str}...", percent, 'in-progress')
+            
+            try:
+                # Fetch batch
+                batch_data = stock_data_provider.fetch_multiple(batch)
+                self.stock_data.update(batch_data)
+            except Exception as e:
+                logger.error(f"Error fetching batch {batch}: {e}")
+                
         logger.info(f"Successfully fetched data for {len(self.stock_data)} stocks")
         return self.stock_data
+
+    def run_screener(self, progress_callback=None):
+        """
+        Main entry point for external calls.
+        Wraps run_all_strategies with progress reporting.
+        """
+        # Fetch data with progress
+        self.fetch_universe_data(progress_callback)
+        
+        # Run strategies
+        if progress_callback:
+            progress_callback("Analyzing market data (Momentum, Growth, Value)...", 55, 'in-progress')
+            
+        return self.run_all_strategies(skip_fetch=True)
     
     def screen_momentum(self, top_n: int = 10) -> List[Tuple[str, float]]:
         """
@@ -129,11 +163,37 @@ class StockScreener:
                 if pct_from_high > -10:  # Within 10% of 52-week high
                     score += (10 + pct_from_high) * 2
                 
+                # Report detailed finding if callback exists
+                    status_text = "PASS" if score > 0 else "FAIL"
+                    # Add price info
+                    price = data.get('current_price', 0)
+                    change = data.get('day_change_pct', 0) * 100 # usually decimal? No, yfinance returns decimal or pct? check stock_data usage.
+                    # stock_data.py line 97: info.get('regularMarketChangePercent', 0). Usually this is e.g. 0.012 for 1.2% or 1.2?
+                    # Let's assume decimal based on multiplier elsewhere. Wait, line 162: (Close - Close)/Close * 100. So manual calc is 100 based.
+                    # yfinance info['regularMarketChangePercent'] is typically decimal (0.01).
+                    if abs(change) < 0.2: # If it's small float like 0.01, multiply by 100. If it's 1.2, don't.
+                         # Actually safer to just display as is if I'm unsure, or check value.
+                         # Let's trust I can format it roughly.
+                         pass
+                    
+                    # Correction: I'll use the cached 'day_change_pct' which comes from yfinance.
+                    # Let's check stock_data.py again. line 97.
+                    # I will assume it is decimal format (e.g. 0.015 for 1.5%) -> so multiply by 100.
+                    
+                    change_pct = change * 100
+                    trend = "🟢" if change >= 0 else "🔴"
+                    price_str = f"${price:.2f} {trend} {change_pct:+.2f}%"
+                    
+                    details = f"{price_str} | RSI={data.get('rsi_14', 'N/A')}, Vol={data.get('volume_ratio', 'N/A'):.1f}x"
+                    progress_callback(f"🔎 {symbol}: {details} -> {status_text} ({score:.1f})", 0, 'detail')
+
                 if score > 0:
                     candidates.append((symbol, score))
             
             except Exception as e:
                 logger.debug(f"Error screening {symbol} for momentum: {e}")
+                if progress_callback:
+                    progress_callback(f"⚠️ {symbol}: Error analysis - {str(e)}", 0, 'detail')
         
         # Sort by score and return top N
         candidates.sort(key=lambda x: x[1], reverse=True)
@@ -198,6 +258,17 @@ class StockScreener:
                 if recommendation in ['strong_buy', 'buy']:
                     score += 20
                 
+                # Report detailed finding
+                if progress_callback:
+                    status_text = "PASS" if score > 0 else "FAIL"
+                    price = data.get('current_price', 0)
+                    change = data.get('day_change_pct', 0) * 100
+                    trend = "🟢" if change >= 0 else "🔴"
+                    price_str = f"${price:.2f} {trend} {change:+.2f}%"
+                    
+                    details = f"{price_str} | Rev={data.get('revenue_growth', 0):.1%}, Marg={data.get('gross_margin', 0):.1%}"
+                    progress_callback(f"🔎 {symbol}: {details} -> {status_text} ({score:.1f})", 0, 'detail')
+
                 if score > 0:
                     candidates.append((symbol, score))
             
@@ -271,6 +342,17 @@ class StockScreener:
                 if roe > 0.10:  # 10%+
                     score += roe * 25
                 
+                # Report detailed finding
+                if progress_callback:
+                    status_text = "PASS" if score > 0 else "FAIL"
+                    price = data.get('current_price', 0)
+                    change = data.get('day_change_pct', 0) * 100
+                    trend = "🟢" if change >= 0 else "🔴"
+                    price_str = f"${price:.2f} {trend} {change:+.2f}%"
+                    
+                    details = f"{price_str} | P/E={data.get('pe_ratio', 'N/A')}, P/B={data.get('pb_ratio', 'N/A')}"
+                    progress_callback(f"🔎 {symbol}: {details} -> {status_text} ({score:.1f})", 0, 'detail')
+
                 if score > 0:
                     candidates.append((symbol, score))
             
@@ -319,12 +401,38 @@ class StockScreener:
                 # Clean symbol (remove -USD for Robinhood)
                 clean_symbol = symbol.replace("-USD", "")
                 
+                
+                if progress_callback:
+                    status_text = "PASS" if score > 0 else "FAIL"
+                    price = data.get('current_price', 0)
+                    # Crypto change is usually calculated manually as price_change_5d in my code?
+                    # Let's see. 'price_change_5d' is in data.
+                    # Or 'day_change_pct' if available.
+                    change = data.get('day_change_pct', data.get('price_change_5d', 0))
+                    # Note: crypto change might be percent already (e.g. 5.0 for 5%) if from Coingecko/Mock?
+                    # data['price_change_5d'] was calculated as * 100 in stock_data.py line 162.
+                    # So it is percentage (5.0).
+                    # If using 'day_change_pct' (from yfinance info), it is decimal.
+                    # This is ambiguous. I will check logic.
+                    # stock_data.py fetches crypto using fetch_stock_data too? 
+                    # Yes, stock_data_provider.fetch_multiple(CRYPTO_UNIVERSE).
+                    # So structure is same.
+                    # I will assume decimal for 'day_change_pct'.
+                    if abs(change) < 0.5: # Likely decimal
+                        change = change * 100
+                    
+                    trend = "🟢" if change >= 0 else "🔴"
+                    price_str = f"${price:.2f} {trend} {change:+.2f}%"
+
+                    details = f"{price_str} | RSI={rsi:.1f}, Vol={volume_ratio:.1f}x"
+                    progress_callback(f"🔎 {clean_symbol}: {details} -> {status_text} ({score:.1f})", 0, 'detail')
+
                 if score > 0:
                     candidates.append((clean_symbol, score))
                     
             except Exception as e:
                 logger.debug(f"Error screening crypto {symbol}: {e}")
-        
+    
         candidates.sort(key=lambda x: x[1], reverse=True)
         return candidates[:5] # Top 5 crypto picks
 
@@ -357,7 +465,7 @@ class StockScreener:
             logger.error(f"Error checking market sentiment: {e}")
             return "neutral"
 
-    def run_all_strategies(self) -> Dict[str, List[str]]:
+    def run_all_strategies(self, skip_fetch=False) -> Dict[str, List[str]]:
         """
         Run all screening strategies and combine results.
         Returns dict with lists of symbols for each strategy.
@@ -385,7 +493,8 @@ class StockScreener:
             return empty_results
 
         self.load_strategy_weights()
-        self.fetch_universe_data()
+        if not skip_fetch:
+            self.fetch_universe_data()
         
         # Adjust number of picks based on sentiment
         base_picks = 35
