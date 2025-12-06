@@ -10,13 +10,38 @@ let researchInterval = null;
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
-    initializeCharts();
-    setupEventListeners();
-    requestInitialData();
+    console.log('DOM loaded, initializing...');
+
+    // Setup listeners FIRST so buttons work even if charts fail
+    try {
+        setupEventListeners();
+        console.log('Event listeners setup');
+    } catch (e) {
+        console.error('Error setting up event listeners:', e);
+    }
+
+    // Initialize charts
+    try {
+        if (typeof Chart !== 'undefined') {
+            initializeCharts();
+        } else {
+            console.error('Chart.js not loaded');
+        }
+    } catch (e) {
+        console.error('Error initializing charts:', e);
+    }
+
+    // Request initial data
+    try {
+        requestInitialData();
+    } catch (e) {
+        console.error('Error requesting initial data:', e);
+    }
 });
 
 // Setup event listeners
 function setupEventListeners() {
+    console.log('Setting up event listeners...');
     // Bot control buttons
     document.getElementById('startBtn').addEventListener('click', startBot);
     document.getElementById('stopBtn').addEventListener('click', stopBot);
@@ -64,6 +89,38 @@ function setupEventListeners() {
     socket.on('portfolio_update', handlePortfolioUpdate);
     socket.on('trade_executed', handleTradeExecuted);
     socket.on('bot_status', handleBotStatus);
+    socket.on('decision_update', handleDecisionUpdate);
+
+    // Activity logging events
+    socket.on('activity_start', (data) => {
+        if (window.activityLog) {
+            window.activityLog.addDetailedActivity(data.title, data.icon, data.type);
+        }
+    });
+
+    socket.on('activity_step', (data) => {
+        if (window.activityLog) {
+            window.activityLog.addActivityStep(data.text, data.status);
+        }
+    });
+
+    socket.on('activity_step_update', (data) => {
+        if (window.activityLog) {
+            window.activityLog.updateActivityStep(data.index, data.status, data.text);
+        }
+    });
+
+    socket.on('activity_progress', (data) => {
+        if (window.activityLog) {
+            window.activityLog.updateActivityProgress(data.percent);
+        }
+    });
+
+    socket.on('activity_complete', (data) => {
+        if (window.activityLog) {
+            window.activityLog.completeActivity(data.success);
+        }
+    });
 }
 
 // Switch between views
@@ -98,16 +155,6 @@ function switchView(view) {
             researchInterval = null;
         }
     }
-    loadResearchData();
-    // Auto-refresh every 30 seconds
-    if (researchInterval) clearInterval(researchInterval);
-    researchInterval = setInterval(loadResearchData, 30000);
-} else {
-    if (researchInterval) {
-        clearInterval(researchInterval);
-        researchInterval = null;
-    }
-}
 }
 
 // Load Day Trading Data
@@ -166,25 +213,27 @@ function updateScannerList(elementId, items) {
     `).join('');
 }
 
-try {
-    // Fetch summary
-    const summary = await fetch('/api/research/summary').then(r => r.json());
-    updateResearchSummary(summary);
+// Load research data
+async function loadResearchData() {
+    try {
+        // Fetch summary
+        const summary = await fetch('/api/research/summary').then(r => r.json());
+        updateResearchSummary(summary);
 
-    // Fetch predictions
-    const predictions = await fetch('/api/research/predictions').then(r => r.json());
-    updatePredictions(predictions.predictions || []);
+        // Fetch predictions
+        const predictions = await fetch('/api/research/predictions').then(r => r.json());
+        updatePredictions(predictions.predictions || []);
 
-    // Fetch trends
-    const trends = await fetch('/api/research/trends').then(r => r.json());
-    updateTrends(trends.trends || []);
+        // Fetch trends
+        const trends = await fetch('/api/research/trends').then(r => r.json());
+        updateTrends(trends.trends || []);
 
-    // Fetch news
-    const news = await fetch('/api/research/news').then(r => r.json());
-    updateNews(news.articles || []);
-} catch (error) {
-    console.error('Error loading research data:', error);
-}
+        // Fetch news
+        const news = await fetch('/api/research/news').then(r => r.json());
+        updateNews(news.articles || []);
+    } catch (error) {
+        console.error('Error loading research data:', error);
+    }
 }
 
 // Update research summary
@@ -428,6 +477,66 @@ function handleBotStatus(data) {
 
     if (data.mode) {
         setMode(data.mode);
+    }
+}
+
+// Handle decision update
+function handleDecisionUpdate(event) {
+    const feed = document.getElementById('decisionFeed');
+    const card = document.createElement('div');
+    const time = new Date(event.timestamp).toLocaleTimeString();
+
+    let icon = 'ℹ️';
+    let title = 'Update';
+    let body = '';
+    let typeClass = 'info';
+
+    if (event.type === 'screener') {
+        icon = '🔍';
+        title = 'Screener Results';
+        typeClass = 'screener';
+        const stocks = event.data.stocks.join(', ') || 'None';
+        const crypto = event.data.crypto.join(', ') || 'None';
+        body = `
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <div class="tag">Stocks: ${stocks}</div>
+                <div class="tag">Crypto: ${crypto}</div>
+            </div>
+            <div style="margin-top: 5px; font-size: 0.9em; color: var(--text-muted);">
+                Scanned ${event.data.count} assets
+            </div>
+        `;
+    } else if (event.type === 'risk_check') {
+        icon = '🛡️';
+        title = 'Risk Check';
+        typeClass = 'risk';
+        body = `Checking portfolio health for ${event.data.portfolio_size} positions...`;
+    } else if (event.type === 'ai_decision') {
+        icon = '🤖';
+        title = `AI Analysis: ${event.data.symbol}`;
+        const decision = event.data.decision.toUpperCase();
+        typeClass = decision === 'BUY' ? 'success' : (decision === 'SELL' ? 'warning' : 'neutral');
+        body = `
+            <div style="font-weight: bold; margin-bottom: 4px;">${decision} ${event.data.quantity} shares</div>
+            <div style="font-style: italic; color: var(--text-muted);">"${event.data.reasoning}"</div>
+        `;
+    }
+
+    card.className = `decision-card ${typeClass}`;
+    card.innerHTML = `
+        <div class="card-header">
+            <span class="icon">${icon}</span>
+            <span class="title">${title}</span>
+            <span class="time">${time}</span>
+        </div>
+        <div class="card-body">${body}</div>
+    `;
+
+    feed.insertBefore(card, feed.firstChild);
+
+    // Keep max 50 cards
+    while (feed.children.length > 50) {
+        feed.removeChild(feed.lastChild);
     }
 }
 

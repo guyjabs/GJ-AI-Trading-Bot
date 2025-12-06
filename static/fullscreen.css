@@ -1,0 +1,68 @@
+/* Detailed Findings */
+.activity-body .step.detail {
+    color: var(--text-muted);
+    font-size: 11px;
+    /* Smaller font for details */
+    font-family: var(--font-mono);
+    padding: 2px 0 2px 14px;
+    /* Indent more */
+    border-left: 1px solid var(--border-color);
+    margin-left: 6px;
+    opacity: 0.9;
+}
+
+.activity-body .step.detail .step-icon {
+    font-size: 10px;
+    width: 14px;
+    opacity: 0.7;
+}
+
+/* Full Screen Activity Log */
+.activity-sidebar.fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    background: var(--bg-primary);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+}
+
+.activity-sidebar.fullscreen .activity-log-content {
+    flex: 1;
+    max-height: none;
+    height: auto !important;
+}
+
+.activity-sidebar.fullscreen .sidebar-header {
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+    background: var(--bg-secondary);
+    /* Highlight header */
+    padding: 15px;
+    border-radius: 4px 4px 0 0;
+}
+
+/* Maximize Button */
+.maximize-btn {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 4px 8px;
+    font-size: 16px;
+    margin-left: auto;
+    transition: all 0.2s;
+}
+
+.maximize-btn:hover {
+    color: var(--accent-primary);
+    background: var(--bg-tertiary);
+    border-color: var(--accent-primary);
+}
