@@ -170,3 +170,5 @@ data/knowledge_base/
 data/research_archive/
 data/screening_results.json
 data/performance_history.json
+data/trade_journal.db
+.coverage 2
