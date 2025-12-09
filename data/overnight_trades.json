@@ -1,0 +1,173 @@
+[
+    {
+        "symbol": "LLY",
+        "action": "SELL",
+        "quantity": 1,
+        "price": 0,
+        "asset": "STOCK",
+        "reason": "Underperforming, high average buy price",
+        "timestamp": "2025-12-08T10:58:04.723849"
+    },
+    {
+        "symbol": "UPS",
+        "action": "SELL",
+        "quantity": 1,
+        "price": 0,
+        "asset": "STOCK",
+        "reason": "Stable price, realization of small profit",
+        "timestamp": "2025-12-08T10:58:04.769115"
+    },
+    {
+        "symbol": "AVGO",
+        "action": "SELL",
+        "quantity": 1.0,
+        "price": 0,
+        "asset": "STOCK",
+        "reason": "Reducing losses near average buy price",
+        "timestamp": "2025-12-08T12:26:10.888021"
+    },
+    {
+        "symbol": "LLY",
+        "action": "SELL",
+        "quantity": 1.0,
+        "price": 0,
+        "asset": "STOCK",
+        "reason": "High average buy price, minor loss",
+        "timestamp": "2025-12-08T12:26:10.928778"
+    },
+    {
+        "symbol": "AMD",
+        "action": "BUY",
+        "quantity": 1.0,
+        "price": 219.61,
+        "asset": "STOCK",
+        "reason": "RSI low, potential for growth",
+        "timestamp": "2025-12-08T12:26:10.977185"
+    },
+    {
+        "symbol": "ADBE",
+        "action": "BUY",
+        "quantity": 1.0,
+        "price": 339.785,
+        "asset": "STOCK",
+        "reason": "Positive momentum, RSI favorable",
+        "timestamp": "2025-12-08T12:26:11.021845"
+    },
+    {
+        "symbol": "LLY",
+        "action": "SELL",
+        "quantity": 1,
+        "price": 0,
+        "asset": "STOCK",
+        "reason": "High price, decrease in average buy price",
+        "timestamp": "2025-12-08T13:08:23.356933"
+    },
+    {
+        "symbol": "AVGO",
+        "action": "SELL",
+        "quantity": 1,
+        "price": 0,
+        "asset": "STOCK",
+        "reason": "Current price below average buy price",
+        "timestamp": "2025-12-08T13:08:23.404516"
+    },
+    {
+        "symbol": "NVDA",
+        "action": "BUY",
+        "quantity": 1,
+        "price": 186.355,
+        "asset": "STOCK",
+        "reason": "Uptrend potential + RSI normal",
+        "timestamp": "2025-12-08T13:08:23.449888"
+    },
+    {
+        "symbol": "LLY",
+        "action": "SELL",
+        "quantity": 1,
+        "price": 0,
+        "asset": "STOCK",
+        "reason": "High average buy price; limit loss",
+        "timestamp": "2025-12-08T13:29:45.892726"
+    },
+    {
+        "symbol": "AVGO",
+        "action": "SELL",
+        "quantity": 1,
+        "price": 0,
+        "asset": "STOCK",
+        "reason": "High average buy price; limit loss",
+        "timestamp": "2025-12-08T13:29:45.944652"
+    },
+    {
+        "symbol": "QCOM",
+        "action": "BUY",
+        "quantity": 1,
+        "price": 174.64,
+        "asset": "STOCK",
+        "reason": "RSI low; potential rebound",
+        "timestamp": "2025-12-08T13:29:45.987656"
+    },
+    {
+        "symbol": "CRM",
+        "action": "BUY",
+        "quantity": 1.0,
+        "price": 257.36,
+        "asset": "STOCK",
+        "reason": "Low RSI indicates potential recovery",
+        "timestamp": "2025-12-08T13:40:59.880909"
+    },
+    {
+        "symbol": "RTX",
+        "action": "BUY",
+        "quantity": 1.0,
+        "price": 170.87,
+        "asset": "STOCK",
+        "reason": "Stable price and current price below VWAP",
+        "timestamp": "2025-12-08T13:40:59.923870"
+    },
+    {
+        "symbol": "FIVE",
+        "action": "BUY",
+        "quantity": 1.0,
+        "price": 176.2,
+        "asset": "STOCK",
+        "reason": "Solid price performance amid stable RSI",
+        "timestamp": "2025-12-08T13:40:59.970258"
+    },
+    {
+        "symbol": "PRIM",
+        "action": "BUY",
+        "quantity": 1.0,
+        "price": 134.52,
+        "asset": "STOCK",
+        "reason": "RSI extremely low, potential for rebound",
+        "timestamp": "2025-12-09T08:58:01.866476"
+    },
+    {
+        "symbol": "LLY",
+        "action": "SELL",
+        "quantity": 1,
+        "price": 0,
+        "asset": "STOCK",
+        "reason": "High average buy price, current loss",
+        "timestamp": "2025-12-09T12:37:43.751279"
+    },
+    {
+        "symbol": "FIVE",
+        "action": "SELL",
+        "quantity": 1,
+        "price": 0,
+        "asset": "STOCK",
+        "reason": "Current loss, consider reallocating funds",
+        "timestamp": "2025-12-09T12:37:43.794771"
+    },
+    {
+        "symbol": "ADBE",
+        "action": "BUY",
+        "quantity": 1,
+        "price": 0,
+        "asset": "STOCK",
+        "reason": "Potential growth, below average buy price",
+        "timestamp": "2025-12-09T12:37:43.836648"
+    }
+]

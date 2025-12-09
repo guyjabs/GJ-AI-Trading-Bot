@@ -1,0 +1,109 @@
+[96m[2025-12-07 17:58:36] [92m[INFO][0m    Loaded strategy weights: {'momentum': 0.547945205479452, 'growth': 0.22602739726027396, 'value': 0.22602739726027396}
+[96m[2025-12-07 17:58:36] [92m[INFO][0m    Knowledge base initialized
+[96m[2025-12-07 17:58:36] [92m[INFO][0m    📁 Research archiver initialized
+[96m[2025-12-07 17:58:36] [92m[INFO][0m    Alpaca client initialized (paper trading)
+[96m[2025-12-07 17:58:36] [92m[INFO][0m    Initializing Research Bot components...
+[96m[2025-12-07 17:58:36] [92m[INFO][0m    Knowledge base initialized
+[96m[2025-12-07 17:58:36] [92m[INFO][0m    📁 Research archiver initialized
+[96m[2025-12-07 17:58:37] [92m[INFO][0m    Loaded 5 watchlist items and 1 alerts
+============================================================
+🤖 Robinhood AI Trading Bot - Web GUI
+============================================================
+Opening GUI at: http://localhost:5003
+Press Ctrl+C to stop the server
+============================================================
+[96m[2025-12-07 17:58:37] [92m[INFO][0m    🚀 Starting GUI server on port 5003
+ * Serving Flask app 'gui'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5003
+ * Running on http://192.168.1.189:5003
+[33mPress CTRL+C to quit[0m
+127.0.0.1 - - [07/Dec/2025 17:58:48] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 17:58:48] "GET /static/fullscreen.css HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 17:58:48] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [07/Dec/2025 17:58:48] "[36mGET /static/activity-log.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [07/Dec/2025 17:58:48] "[36mGET /static/test.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [07/Dec/2025 17:58:48] "GET /static/app.js?v=4 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 17:58:48] "GET /api/debug_log?msg=TEST_JS_LOADED HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 17:58:48] "GET /api/debug_log?msg=DOMContentLoaded HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 17:58:48] "GET /api/debug_log?msg=setupEventListeners_Start HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 17:58:48] "GET /socket.io/?EIO=4&transport=polling&t=Phx2W7q HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 17:58:48] "GET /api/debug_log?msg=WINDOW_LOADED HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 17:58:48] "POST /socket.io/?EIO=4&transport=polling&t=Phx2W8C&sid=C6aT-xA0WM_e9G9YAAAA HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 17:58:48] "GET /socket.io/?EIO=4&transport=polling&t=Phx2W8C.0&sid=C6aT-xA0WM_e9G9YAAAA HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 17:58:48] "GET /api/status/data HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 17:59:03] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 17:59:09] "GET /api/debug_log?msg=switchView_strategy HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 17:59:09] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 17:59:09] "GET /api/strategy/history HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:00:28] "GET /socket.io/?EIO=4&transport=websocket&sid=C6aT-xA0WM_e9G9YAAAA HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:00:28] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:00:28] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [07/Dec/2025 18:00:28] "[36mGET /static/test.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [07/Dec/2025 18:00:28] "[36mGET /static/fullscreen.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [07/Dec/2025 18:00:28] "[36mGET /static/activity-log.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [07/Dec/2025 18:00:28] "[36mGET /static/app.js?v=4 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [07/Dec/2025 18:00:28] "GET /api/debug_log?msg=TEST_JS_LOADED HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:00:28] "GET /socket.io/?EIO=4&transport=polling&t=Phx2uej HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:00:28] "GET /api/debug_log?msg=DOMContentLoaded HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:00:28] "GET /api/debug_log?msg=setupEventListeners_Start HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:00:28] "GET /api/debug_log?msg=WINDOW_LOADED HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:00:28] "POST /socket.io/?EIO=4&transport=polling&t=Phx2ues&sid=EuqaJE_ncf8JT4F3AAAC HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:00:28] "GET /socket.io/?EIO=4&transport=polling&t=Phx2uet&sid=EuqaJE_ncf8JT4F3AAAC HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:00:29] "GET /api/status/data HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:01:58] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:01:58] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [07/Dec/2025 18:01:58] "[36mGET /static/fullscreen.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [07/Dec/2025 18:01:58] "[36mGET /static/app.js?v=4 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [07/Dec/2025 18:01:58] "[36mGET /static/test.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [07/Dec/2025 18:01:58] "[36mGET /static/activity-log.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [07/Dec/2025 18:01:58] "GET /api/debug_log?msg=TEST_JS_LOADED HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:01:58] "GET /api/debug_log?msg=DOMContentLoaded HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:01:58] "GET /socket.io/?EIO=4&transport=polling&t=Phx3ETi HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:01:58] "GET /api/debug_log?msg=setupEventListeners_Start HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:01:58] "POST /socket.io/?EIO=4&transport=polling&t=Phx3EUM&sid=M_7vWCYmsBDQb5b7AAAE HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:01:58] "GET /api/debug_log?msg=WINDOW_LOADED HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:01:58] "GET /socket.io/?EIO=4&transport=polling&t=Phx3EUN&sid=M_7vWCYmsBDQb5b7AAAE HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:01:58] "GET /socket.io/?EIO=4&transport=polling&t=Phx3EVH&sid=M_7vWCYmsBDQb5b7AAAE HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:01:58] "GET /api/status/data HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:02:04] "GET /api/debug_log?msg=switchView_strategy HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:02:04] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:02:04] "GET /api/strategy/history HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:02:20] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:02:20] "[36mGET /static/fullscreen.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [07/Dec/2025 18:02:20] "GET /static/style.css HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:02:21] "[36mGET /static/activity-log.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [07/Dec/2025 18:02:21] "[36mGET /static/test.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [07/Dec/2025 18:02:21] "[36mGET /static/app.js?v=4 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [07/Dec/2025 18:02:21] "GET /api/debug_log?msg=TEST_JS_LOADED HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:02:21] "GET /api/debug_log?msg=DOMContentLoaded HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:02:21] "GET /socket.io/?EIO=4&transport=polling&t=Phx3K1q HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:02:21] "GET /api/debug_log?msg=setupEventListeners_Start HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:02:21] "GET /api/debug_log?msg=WINDOW_LOADED HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:02:21] "POST /socket.io/?EIO=4&transport=polling&t=Phx3K2R&sid=7EJfN7Mg7wHkP-MaAAAG HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:02:21] "GET /socket.io/?EIO=4&transport=polling&t=Phx3K2S&sid=7EJfN7Mg7wHkP-MaAAAG HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:02:21] "GET /api/status/data HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:02:27] "GET /api/debug_log?msg=switchView_strategy HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:02:27] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:02:27] "GET /api/strategy/history HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:02:53] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:02:53] "[36mGET /static/activity-log.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [07/Dec/2025 18:02:53] "[36mGET /static/test.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [07/Dec/2025 18:02:53] "[36mGET /static/app.js?v=4 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [07/Dec/2025 18:02:53] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [07/Dec/2025 18:02:53] "[36mGET /static/fullscreen.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [07/Dec/2025 18:02:53] "GET /api/debug_log?msg=TEST_JS_LOADED HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:02:53] "GET /api/debug_log?msg=DOMContentLoaded HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:02:53] "GET /api/debug_log?msg=setupEventListeners_Start HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:02:53] "GET /socket.io/?EIO=4&transport=polling&t=Phx3Rvv HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:02:53] "GET /api/debug_log?msg=WINDOW_LOADED HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:02:53] "POST /socket.io/?EIO=4&transport=polling&t=Phx3Rwh&sid=n0pHjU4q__78K4B-AAAI HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:02:53] "GET /socket.io/?EIO=4&transport=polling&t=Phx3Rwi&sid=n0pHjU4q__78K4B-AAAI HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:02:53] "GET /api/status/data HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:02:59] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:02:59] "GET /api/debug_log?msg=switchView_strategy HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:02:59] "GET /api/strategy/history HTTP/1.1" 200 -
+/Users/guyjaber/.pyenv/versions/3.10.12/lib/python3.10/multiprocessing/resource_tracker.py:224: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '

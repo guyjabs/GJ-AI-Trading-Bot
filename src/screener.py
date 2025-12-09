@@ -7,9 +7,11 @@ from typing import List, Dict, Tuple
 from datetime import datetime
 import json
 import os
+import yfinance as yf
 
 from .data.stock_data import stock_data_provider
 from .utils import logger
+from .config_manager import config_manager
 
 # Stock universes
 SP500_SYMBOLS = [
@@ -31,8 +33,8 @@ DEFAULT_UNIVERSE = SP500_SYMBOLS + RUSSELL_2000_SAMPLE
 
 # Crypto Universe
 CRYPTO_UNIVERSE = [
-    "BTC-USD", "ETH-USD", "SOL-USD", "DOGE-USD", "SHIB-USD", 
-    "LTC-USD", "BCH-USD", "ETC-USD", "AVAX-USD", "LINK-USD"
+    "BTC/USD", "ETH/USD", "SOL/USD", "DOGE/USD", "SHIB/USD", 
+    "LTC/USD", "BCH/USD", "ETC/USD", "AVAX/USD", "LINK/USD"
 ]
 
 class StockScreener:
@@ -72,6 +74,39 @@ class StockScreener:
             logger.info(f"Saved strategy weights: {self.strategy_weights}")
         except Exception as e:
             logger.error(f"Error saving strategy weights: {e}")
+
+    def log_strategy_decision(self, action: str, reason: str):
+        """
+        Log a strategy decision to history.
+        
+        Args:
+            action: 'updated' or 'kept'
+            reason: Explanation for the decision
+        """
+        history_file = "data/strategy_history.json"
+        try:
+            history = []
+            if os.path.exists(history_file):
+                with open(history_file, 'r') as f:
+                    history = json.load(f)
+            
+            entry = {
+                "date": datetime.now().isoformat(),
+                "action": action,
+                "reason": reason,
+                "weights": self.strategy_weights.copy()
+            }
+            
+            # Prepend to keep newest first, or append? Let's append and sort in UI or just append.
+            # User asked for a track.
+            history.append(entry)
+            
+            with open(history_file, 'w') as f:
+                json.dump(history, f, indent=2)
+                
+            logger.info(f"Logged strategy decision: {action}")
+        except Exception as e:
+            logger.error(f"Error logging strategy history: {e}")
     
     def fetch_universe_data(self, progress_callback=None):
         """Fetch data for all stocks in universe with progress reporting"""
@@ -100,6 +135,41 @@ class StockScreener:
         logger.info(f"Successfully fetched data for {len(self.stock_data)} stocks")
         return self.stock_data
 
+    def calculate_industry_averages(self) -> Dict[str, Dict]:
+        """Calculate average metrics per industry for relative comparison"""
+        industry_data = {}
+        
+        for symbol, data in self.stock_data.items():
+            ind = data.get('industry', 'Unknown')
+            if ind == 'Unknown': continue
+            
+            if ind not in industry_data:
+                industry_data[ind] = {'pe': [], 'peg': [], 'fcf_share': []}
+            
+            # P/E
+            pe = data.get('pe_ratio', 0)
+            if pe > 0: industry_data[ind]['pe'].append(pe)
+            
+            # PEG
+            peg = data.get('peg_ratio', 0)
+            if peg > 0: industry_data[ind]['peg'].append(peg)
+            
+            # Cashflow per share (Free Cash Flow / Shares Outstanding)
+            fcf = data.get('free_cash_flow', 0)
+            shares = data.get('shares_outstanding', 0)
+            if fcf and shares:
+                industry_data[ind]['fcf_share'].append(fcf / shares)
+
+        # Compute averages
+        averages = {}
+        for ind, metrics in industry_data.items():
+            averages[ind] = {
+                'avg_pe': sum(metrics['pe']) / len(metrics['pe']) if metrics['pe'] else 20,
+                'avg_peg': sum(metrics['peg']) / len(metrics['peg']) if metrics['peg'] else 2,
+                'avg_fcf_share': sum(metrics['fcf_share']) / len(metrics['fcf_share']) if metrics['fcf_share'] else 0
+            }
+        return averages
+
     def run_screener(self, progress_callback=None):
         """
         Main entry point for external calls.
@@ -112,9 +182,9 @@ class StockScreener:
         if progress_callback:
             progress_callback("Analyzing market data (Momentum, Growth, Value)...", 55, 'in-progress')
             
-        return self.run_all_strategies(skip_fetch=True)
+        return self.run_all_strategies(skip_fetch=True, progress_callback=progress_callback)
     
-    def screen_momentum(self, top_n: int = 10) -> List[Tuple[str, float]]:
+    def screen_momentum(self, top_n: int = 10, progress_callback=None) -> List[Tuple[str, float]]:
         """
         Momentum strategy: Find stocks with strong recent price action.
         
@@ -129,60 +199,71 @@ class StockScreener:
             List of (symbol, score) tuples, sorted by score descending
         """
         candidates = []
+        metrics = config_manager.get_metrics().get('momentum', {})
+        min_gain = metrics.get('min_top_gainers_pct', 5)
+        min_rel_vol = metrics.get('min_volume_ratio', 1.5)
         
         for symbol, data in self.stock_data.items():
             try:
                 score = 0
                 
                 # Quality filters
-                if data.get('market_cap', 0) < 1_000_000_000:  # $1B minimum
+                market_cap = data.get('market_cap', 0)
+                if market_cap < 1_000_000_000:  # $1B minimum
                     continue
-                if data.get('avg_volume', 0) < 100_000:  # Minimum liquidity
+                
+                # DATA CHECK: Ensure volume is higher than average (Previous Month proxy)
+                # We use volume_ratio which is Vol / AvgVol. If > 1.0, it's higher than average.
+                volume_ratio = data.get('volume_ratio', 0)
+                if volume_ratio <= 1.0: 
+                    continue # Strict rule: Volume MUST be higher than average
+                
+                # Strict rule: Relative Volume > 1.5 (or config)
+                if volume_ratio <= min_rel_vol:
                     continue
+
                 if data.get('current_price', 0) < 5:  # Avoid penny stocks
                     continue
                 
                 # Momentum signals
                 price_change_5d = data.get('price_change_5d', 0)
-                if price_change_5d > 5:
-                    score += price_change_5d * 2  # Weight recent momentum heavily
                 
-                # Volume surge
-                volume_ratio = data.get('volume_ratio', 0)
-                if volume_ratio > 2:
-                    score += (volume_ratio - 1) * 10
+                # Strict rule: Price went up > 5% (or config)
+                if price_change_5d < min_gain:
+                    continue 
+
+                # If passed filters, score it high!
+                score += price_change_5d * 5
+                score += (volume_ratio - 1) * 20
                 
                 # Price vs moving averages
                 current_price = data.get('current_price', 0)
                 ma_50 = data.get('50day_avg', 0)
                 if current_price > ma_50 and ma_50 > 0:
-                    score += ((current_price - ma_50) / ma_50) * 100
+                    score += ((current_price - ma_50) / ma_50) * 50
                 
                 # Distance from 52-week high (closer is better for momentum)
                 pct_from_high = data.get('pct_from_52week_high', -100)
                 if pct_from_high > -10:  # Within 10% of 52-week high
                     score += (10 + pct_from_high) * 2
-                
+
+                # RSI Check (Enabled)
+                # target: 50-70 (strong trend but not overbought)
+                rsi = data.get('rsi_14', 50)
+                if 50 <= rsi <= 70:
+                    score += 15  # Good momentum zone
+                elif rsi > 70:
+                    score -= (rsi - 70) * 1.5  # Overbought penalty
+                elif rsi < 40:
+                    score -= 10  # Too weak
+
                 # Report detailed finding if callback exists
+                if progress_callback:
                     status_text = "PASS" if score > 0 else "FAIL"
-                    # Add price info
                     price = data.get('current_price', 0)
-                    change = data.get('day_change_pct', 0) * 100 # usually decimal? No, yfinance returns decimal or pct? check stock_data usage.
-                    # stock_data.py line 97: info.get('regularMarketChangePercent', 0). Usually this is e.g. 0.012 for 1.2% or 1.2?
-                    # Let's assume decimal based on multiplier elsewhere. Wait, line 162: (Close - Close)/Close * 100. So manual calc is 100 based.
-                    # yfinance info['regularMarketChangePercent'] is typically decimal (0.01).
-                    if abs(change) < 0.2: # If it's small float like 0.01, multiply by 100. If it's 1.2, don't.
-                         # Actually safer to just display as is if I'm unsure, or check value.
-                         # Let's trust I can format it roughly.
-                         pass
-                    
-                    # Correction: I'll use the cached 'day_change_pct' which comes from yfinance.
-                    # Let's check stock_data.py again. line 97.
-                    # I will assume it is decimal format (e.g. 0.015 for 1.5%) -> so multiply by 100.
-                    
-                    change_pct = change * 100
+                    change = data.get('day_change_pct', 0) * 100 
                     trend = "🟢" if change >= 0 else "🔴"
-                    price_str = f"${price:.2f} {trend} {change_pct:+.2f}%"
+                    price_str = f"${price:.2f} {trend} {change:+.2f}%"
                     
                     details = f"{price_str} | RSI={data.get('rsi_14', 'N/A')}, Vol={data.get('volume_ratio', 'N/A'):.1f}x"
                     progress_callback(f"🔎 {symbol}: {details} -> {status_text} ({score:.1f})", 0, 'detail')
@@ -192,14 +273,12 @@ class StockScreener:
             
             except Exception as e:
                 logger.debug(f"Error screening {symbol} for momentum: {e}")
-                if progress_callback:
-                    progress_callback(f"⚠️ {symbol}: Error analysis - {str(e)}", 0, 'detail')
         
         # Sort by score and return top N
         candidates.sort(key=lambda x: x[1], reverse=True)
         return candidates[:top_n]
     
-    def screen_growth(self, top_n: int = 15) -> List[Tuple[str, float]]:
+    def screen_growth(self, top_n: int = 15, progress_callback=None) -> List[Tuple[str, float]]:
         """
         Growth strategy: Find companies with strong growth metrics.
         
@@ -213,45 +292,49 @@ class StockScreener:
             List of (symbol, score) tuples, sorted by score descending
         """
         candidates = []
+        metrics = config_manager.get_metrics().get('growth', {})
+        trending_industries = metrics.get('trending_industries', [])
+        min_earnings_growth = metrics.get('min_earnings_growth', 10) / 100.0  # Convert to decimal
+        
+        # Calculate industry average earnings growth
+        industry_avgs = self.calculate_industry_averages()
         
         for symbol, data in self.stock_data.items():
             try:
                 score = 0
                 
+                # INDUSTRY CHECK: Must be in specific industry list
+                industry = data.get('industry', 'Unknown')
+                if trending_industries and industry not in trending_industries:
+                    # Optional: Strict exclude? Or just penalty?
+                    # User said "focus on specific industries... Identify stocks in that industry"
+                    # Let's STRICTLY filter for now, or just boost heavily.
+                    # "Identified stocks in THAT industry" implies logic:
+                    # 1. Filter by Trending Industry list -> 2. Find growth > peers
+                    continue 
+
                 # Quality filters
                 if data.get('market_cap', 0) < 500_000_000:  # $500M minimum
                     continue
                 if data.get('current_price', 0) < 5:
                     continue
                 
-                # Revenue growth
+                # Check for latest earnings showing growth (Revenue or Earnings)
                 revenue_growth = data.get('revenue_growth', 0)
-                if revenue_growth > 0.15:  # 15%+
-                    score += revenue_growth * 100
-                
-                # Earnings growth
                 earnings_growth = data.get('earnings_growth', 0)
-                if earnings_growth > 0.10:  # 10%+
-                    score += earnings_growth * 80
                 
-                # Quarterly earnings growth (more recent)
-                quarterly_growth = data.get('earnings_quarterly_growth', 0)
-                if quarterly_growth > 0:
-                    score += quarterly_growth * 60
+                if earnings_growth <= min_earnings_growth and revenue_growth <= 0.10: 
+                    continue # Needs some growth
                 
-                # Profitability margins
-                gross_margin = data.get('gross_margin', 0)
-                if gross_margin > 0.30:  # 30%+
-                    score += gross_margin * 50
+                # Score based on growth
+                score += (earnings_growth * 100) + (revenue_growth * 80)
                 
-                operating_margin = data.get('operating_margin', 0)
-                if operating_margin > 0.15:  # 15%+
-                    score += operating_margin * 40
+                # Forecasted to grow more than peers?
+                # We don't have explicit "forecast" data in this simple provider, using trailing/current growth as proxy.
+                # Or use analyst target price?
+                # Let's compare vs Industry Average growth if available, or just general relative score.
                 
-                # Return on equity
-                roe = data.get('roe', 0)
-                if roe > 0.15:  # 15%+
-                    score += roe * 30
+                score += 50 # Base score for making it through the industry filter
                 
                 # Analyst sentiment
                 recommendation = data.get('recommendation', 'none')
@@ -266,7 +349,7 @@ class StockScreener:
                     trend = "🟢" if change >= 0 else "🔴"
                     price_str = f"${price:.2f} {trend} {change:+.2f}%"
                     
-                    details = f"{price_str} | Rev={data.get('revenue_growth', 0):.1%}, Marg={data.get('gross_margin', 0):.1%}"
+                    details = f"{price_str} | Ind={industry} | EarnGwth={earnings_growth:.1%}"
                     progress_callback(f"🔎 {symbol}: {details} -> {status_text} ({score:.1f})", 0, 'detail')
 
                 if score > 0:
@@ -278,7 +361,7 @@ class StockScreener:
         candidates.sort(key=lambda x: x[1], reverse=True)
         return candidates[:top_n]
     
-    def screen_value(self, top_n: int = 10) -> List[Tuple[str, float]]:
+    def screen_value(self, top_n: int = 10, progress_callback=None) -> List[Tuple[str, float]]:
         """
         Value strategy: Find undervalued stocks with strong fundamentals.
         
@@ -293,6 +376,8 @@ class StockScreener:
             List of (symbol, score) tuples, sorted by score descending
         """
         candidates = []
+        metrics = config_manager.get_metrics().get('value', {})
+        industry_avgs = self.calculate_industry_averages()
         
         for symbol, data in self.stock_data.items():
             try:
@@ -304,43 +389,39 @@ class StockScreener:
                 if data.get('current_price', 0) < 5:
                     continue
                 
-                # Valuation metrics (lower is better, so invert scoring)
+                industry = data.get('industry', 'Unknown')
+                ind_stats = industry_avgs.get(industry, {})
+                avg_pe = ind_stats.get('avg_pe', 20)
+                avg_peg = ind_stats.get('avg_peg', 2)
+                avg_fcf = ind_stats.get('avg_fcf_share', 0)
+                
+                # Valuation metrics (Undervalued vs Peers)
                 pe_ratio = data.get('pe_ratio', 999)
-                if 0 < pe_ratio < 15:
-                    score += (15 - pe_ratio) * 3
+                peg_ratio = data.get('peg_ratio', 999)
                 
-                pb_ratio = data.get('pb_ratio', 999)
-                if 0 < pb_ratio < 2:
-                    score += (2 - pb_ratio) * 20
+                # Check 1: P/E < Industry Average
+                if 0 < pe_ratio < avg_pe:
+                    score += (avg_pe - pe_ratio) * 5
                 
-                ps_ratio = data.get('ps_ratio', 999)
-                if 0 < ps_ratio < 2:
-                    score += (2 - ps_ratio) * 15
+                # Check 2: PEG Ratio (Growth at a Reasonable Price)
+                # Configurable max PEG (usually < 1 or < 2)
+                if 0 < peg_ratio < metrics.get('max_peg_ratio', 2.0):
+                    score += (2.0 - peg_ratio) * 20
+                    
+                # Check 3: Check for stocks undervalued financially compared to peers (Cashflow per share)
+                fcf = data.get('free_cash_flow', 0)
+                shares = data.get('shares_outstanding', 1)
+                fcf_per_share = fcf / shares if shares > 0 else 0
                 
-                # Dividend yield (higher is better)
-                div_yield = data.get('dividend_yield', 0)
-                if div_yield > 0.02:  # 2%+
-                    score += div_yield * 200
+                if fcf_per_share > avg_fcf:
+                    score += 30 # Bonus for being a cash cow vs peers
                 
-                # Financial health
+                # Note: "In value, do not use the good dividends as a metric" -> REMOVED Dividend Logic.
+                
+                # Financial health validation
                 debt_to_equity = data.get('debt_to_equity', 999)
                 if debt_to_equity < 0.5:
-                    score += (0.5 - debt_to_equity) * 20
-                
-                # Free cash flow (positive is good)
-                fcf = data.get('free_cash_flow', 0)
-                if fcf > 0:
-                    score += 20
-                
-                # Profitability
-                profit_margin = data.get('profit_margin', 0)
-                if profit_margin > 0.10:  # 10%+
-                    score += profit_margin * 30
-                
-                # ROE
-                roe = data.get('roe', 0)
-                if roe > 0.10:  # 10%+
-                    score += roe * 25
+                    score += 10
                 
                 # Report detailed finding
                 if progress_callback:
@@ -350,7 +431,7 @@ class StockScreener:
                     trend = "🟢" if change >= 0 else "🔴"
                     price_str = f"${price:.2f} {trend} {change:+.2f}%"
                     
-                    details = f"{price_str} | P/E={data.get('pe_ratio', 'N/A')}, P/B={data.get('pb_ratio', 'N/A')}"
+                    details = f"{price_str} | P/E={pe_ratio:.1f} (Avg {avg_pe:.1f}) | PEG={peg_ratio:.2f}"
                     progress_callback(f"🔎 {symbol}: {details} -> {status_text} ({score:.1f})", 0, 'detail')
 
                 if score > 0:
@@ -362,79 +443,91 @@ class StockScreener:
         candidates.sort(key=lambda x: x[1], reverse=True)
         return candidates[:top_n]
     
-    def screen_crypto(self) -> List[Tuple[str, float]]:
+    def screen_crypto(self, progress_callback=None) -> Dict[str, List[Tuple[str, float]]]:
         """
-        Crypto Strategy: Momentum & Reversal
-        
-        Criteria:
-        - Momentum: Price up > 3% in 24h
-        - Volume: High relative volume
-        - Reversal: RSI < 30 (Oversold bounce)
+        Screen crypto for multiple bots (Moonshot, Conservative, Custom).
+        Returns dict: {'BotName': [(symbol, score), ...]}
         """
-        candidates = []
+        results = {}
         
-        # Fetch crypto data
-        logger.info(f"Fetching data for {len(CRYPTO_UNIVERSE)} crypto assets...")
-        crypto_data = stock_data_provider.fetch_multiple(CRYPTO_UNIVERSE)
+        # Get bot configs
+        metrics_config = config_manager.get_metrics()
+        bots = metrics_config.get('crypto_bots', [])
         
-        for symbol, data in crypto_data.items():
-            try:
-                score = 0
+        # If still old config format, convert on fly or default
+        if not bots and metrics_config.get('crypto'):
+             # Fallback to old single bot if config update failed
+             bots = [{'name': 'Legacy', 'strategy': metrics_config['crypto'].get('strategy'), 'symbols': metrics_config['crypto'].get('symbols')}]
+        
+        for bot in bots:
+            if not bot.get('enabled', True):
+                continue
                 
-                # Momentum
-                price_change = data.get('price_change_5d', 0) # Using 5d as proxy for trend
-                if price_change > 3:
-                    score += price_change * 5
-                
-                # Volume
-                volume_ratio = data.get('volume_ratio', 0)
-                if volume_ratio > 1.5:
-                    score += (volume_ratio - 1) * 20
-                
-                # Reversal (Oversold RSI)
-                rsi = data.get('rsi', 50)
-                if rsi < 30:
-                    score += (30 - rsi) * 5  # Bounce play
-                elif rsi > 70:
-                    score -= (rsi - 70) * 2  # Overbought penalty
-                
-                # Clean symbol (remove -USD for Robinhood)
-                clean_symbol = symbol.replace("-USD", "")
-                
-                
-                if progress_callback:
-                    status_text = "PASS" if score > 0 else "FAIL"
-                    price = data.get('current_price', 0)
-                    # Crypto change is usually calculated manually as price_change_5d in my code?
-                    # Let's see. 'price_change_5d' is in data.
-                    # Or 'day_change_pct' if available.
-                    change = data.get('day_change_pct', data.get('price_change_5d', 0))
-                    # Note: crypto change might be percent already (e.g. 5.0 for 5%) if from Coingecko/Mock?
-                    # data['price_change_5d'] was calculated as * 100 in stock_data.py line 162.
-                    # So it is percentage (5.0).
-                    # If using 'day_change_pct' (from yfinance info), it is decimal.
-                    # This is ambiguous. I will check logic.
-                    # stock_data.py fetches crypto using fetch_stock_data too? 
-                    # Yes, stock_data_provider.fetch_multiple(CRYPTO_UNIVERSE).
-                    # So structure is same.
-                    # I will assume decimal for 'day_change_pct'.
-                    if abs(change) < 0.5: # Likely decimal
-                        change = change * 100
+            bot_name = bot['name']
+            strategy = bot['strategy']
+            universe = bot['symbols']
+            
+            logger.info(f"🤖 Running {bot_name} Bot ({strategy}) on {len(universe)} symbols...")
+            
+            candidates = []
+            
+            # Fetch data for this bot's universe
+            crypto_data = stock_data_provider.fetch_multiple(universe)
+            
+            for symbol, data in crypto_data.items():
+                try:
+                    score = 0
+                    clean_symbol = symbol.replace("/USD", "")
                     
-                    trend = "🟢" if change >= 0 else "🔴"
-                    price_str = f"${price:.2f} {trend} {change:+.2f}%"
-
-                    details = f"{price_str} | RSI={rsi:.1f}, Vol={volume_ratio:.1f}x"
-                    progress_callback(f"🔎 {clean_symbol}: {details} -> {status_text} ({score:.1f})", 0, 'detail')
-
-                if score > 0:
-                    candidates.append((clean_symbol, score))
+                    # --- MOONSHOT STRATEGY ---
+                    if strategy == 'moonshot':
+                        # High Risk, High Reward
+                        price_change = data.get('price_change_5d', 0)
+                        if price_change > 3: score += price_change * 10
+                        if price_change < 0: continue
+                        
+                        volume_ratio = data.get('volume_ratio', 0)
+                        if volume_ratio > 1.2: score += (volume_ratio - 1) * 30
+                        
+                        rsi = data.get('rsi', 50)
+                        if 60 <= rsi <= 85: score += 20 + (rsi - 60)
+                        elif rsi < 50: score -= 20
+                        
+                    # --- CONSERVATIVE STRATEGY ---
+                    elif strategy == 'dip_buy':
+                        # Buy Fear, Sell Greed
+                        rsi = data.get('rsi', 50)
+                        if rsi < 35: score += (35 - rsi) * 5 # Buy the dip
+                        elif rsi > 60: score -= 50 # Avoid heat
+                        
+                        market_cap = data.get('market_cap', 0) # Prefer safety (not available for all, but conceptually)
+                        score += 10 # Base score for blue chips
+                        
+                    # --- CUSTOM STRATEGY ---
+                    elif strategy == 'custom':
+                        # Simple Momentum or MA Crossover (Default)
+                        price = data.get('current_price', 0)
+                        ma50 = data.get('50day_avg', 0)
+                        if price > ma50: score += 20
+                        
+                        rsi = data.get('rsi', 50)
+                        if 40 <= rsi <= 70: score += 10
                     
-            except Exception as e:
-                logger.debug(f"Error screening crypto {symbol}: {e}")
-    
-        candidates.sort(key=lambda x: x[1], reverse=True)
-        return candidates[:5] # Top 5 crypto picks
+                    
+                    # Logging
+                    if progress_callback and score > 0:
+                         progress_callback(f"🤖 {bot_name}: Analyzed {clean_symbol} -> Score {score:.1f}", 0, 'detail')
+
+                    if score > 0:
+                        candidates.append((symbol, score)) # Keep full symbol for execution
+                        
+                except Exception as e:
+                    logger.debug(f"Error screening {symbol} for {bot_name}: {e}")
+            
+            candidates.sort(key=lambda x: x[1], reverse=True)
+            results[bot_name] = candidates[:3] # Top 3 per bot
+            
+        return results
 
     def check_market_sentiment(self) -> str:
         """
@@ -465,7 +558,7 @@ class StockScreener:
             logger.error(f"Error checking market sentiment: {e}")
             return "neutral"
 
-    def run_all_strategies(self, skip_fetch=False) -> Dict[str, List[str]]:
+    def run_all_strategies(self, skip_fetch=False, progress_callback=None) -> Dict[str, List[str]]:
         """
         Run all screening strategies and combine results.
         Returns dict with lists of symbols for each strategy.
@@ -501,18 +594,18 @@ class StockScreener:
         if sentiment == "neutral":
             base_picks = 25 # Be slightly more conservative
             
-        momentum_picks = self.screen_momentum(top_n=int(base_picks * self.strategy_weights['momentum']))
-        growth_picks = self.screen_growth(top_n=int(base_picks * self.strategy_weights['growth']))
-        value_picks = self.screen_value(top_n=int(base_picks * self.strategy_weights['value']))
+        momentum_picks = self.screen_momentum(top_n=int(base_picks * self.strategy_weights['momentum']), progress_callback=progress_callback)
+        growth_picks = self.screen_growth(top_n=int(base_picks * self.strategy_weights['growth']), progress_callback=progress_callback)
+        value_picks = self.screen_value(top_n=int(base_picks * self.strategy_weights['value']), progress_callback=progress_callback)
         
-        # Screen Crypto
-        crypto_picks = self.screen_crypto()
+        # Screen Crypto (Returns dict of lists)
+        crypto_picks = self.screen_crypto(progress_callback=progress_callback)
         
         results = {
             'momentum': [x[0] for x in momentum_picks],
             'growth': [x[0] for x in growth_picks],
             'value': [x[0] for x in value_picks],
-            'crypto': [x[0] for x in crypto_picks],
+            'crypto': {bot: [x[0] for x in picks] for bot, picks in crypto_picks.items()},
             'timestamp': datetime.now().isoformat(),
             'weights': self.strategy_weights,
             'market_sentiment': sentiment

@@ -1,16 +1,29 @@
 // WebSocket connection
-const socket = io();
+let socket = null;
 
 // State
 let botRunning = false;
 let currentMode = 'demo';
-let currentView = 'trading';
+let currentView = 'strategy';
 let portfolioChart = null;
 let researchInterval = null;
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM loaded, initializing...');
+    fetch('/api/debug_log?msg=DOMContentLoaded');
+
+    // Initialize Socket.IO safely
+    if (typeof io !== 'undefined') {
+        socket = io();
+    } else {
+        console.error('Socket.IO not loaded');
+        // Mock socket to prevent errors
+        socket = {
+            on: () => { },
+            emit: () => { }
+        };
+    }
 
     // Setup listeners FIRST so buttons work even if charts fail
     try {
@@ -42,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Setup event listeners
 function setupEventListeners() {
     console.log('Setting up event listeners...');
+    fetch('/api/debug_log?msg=setupEventListeners_Start');
     // Bot control buttons
     document.getElementById('startBtn').addEventListener('click', startBot);
     document.getElementById('stopBtn').addEventListener('click', stopBot);
@@ -54,9 +68,11 @@ function setupEventListeners() {
     });
 
     // View navigation
-    document.querySelectorAll('.nav-tab').forEach(btn => {
+    document.querySelectorAll('.nav-link').forEach(btn => {
         btn.addEventListener('click', (e) => {
-            switchView(e.target.dataset.view);
+            // Check for disabled attribute or class if needed, or get dataset from currentTarget
+            const view = e.currentTarget.dataset.view;
+            if (view) switchView(view);
         });
     });
 
@@ -73,6 +89,18 @@ function setupEventListeners() {
         });
     });
 
+    // Watchlist & Alerts
+    const addStockBtn = document.getElementById('addStockBtn');
+    if (addStockBtn) addStockBtn.addEventListener('click', addToWatchlist);
+
+
+    const createAlertBtn = document.getElementById('createAlertBtn');
+    if (createAlertBtn) createAlertBtn.addEventListener('click', createAlert);
+
+    // Save Config Button
+    const saveConfigBtn = document.getElementById('saveConfigBtn');
+    if (saveConfigBtn) saveConfigBtn.addEventListener('click', saveMetricsConfig);
+
     // Socket events
     socket.on('connect', () => {
         console.log('Connected to server');
@@ -88,6 +116,72 @@ function setupEventListeners() {
     socket.on('log_message', handleLogMessage);
     socket.on('portfolio_update', handlePortfolioUpdate);
     socket.on('trade_executed', handleTradeExecuted);
+    socket.on('research_log', function (data) {
+        const logContainer = document.getElementById('researchLog');
+        if (!logContainer) return;
+
+        // Clear empty state if present
+        const emptyState = logContainer.querySelector('.empty-state');
+        if (emptyState) emptyState.remove();
+
+        const entry = document.createElement('div');
+        entry.style.marginBottom = '8px';
+        entry.style.padding = '8px';
+        entry.style.borderLeft = '3px solid #444';
+        entry.style.background = 'rgba(255,255,255,0.05)';
+
+        const timestamp = new Date().toLocaleTimeString();
+
+        if (data.type === 'info') {
+            entry.style.borderLeftColor = '#3498db';
+            entry.innerHTML = `<span style="color:#aaa">[${timestamp}]</span> ℹ️ ${data.message}`;
+        } else if (data.type === 'success') {
+            entry.style.borderLeftColor = '#2ecc71';
+            entry.innerHTML = `<span style="color:#aaa">[${timestamp}]</span> ✅ ${data.message}`;
+        } else if (data.type === 'article') {
+            entry.style.borderLeftColor = '#9b59b6';
+            entry.innerHTML = `
+                <div style="color:#aaa; font-size:0.8em">[${timestamp}] 📰 Article ${data.index}/${data.total}</div>
+                <div style="color:#fff; font-weight:bold">${data.title}</div>
+                <div style="color:#aaa; font-size:0.9em">Source: ${data.source}</div>
+                <div style="color:#ccc; font-style:italic; margin-top:4px">${data.summary.substring(0, 100)}...</div>
+            `;
+        } else if (data.type === 'progress') {
+            entry.style.borderLeftColor = '#3498db';
+            entry.style.background = 'rgba(52, 152, 219, 0.1)';
+            entry.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span style="color:#fff; font-weight:bold;">${data.message}</span>
+                    <span style="color:#3498db;">${data.percent}%</span>
+                </div>
+                <div style="width:100%; height:4px; background:#333; margin-top:5px; border-radius:2px;">
+                    <div style="width:${data.percent}%; height:100%; background:#3498db; border-radius:2px; transition:width 0.3s ease;"></div>
+                </div>
+            `;
+        } else if (data.type === 'detail') {
+            entry.style.borderLeftColor = '#95a5a6';
+            entry.style.padding = '4px 8px'; // Compact padding
+            entry.innerHTML = `<span style="color:#888; font-family:monospace;">> ${data.message}</span>`;
+        } else if (data.type === 'trend') {
+            entry.style.borderLeftColor = '#e67e22';
+            entry.innerHTML = `
+                <div style="color:#aaa; font-size:0.8em">[${timestamp}] 📈 Trend Detected</div>
+                <div style="color:#fff; font-weight:bold">${data.name}</div>
+                <div style="color:#aaa">Type: ${data.trend_type} | Mentions: ${data.count}</div>
+            `;
+        } else if (data.type === 'insight') {
+            entry.style.borderLeftColor = '#f1c40f';
+            entry.innerHTML = `
+                <div style="color:#aaa; font-size:0.8em">[${timestamp}] 💡 Insight</div>
+                <div style="color:#fff">${data.text}</div>
+                <div style="color:#aaa">Confidence: ${(data.confidence * 100).toFixed(0)}%</div>
+            `;
+        }
+
+        logContainer.appendChild(entry);
+        logContainer.scrollTop = logContainer.scrollHeight;
+    });
+
     socket.on('bot_status', handleBotStatus);
     socket.on('decision_update', handleDecisionUpdate);
 
@@ -124,37 +218,245 @@ function setupEventListeners() {
 }
 
 // Switch between views
+// Switch between views
 function switchView(view) {
-    currentView = view;
+    try {
+        console.log('Switching to view:', view);
+        fetch(`/api/debug_log?msg=switchView_${view}`);
 
-    // Update tab buttons
-    document.querySelectorAll('.nav-tab').forEach(tab => {
-        tab.classList.remove('active');
-    });
-    document.querySelector(`[data-view="${view}"]`).classList.add('active');
+        currentView = view;
 
-    // Show/hide view sections
-    document.getElementById('trading-view').style.display = view === 'trading' ? 'block' : 'none';
-    document.getElementById('day-trading-view').style.display = view === 'day-trading' ? 'block' : 'none';
-    document.getElementById('research-view').style.display = view === 'research' ? 'block' : 'none';
+        // 1. Update tab buttons
+        document.querySelectorAll('.nav-link').forEach(tab => {
+            // Remove active class from all
+            tab.classList.remove('active');
+            // Add active class if it matches the current view
+            if (tab.dataset.view === view) {
+                tab.classList.add('active');
+            }
+        });
 
-    // Load research data if switching to research view
-    if (view === 'research') {
-        loadResearchData();
-        // Auto-refresh every 30 seconds
-        if (researchInterval) clearInterval(researchInterval);
-        researchInterval = setInterval(loadResearchData, 30000);
-    } else if (view === 'day-trading') {
-        loadDayTradingData();
-        // Auto-refresh every 5 seconds for day trading
-        if (researchInterval) clearInterval(researchInterval);
-        researchInterval = setInterval(loadDayTradingData, 5000);
-    } else {
-        if (researchInterval) {
-            clearInterval(researchInterval);
-            researchInterval = null;
+        // 2. Hide ALL views first
+        const allViews = ['strategy', 'trading', 'day-trading', 'research', 'readme', 'metrics', 'scalping', 'learning'];
+        allViews.forEach(v => {
+            const el = document.getElementById(`${v}-view`);
+            if (el) {
+                el.style.display = 'none';
+                el.classList.remove('active'); // Ensure class logic matches strictly
+            }
+        });
+
+        // 3. Show the selected view
+        const targetView = document.getElementById(`${view}-view`);
+        if (targetView) {
+            targetView.style.display = 'block';
+            targetView.classList.add('active');
+        } else {
+            console.error(`View element #${view}-view not found!`);
         }
+
+        // 4. Trigger specific view loaders
+        if (view === 'research') {
+            loadResearchData();
+            if (researchInterval) clearInterval(researchInterval);
+            researchInterval = setInterval(loadResearchData, 30000);
+        } else if (view === 'day-trading') {
+            loadDayTradingData();
+            if (researchInterval) clearInterval(researchInterval);
+            researchInterval = setInterval(loadDayTradingData, 5000);
+        } else if (view === 'scalping') {
+            loadScalpingData();
+            if (researchInterval) clearInterval(researchInterval);
+            researchInterval = setInterval(loadScalpingData, 1000); // Fast polling
+        } else if (view === 'strategy') {
+            loadStrategyHistory();
+        } else if (view === 'metrics') {
+            loadMetricsConfig();
+            if (researchInterval) {
+                clearInterval(researchInterval);
+                researchInterval = null;
+            }
+        }
+    } catch (e) {
+        console.error('Error switching view:', e);
+        fetch(`/api/debug_log?msg=ERROR_switchView_${e.message}`);
     }
+}
+
+
+// Load Strategy History
+function loadStrategyHistory() {
+    fetch('/api/strategy/history')
+        .then(response => response.json())
+        .then(data => {
+            const container = document.getElementById('strategy-timeline');
+            if (!data.history || data.history.length === 0) {
+                container.innerHTML = '<div class="timeline-item">No strategy history yet.</div>';
+                return;
+            }
+
+            container.innerHTML = data.history.map(item => {
+                const date = new Date(item.date).toLocaleString(undefined, {
+                    year: 'numeric', month: 'short', day: 'numeric',
+                    hour: '2-digit', minute: '2-digit'
+                });
+                const weights = item.weights || {};
+                const weightsStr = Object.entries(weights)
+                    .map(([k, v]) => `<span style="margin-right: 15px;"><strong>${k.charAt(0).toUpperCase() + k.slice(1)}:</strong> ${(v * 100).toFixed(0)}%</span>`)
+                    .join('');
+
+                const color = item.action === 'updated' ? 'var(--success)' : 'var(--accent-primary)';
+
+                return `
+                    <div class="timeline-item" style="border-left: 2px solid ${color}; padding-left: 15px; margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px;">
+                            <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-primary);">
+                                <span style="color: ${color}; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px; margin-right: 8px;">${item.action}</span>
+                                Strategy Adjustment
+                            </div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono);">${date}</div>
+                        </div>
+                        <div style="margin-bottom: 6px; color: var(--text-secondary); font-size: 0.85rem; line-height: 1.4;">${item.reason}</div>
+                        <div style="background: var(--bg-tertiary); padding: 6px 10px; border-radius: 4px; font-size: 0.8rem; color: var(--text-primary); border: 1px solid var(--border-color); display: flex;">
+                            ${weightsStr}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Render Chart
+            renderStrategyChart(data.history);
+        })
+        .catch(error => console.error('Error loading strategy history:', error));
+}
+
+let strategyChartInstance = null;
+
+function renderStrategyChart(history) {
+    const ctx = document.getElementById('strategyChart').getContext('2d');
+
+    // Destroy existing chart if it exists
+    if (strategyChartInstance) {
+        strategyChartInstance.destroy();
+    }
+
+    // Process data for chart (reverse to show oldest to newest)
+    const sortedHistory = [...history].reverse();
+    const labels = sortedHistory.map(item => new Date(item.date).toLocaleDateString());
+
+    const momentumData = sortedHistory.map(item => (item.weights?.momentum || 0) * 100);
+    const growthData = sortedHistory.map(item => (item.weights?.growth || 0) * 100);
+    const valueData = sortedHistory.map(item => (item.weights?.value || 0) * 100);
+
+    strategyChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Momentum',
+                    data: momentumData,
+                    borderColor: '#0066cc', // accent-primary
+                    backgroundColor: 'rgba(0, 102, 204, 0.05)',
+                    borderWidth: 2,
+                    pointRadius: 3,
+                    pointHoverRadius: 5,
+                    tension: 0.3,
+                    fill: true
+                },
+                {
+                    label: 'Growth',
+                    data: growthData,
+                    borderColor: '#28a745', // success
+                    backgroundColor: 'rgba(40, 167, 69, 0.05)',
+                    borderWidth: 2,
+                    pointRadius: 3,
+                    pointHoverRadius: 5,
+                    tension: 0.3,
+                    fill: true
+                },
+                {
+                    label: 'Value',
+                    data: valueData,
+                    borderColor: '#fd7e14', // warning
+                    backgroundColor: 'rgba(253, 126, 20, 0.05)',
+                    borderWidth: 2,
+                    pointRadius: 3,
+                    pointHoverRadius: 5,
+                    tension: 0.3,
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+            plugins: {
+                tooltip: {
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    titleColor: '#212529',
+                    bodyColor: '#212529',
+                    borderColor: '#dee2e6',
+                    borderWidth: 1,
+                    padding: 10,
+                    boxPadding: 4,
+                    callbacks: {
+                        afterBody: function (context) {
+                            const index = context[0].dataIndex;
+                            const item = sortedHistory[index];
+                            return `\nReason: ${item.reason}`;
+                        }
+                    }
+                },
+                legend: {
+                    position: 'top',
+                    labels: {
+                        usePointStyle: true,
+                        boxWidth: 8,
+                        font: {
+                            size: 11,
+                            family: "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif"
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        font: {
+                            size: 10
+                        }
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    grid: {
+                        color: '#f1f3f5'
+                    },
+                    ticks: {
+                        font: {
+                            size: 10
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Allocation (%)',
+                        font: {
+                            size: 11
+                        }
+                    }
+                }
+            }
+        }
+    });
 }
 
 // Load Day Trading Data
@@ -353,56 +655,284 @@ function getTimeAgo(date) {
     return `${Math.floor(seconds / 86400)}d ago`;
 }
 
-// Force research with selected sources
-async function forceResearch() {
-    const btn = document.getElementById('forceResearchBtn');
-    const originalText = btn.textContent;
 
+
+// === Custom Bot Asset Management ===
+let customBotAssets = [];
+
+function renderAssetTable() {
+    const tbody = document.getElementById('asset-list-body');
+    const emptyState = document.getElementById('empty-state');
+    const badge = document.getElementById('asset-count');
+
+    tbody.innerHTML = '';
+
+    if (customBotAssets.length === 0) {
+        emptyState.style.display = 'block';
+    } else {
+        emptyState.style.display = 'none';
+        customBotAssets.forEach((symbol, index) => {
+            const row = document.createElement('tr');
+            row.className = 'asset-row';
+            row.innerHTML = `
+                <td><strong>${symbol}</strong></td>
+                <td class="text-right">
+                    <button class="btn-delete" onclick="deleteAsset(${index})" title="Remove">
+                        🗑️
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    badge.innerText = `${customBotAssets.length} Asset${customBotAssets.length !== 1 ? 's' : ''}`;
+}
+
+function handleAssetInput(event) {
+    if (event.key === 'Enter') {
+        addAsset();
+    }
+}
+
+function addAsset() {
+    const input = document.getElementById('new-asset-symbol');
+    let symbol = input.value.trim().toUpperCase();
+
+    if (!symbol) return;
+
+    // Auto-append /USD if missing
+    if (!symbol.includes('/') && !symbol.includes('-')) {
+        symbol += '/USD';
+    }
+
+    if (customBotAssets.includes(symbol)) {
+        showToast('Asset already exists!', 'error');
+        return;
+    }
+
+    customBotAssets.push(symbol);
+    renderAssetTable();
+    syncAssetsToBackend();
+    input.value = '';
+    showToast(`Added ${symbol}`, 'success');
+}
+
+function deleteAsset(index) {
+    const removed = customBotAssets.splice(index, 1);
+    renderAssetTable();
+    syncAssetsToBackend();
+    showToast(`Removed ${removed}`, 'success');
+}
+
+function syncAssetsToBackend() {
+    fetch('/api/config/update_custom_bot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ symbols: customBotAssets }),
+    })
+        .catch(error => {
+            console.error('Error syncing assets:', error);
+            showToast('Sync failed', 'error');
+        });
+}
+
+// === Metrics Configuration ===
+
+// Save Custom Bot Config (Deprecated by dynamic sync)
+// function saveCustomBotConfig() {
+//     const input = document.getElementById('custom-bot-symbols').value;
+//     const symbols = input.split(',').map(s => s.trim()).filter(s => s.length > 0);
+
+//     // Basic validation: Ensure /USD suffix if missing (optional helper)
+//     const formattedSymbols = symbols.map(s => s.toUpperCase().includes('/') ? s.toUpperCase() : `${s.toUpperCase()}/USD`);
+
+//     if (formattedSymbols.length === 0) {
+//         showToast('Please enter at least one symbol', 'error');
+//         return;
+//     }
+
+//     fetch('/api/config/update_custom_bot', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({ symbols: formattedSymbols }),
+//     })
+//         .then(response => response.json())
+//         .then(data => {
+//             if (data.status === 'success') {
+//                 showToast('Custom Bot Updated! 🤖', 'success');
+//             } else {
+//                 showToast('Error: ' + data.message, 'error');
+//             }
+//         })
+//         .catch(error => {
+//             console.error('Error:', error);
+//             showToast('Error updating custom bot', 'error');
+//         });
+// }
+
+async function loadMetricsConfig() {
     try {
-        // Disable button
-        btn.disabled = true;
-        btn.textContent = '⏳ Researching...';
+        const response = await fetch('/api/config');
+        const data = await response.json();
+        const config = data.config;
 
-        // Get selected sources
-        const sources = {
-            newsapi: document.getElementById('sourceNewsAPI').checked,
-            alphavantage: document.getElementById('sourceAlphaVantage').checked,
-            finnhub: document.getElementById('sourceFinnhub').checked
-        };
+        if (!config) return;
 
-        // Check if at least one source is selected
-        if (!sources.newsapi && !sources.alphavantage && !sources.finnhub) {
-            alert('Please select at least one research source!');
-            btn.disabled = false;
-            btn.textContent = originalText;
-            return;
+        // Metrics...
+        if (config.metrics) {
+            const metrics = config.metrics;
+            // Momentum
+            if (document.getElementById('cfg_mom_min_gain'))
+                document.getElementById('cfg_mom_min_gain').value = metrics.momentum?.min_top_gainers_pct || 5.0;
+            if (document.getElementById('cfg_mom_min_vol'))
+                document.getElementById('cfg_mom_min_vol').value = metrics.momentum?.volume_ratio || 1.5;
+
+            // Value
+            if (document.getElementById('cfg_val_max_peg'))
+                document.getElementById('cfg_val_max_peg').value = metrics.value?.max_peg_ratio || 2.0;
+            if (document.getElementById('cfg_val_industry'))
+                document.getElementById('cfg_val_industry').checked = metrics.value?.check_industry_pe || false;
+            if (document.getElementById('cfg_val_pe_industry'))
+                document.getElementById('cfg_val_pe_industry').checked = metrics.value?.industry_filter || false;
+
+            // Populate Asset Table
+            if (metrics.crypto_bots) {
+                const customBot = metrics.crypto_bots.find(b => b.name === 'Custom');
+                if (customBot && customBot.symbols) {
+                    customBotAssets = customBot.symbols;
+                    renderAssetTable();
+                }
+            }
+
+            // Growth
+            if (document.getElementById('cfg_growth_min_eps'))
+                document.getElementById('cfg_growth_min_eps').value = metrics.growth?.min_earnings_growth || 15.0;
+            if (document.getElementById('cfg_growth_industries'))
+                document.getElementById('cfg_growth_industries').value = (metrics.growth?.trending_industries || []).join('\n');
+        } else {
+            // Fallback for older config structure if metrics object is not present
+            // Momentum
+            if (document.getElementById('cfg_mom_min_gain'))
+                document.getElementById('cfg_mom_min_gain').value = config.momentum?.min_top_gainers_pct || 5.0;
+            if (document.getElementById('cfg_mom_min_vol'))
+                document.getElementById('cfg_mom_min_vol').value = config.momentum?.volume_ratio || 1.5;
+
+            // Value
+            if (document.getElementById('cfg_val_max_peg'))
+                document.getElementById('cfg_val_max_peg').value = config.value?.max_peg_ratio || 2.0;
+            if (document.getElementById('cfg_val_industry'))
+                document.getElementById('cfg_val_industry').checked = config.value?.check_industry_pe || false;
+
+            // Custom Bot
+            if (config.crypto_bots) {
+                const customBot = config.crypto_bots.find(b => b.name === 'Custom');
+                if (customBot && customBot.symbols) {
+                    customBotAssets = customBot.symbols;
+                    renderAssetTable();
+                }
+            }
+
+            // Growth
+            if (document.getElementById('cfg_growth_min_eps'))
+                document.getElementById('cfg_growth_min_eps').value = config.growth?.min_earnings_growth || 15.0;
+            if (document.getElementById('cfg_growth_industries'))
+                document.getElementById('cfg_growth_industries').value = (config.growth?.trending_industries || []).join('\n');
         }
 
-        // Trigger research
-        const response = await fetch('/api/research/force', {
+    } catch (error) {
+        console.error('Error loading config:', error);
+        addLog('Failed to load strategy config', 'error');
+    }
+}
+
+async function saveMetricsConfig() {
+    const btn = document.getElementById('saveConfigBtn');
+    const originalText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Saving...';
+
+    // Gather values
+    const configUpdate = {
+        momentum: {
+            min_top_gainers_pct: parseFloat(document.getElementById('cfg_mom_min_gain').value),
+            volume_ratio: parseFloat(document.getElementById('cfg_mom_min_vol').value)
+        },
+        value: {
+            max_peg_ratio: parseFloat(document.getElementById('cfg_val_max_peg').value),
+            check_industry_pe: document.getElementById('cfg_val_industry').checked
+        },
+        growth: {
+            min_earnings_growth: parseFloat(document.getElementById('cfg_growth_min_eps').value),
+            trending_industries: document.getElementById('cfg_growth_industries').value
+                .split('\n')
+                .map(s => s.trim())
+                .filter(s => s.length > 0)
+        }
+    };
+
+    try {
+        const response = await fetch('/api/config/update', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ sources })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(configUpdate)
         });
 
         const result = await response.json();
 
-        if (result.success) {
-            // Show success message
-            btn.textContent = `✅ Done! ${result.articles_count} articles`;
-            setTimeout(() => {
-                btn.textContent = originalText;
-            }, 3000);
-
-            // Reload research data
-            setTimeout(() => {
-                loadResearchData();
-            }, 1000);
+        if (result.status === 'success') {
+            addLog('Strategy configuration saved', 'success');
+            btn.textContent = '✅ Saved';
         } else {
+            throw new Error(result.error);
+        }
+    } catch (error) {
+        console.error('Error saving config:', error);
+        addLog(`Error saving config: ${error.message}`, 'error');
+        btn.textContent = '❌ Error';
+    } finally {
+        setTimeout(() => {
+            btn.textContent = originalText;
+            btn.disabled = false;
+        }, 2000);
+    }
+}
+
+// Force research with selected sources
+async function forceResearch() {
+    const btn = document.getElementById('forceResearchBtn');
+    const originalText = btn.textContent;
+    if (btn) btn.disabled = true;
+
+    const sources = {
+        newsapi: document.getElementById('sourceNewsAPI').checked,
+        alphavantage: document.getElementById('sourceAlphaVantage').checked,
+        finnhub: document.getElementById('sourceFinnhub').checked
+    };
+
+    try {
+        const response = await fetch('/api/research/force', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sources })
+        });
+
+        if (!response.ok) {
+            const result = await response.json();
             throw new Error(result.error || 'Research failed');
         }
+
+        // Reload research data
+        setTimeout(() => {
+            loadResearchData();
+        }, 1000);
+
+        btn.textContent = '✅ Started';
+        setTimeout(() => {
+            btn.textContent = originalText;
+        }, 2000);
 
     } catch (error) {
         console.error('Force research error:', error);
@@ -419,6 +949,17 @@ async function forceResearch() {
 function requestInitialData() {
     socket.emit('get_status');
     socket.emit('get_portfolio');
+
+    // HTTP Fallback to ensure data loads
+    fetch('/api/status/data')
+        .then(response => response.json())
+        .then(data => {
+            if (!data.error) {
+                console.log("HTTP Status Data:", data);
+                updateDashboard(data);
+            }
+        })
+        .catch(err => console.error("HTTP Status Error:", err));
 }
 
 // Start bot
@@ -454,7 +995,7 @@ function handleStatusUpdate(data) {
 
 // Handle log message
 function handleLogMessage(data) {
-    addLog(data.message, data.level);
+    addLog(data.message, data.level, data.details);
 }
 
 // Handle portfolio update
@@ -628,16 +1169,38 @@ function updateTickerBar(stocks) {
 }
 
 // Add log entry
-function addLog(message, level = 'info') {
-    const logContainer = document.getElementById('logContainer');
+function addLog(message, level = 'info', details = null) {
+    const logContainer = document.getElementById('activityLog'); // Fixed ID
+    if (!logContainer) return;
+
     const entry = document.createElement('div');
     entry.className = `log-entry ${level}`;
 
+    // Add fullscreen class check to initialize visibility correctly if needed, 
+    // though CSS handles it via parent class.
+
     const timestamp = new Date().toLocaleTimeString();
+
+    let detailsHtml = '';
+    if (details) {
+        // Format details object/string
+        const debugContent = typeof details === 'object' ? JSON.stringify(details, null, 2) : details;
+        detailsHtml = `<div class="detail-view">${debugContent}</div>`;
+    }
+
     entry.innerHTML = `
             <span class="timestamp">[${timestamp}]</span>
             <span>${message}</span>
+            ${detailsHtml}
         `;
+
+    // Insert after the header? activityLog usually has activities or steps.
+    // Wait, activityLog is the detailed view container BUT there's also a logContainer used by addLog?
+    // Let's check index.html structure previously viewed or inferred. 
+    // Actually, 'activityLog' ID was used in activity-log.js. 
+    // The previous code targeted 'logContainer' which didn't exist.
+    // We should treat 'activityLog' as the unified place or check if there's a specific 'logs' list inside it.
+    // activity-log.js appends directly to 'activityLog'.
 
     logContainer.insertBefore(entry, logContainer.firstChild);
 
@@ -779,6 +1342,9 @@ function initializeCharts() {
     updatePortfolioChartWithHistory();
 }
 
+// Update timeline item styles to use theme variables
+
+
 // Update portfolio chart with historical data
 function updatePortfolioChartWithHistory() {
     if (!portfolioChart) return;
@@ -815,3 +1381,249 @@ function updatePortfolioChart(portfolio) {
     portfolioChart.data.datasets[0].data = data;
     portfolioChart.update('none'); // Update without animation for real-time feel
 }
+
+// ---------------------------------------------------------
+// Watchlist & Alerts Functions (Missing in original file)
+// ---------------------------------------------------------
+
+async function loadWatchlist() {
+    try {
+        const response = await fetch('/api/watchlist');
+        const data = await response.json();
+
+        updateWatchlistTable(data.watchlist || []);
+        updateAlertsList(data.alerts || []);
+    } catch (error) {
+        console.error('Error loading watchlist:', error);
+    }
+}
+
+function updateWatchlistTable(watchlist) {
+    const tbody = document.getElementById('watchlistBody');
+    if (!tbody) return;
+
+    if (!watchlist || watchlist.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="empty-state">No stocks in watchlist</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = watchlist.map(item => {
+        const changeClass = item.change >= 0 ? 'positive' : 'negative';
+        const sign = item.change >= 0 ? '+' : '';
+        return `
+            <tr>
+                <td><span class="symbol">${item.symbol}</span></td>
+                <td>$${item.price.toFixed(2)}</td>
+                <td class="${changeClass}">${sign}${item.change.toFixed(2)}%</td>
+                <td>
+                    <button class="action-btn danger" onclick="removeFromWatchlist('${item.symbol}')" title="Remove">×</button>
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
+
+function updateAlertsList(alerts) {
+    const list = document.getElementById('activeAlertsList');
+    const symbolSelect = document.getElementById('alertSymbol');
+    if (!list) return;
+
+    // Update symbol select
+    if (symbolSelect) {
+        // Keep the first option
+        const first = symbolSelect.options[0];
+        symbolSelect.innerHTML = '';
+        symbolSelect.appendChild(first);
+
+        // Add watchlist symbols
+        const watchlist = document.querySelectorAll('#watchlistBody .symbol');
+        watchlist.forEach(el => {
+            const sym = el.textContent;
+            const opt = document.createElement('option');
+            opt.value = sym;
+            opt.textContent = sym;
+            symbolSelect.appendChild(opt);
+        });
+    }
+
+    if (!alerts || alerts.length === 0) {
+        list.innerHTML = '<div class="empty-state">No active alerts</div>';
+        return;
+    }
+
+    list.innerHTML = alerts.map(alert => `
+        <div class="alert-item" style="display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid var(--border-color);">
+            <div>
+                <span style="font-weight: bold;">${alert.symbol}</span>
+                <span style="color: var(--text-secondary); font-size: 0.9em;">
+                    ${alert.condition === 'price_above' ? '>' : '<'} ${alert.value}
+                </span>
+            </div>
+            <button class="action-btn danger" onclick="deleteAlert(${alert.id})" style="padding: 2px 6px;">×</button>
+        </div>
+    `).join('');
+}
+
+async function addToWatchlist() {
+    const input = document.getElementById('newStockInput');
+    const symbol = input.value.trim().toUpperCase();
+
+    if (!symbol) return;
+
+    try {
+        const response = await fetch('/api/watchlist/add', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ symbol })
+        });
+        const data = await response.json();
+
+        if (data.success) {
+            input.value = '';
+            loadWatchlist();
+            addLog(`Added ${symbol} to watchlist`, 'success');
+        } else {
+            addLog(data.message || 'Error adding stock', 'warning');
+        }
+    } catch (error) {
+        console.error('Error adding to watchlist:', error);
+    }
+}
+
+async function removeFromWatchlist(symbol) {
+    if (!confirm(`Remove ${symbol} from watchlist?`)) return;
+
+    try {
+        const response = await fetch('/api/watchlist/remove', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ symbol })
+        });
+        const data = await response.json();
+
+        if (data.success) {
+            loadWatchlist();
+            addLog(`Removed ${symbol} from watchlist`, 'info');
+        }
+    } catch (error) {
+        console.error('Error removing from watchlist:', error);
+    }
+}
+
+async function createAlert() {
+    const symbol = document.getElementById('alertSymbol').value;
+    const condition = document.getElementById('alertCondition').value;
+    const value = document.getElementById('alertValue').value;
+
+    if (!symbol || !condition || !value) {
+        alert('Please fill all fields');
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/alerts/create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ symbol, condition, value })
+        });
+        const data = await response.json();
+
+        if (data.success) {
+            document.getElementById('alertValue').value = '';
+            loadWatchlist();
+            addLog(`Created alert for ${symbol}`, 'success');
+        } else {
+            addLog(data.message || 'Error creating alert', 'warning');
+        }
+    } catch (error) {
+        console.error('Error creating alert:', error);
+    }
+}
+
+async function deleteAlert(alertId) {
+    try {
+        const response = await fetch('/api/alerts/delete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ alert_id: alertId })
+        });
+        const data = await response.json();
+
+        if (data.success) {
+            loadWatchlist();
+            addLog(`Deleted alert`, 'info');
+        }
+    } catch (error) {
+        console.error('Error deleting alert:', error);
+    }
+}
+
+
+// CLICK LOGGER REMOVED FOR PRIVATE LOGGING
+
+// --- Scalping Bot Functions ---
+function loadScalpingData() {
+    fetch('/api/scalping/status')
+        .then(response => response.json())
+        .then(data => {
+            const badge = document.getElementById('scalper-status-badge');
+            if (data.running) {
+                badge.textContent = 'RUNNING';
+                badge.className = 'badge long'; // success style
+            } else {
+                badge.textContent = 'OFFLINE';
+                badge.className = 'badge short'; // error style
+            }
+
+            document.getElementById('scalper-pair-count').textContent = data.monitored_symbols.length;
+
+            const log = document.getElementById('scalper-log');
+            log.innerHTML = ''; // Clear and rebuild for now (simple)
+
+            // Format active trades as signals
+            if (Object.keys(data.active_trades).length > 0) {
+                Object.entries(data.active_trades).forEach(([symbol, info]) => {
+                    const div = document.createElement('div');
+                    div.className = 'log-entry info';
+                    div.innerHTML = `<span class="timestamp">${info.time}</span> <strong>${symbol}</strong>: ${info.signal} (${(info.change * 100).toFixed(4)}%) @ ${info.price.toFixed(2)}`;
+                    log.appendChild(div);
+                });
+                // Update last signal box
+                const lastKey = Object.keys(data.active_trades).pop();
+                const lastInfo = data.active_trades[lastKey];
+                document.getElementById('scalper-last-signal').textContent = `${lastKey} ${lastInfo.signal}`;
+                document.getElementById('scalper-last-signal').className = lastInfo.signal === 'UP' ? 'value positive' : 'value negative';
+                document.getElementById('scalper-last-time').textContent = lastInfo.time;
+            } else {
+                log.innerHTML = '<div class="empty-state">No signals yet. Waiting for volatility...</div>';
+            }
+        })
+        .catch(err => console.error('Error loading scalping data:', err));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const startBtn = document.getElementById('start-scalper-btn');
+    const stopBtn = document.getElementById('stop-scalper-btn');
+
+    if (startBtn) {
+        startBtn.addEventListener('click', () => {
+            fetch('/api/scalping/start', { method: 'POST' })
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data.message);
+                    loadScalpingData();
+                });
+        });
+    }
+
+    if (stopBtn) {
+        stopBtn.addEventListener('click', () => {
+            fetch('/api/scalping/stop', { method: 'POST' })
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data.message);
+                    loadScalpingData();
+                });
+        });
+    }
+});

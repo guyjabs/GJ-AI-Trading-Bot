@@ -66,3 +66,20 @@
     background: var(--bg-tertiary);
     border-color: var(--accent-primary);
 }
+
+/* Toggleable Details View */
+.log-entry .detail-view {
+    display: none;
+    background: rgba(0, 0, 0, 0.2);
+    border-left: 2px solid var(--text-muted);
+    margin-top: 5px;
+    padding: 8px;
+    font-size: 0.85em;
+    color: var(--text-secondary);
+    white-space: pre-wrap;
+    font-family: var(--font-mono);
+}
+
+.activity-sidebar.fullscreen .log-entry .detail-view {
+    display: block;
+}

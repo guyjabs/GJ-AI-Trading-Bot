@@ -1,0 +1,28 @@
+[96m[2025-12-07 19:28:23] [92m[INFO][0m    Loaded strategy weights: {'momentum': 0.547945205479452, 'growth': 0.22602739726027396, 'value': 0.22602739726027396}
+[96m[2025-12-07 19:28:24] [92m[INFO][0m    Knowledge base initialized
+[96m[2025-12-07 19:28:24] [92m[INFO][0m    📁 Research archiver initialized
+[96m[2025-12-07 19:28:24] [92m[INFO][0m    Alpaca client initialized (paper trading)
+[96m[2025-12-07 19:28:24] [92m[INFO][0m    Initializing Research Bot components...
+[96m[2025-12-07 19:28:24] [92m[INFO][0m    Knowledge base initialized
+[96m[2025-12-07 19:28:24] [92m[INFO][0m    📁 Research archiver initialized
+[96m[2025-12-07 19:28:24] [92m[INFO][0m    Loaded 5 watchlist items and 1 alerts
+============================================================
+🤖 Robinhood AI Trading Bot - Web GUI
+============================================================
+Opening GUI at: http://localhost:5003
+Press Ctrl+C to stop the server
+============================================================
+[96m[2025-12-07 19:28:24] [92m[INFO][0m    🚀 Starting GUI server on port 5003
+ * Serving Flask app 'gui'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5003
+ * Running on http://192.168.0.35:5003
+[33mPress CTRL+C to quit[0m
+127.0.0.1 - - [07/Dec/2025 19:28:27] "GET /socket.io/?EIO=4&transport=polling&t=PhxN1SJ HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:28:27] "POST /socket.io/?EIO=4&transport=polling&t=PhxN1SR&sid=UJ3TpQhBVlR-iXo4AAAA HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:28:27] "GET /socket.io/?EIO=4&transport=polling&t=PhxN1SS&sid=UJ3TpQhBVlR-iXo4AAAA HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:28:27] "GET /socket.io/?EIO=4&transport=polling&t=PhxN1Sa&sid=UJ3TpQhBVlR-iXo4AAAA HTTP/1.1" 200 -
+/Users/guyjaber/.pyenv/versions/3.10.12/lib/python3.10/multiprocessing/resource_tracker.py:224: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '

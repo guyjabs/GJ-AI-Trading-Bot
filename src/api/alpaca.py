@@ -153,6 +153,19 @@ class AlpacaClient:
             elif span == "day":
                 start = end - timedelta(days=1) # Or business day
                 timeframe = TimeFrame.Minute # 5 min approximation
+            elif span.endswith("d"):
+                try:
+                    days = int(span[:-1])
+                    start = end - timedelta(days=days)
+                    # If looking back many days, day bars might be better, but if interval is specified, use that.
+                    # Default to Minute if not specified or "5minute"
+                    timeframe = TimeFrame.Minute
+                except:
+                    start = end - timedelta(days=1)
+            elif span == "month" or span.endswith("mo"):
+                 start = end - timedelta(days=30)
+                 timeframe = TimeFrame.Minute
+
             
             # Map interval string to TimeFrame if needed, for now simplified
             

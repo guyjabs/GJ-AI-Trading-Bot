@@ -293,21 +293,48 @@ If the content doesn't contain useful trading strategy information, return {{"vi
         logger.info(f"Documented {len(insights)} technical indicators")
         return insights
     
-    def run_daily_research(self) -> Dict:
+    def run_daily_research(self, progress_callback=None) -> Dict:
         """
         Run comprehensive daily strategy research.
         
+        Args:
+            progress_callback: Function to emit progress events
+            
         Returns:
             Summary of research results
         """
+        if progress_callback:
+            progress_callback("🚀 Launching daily strategy research module...", 5, 'in-progress')
+            
         logger.info("Starting daily strategy research...")
         
         all_insights = []
         
-        # Research from various sources
+        # Research Investopedia
+        if progress_callback:
+            progress_callback("📚 Scanning Investopedia educational archives...", 20, 'in-progress')
+            
         all_insights.extend(self.research_investopedia_strategies())
-        all_insights.extend(self.research_reddit_strategies())
-        all_insights.extend(self.research_technical_indicators())
+        
+        if progress_callback:
+            progress_callback(f"✓ Extracted {len(all_insights)} classic strategies", 35, 'detail')
+        
+        # Research Reddit
+        if progress_callback:
+            progress_callback("🕵️ Monitoring social sentiment on Reddit (r/algotrading)...", 40, 'in-progress')
+            
+        reddit_insights = self.research_reddit_strategies()
+        all_insights.extend(reddit_insights)
+        
+        if progress_callback:
+            progress_callback(f"✓ Found {len(reddit_insights)} crowd-sourced strategies", 60, 'detail')
+        
+        # Technical Indicators
+        if progress_callback:
+            progress_callback("📈 Calibrating technical indicators...", 70, 'in-progress')
+            
+        tech_insights = self.research_technical_indicators()
+        all_insights.extend(tech_insights)
         
         # Generate summary
         summary = {
@@ -326,6 +353,10 @@ If the content doesn't contain useful trading strategy information, return {{"vi
         }
         
         logger.info(f"Daily research complete: {summary['total_insights']} insights extracted")
+        
+        if progress_callback:
+             progress_callback("🏁 Strategy research cycle complete.", 100, 'done')
+             
         return summary
 
 

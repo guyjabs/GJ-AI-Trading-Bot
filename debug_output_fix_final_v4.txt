@@ -1,0 +1,42 @@
+[96m[2025-12-07 18:18:29] [92m[INFO][0m    Loaded strategy weights: {'momentum': 0.547945205479452, 'growth': 0.22602739726027396, 'value': 0.22602739726027396}
+[96m[2025-12-07 18:18:30] [92m[INFO][0m    Knowledge base initialized
+[96m[2025-12-07 18:18:30] [92m[INFO][0m    📁 Research archiver initialized
+[96m[2025-12-07 18:18:30] [92m[INFO][0m    Alpaca client initialized (paper trading)
+[96m[2025-12-07 18:18:30] [92m[INFO][0m    Initializing Research Bot components...
+[96m[2025-12-07 18:18:30] [92m[INFO][0m    Knowledge base initialized
+[96m[2025-12-07 18:18:30] [92m[INFO][0m    📁 Research archiver initialized
+[96m[2025-12-07 18:18:30] [92m[INFO][0m    Loaded 5 watchlist items and 1 alerts
+============================================================
+🤖 Robinhood AI Trading Bot - Web GUI
+============================================================
+Opening GUI at: http://localhost:5003
+Press Ctrl+C to stop the server
+============================================================
+[96m[2025-12-07 18:18:30] [92m[INFO][0m    🚀 Starting GUI server on port 5003
+ * Serving Flask app 'gui'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5003
+ * Running on http://192.168.1.189:5003
+[33mPress CTRL+C to quit[0m
+127.0.0.1 - - [07/Dec/2025 18:18:32] "GET /socket.io/?EIO=4&transport=polling&t=Phx71Ad HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:18:32] "POST /socket.io/?EIO=4&transport=polling&t=Phx71An&sid=IvqLY5oMgXRMIq8bAAAA HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:18:32] "GET /socket.io/?EIO=4&transport=polling&t=Phx71Ap&sid=IvqLY5oMgXRMIq8bAAAA HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:18:32] "GET /socket.io/?EIO=4&transport=polling&t=Phx71At&sid=IvqLY5oMgXRMIq8bAAAA HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:18:47] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:18:51] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:18:51] "GET /static/style.css?v=2 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:18:51] "GET /static/style.css HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:18:51] "[36mGET /static/fullscreen.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [07/Dec/2025 18:18:51] "[36mGET /static/app.js?v=4 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [07/Dec/2025 18:18:51] "[36mGET /static/activity-log.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [07/Dec/2025 18:18:51] "GET /api/debug_log?msg=DOMContentLoaded HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:18:51] "GET /api/debug_log?msg=setupEventListeners_Start HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:18:51] "GET /socket.io/?EIO=4&transport=polling&t=Phx75mt HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:18:51] "POST /socket.io/?EIO=4&transport=polling&t=Phx75oD&sid=F9IiIW1tX9dNdaeiAAAC HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:18:51] "GET /socket.io/?EIO=4&transport=polling&t=Phx75oE&sid=F9IiIW1tX9dNdaeiAAAC HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:18:51] "GET /socket.io/?EIO=4&transport=polling&t=Phx75oP&sid=F9IiIW1tX9dNdaeiAAAC HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:18:51] "GET /api/status/data HTTP/1.1" 200 -
+/Users/guyjaber/.pyenv/versions/3.10.12/lib/python3.10/multiprocessing/resource_tracker.py:224: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '

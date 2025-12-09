@@ -1,0 +1,73 @@
+{
+    "watchlist": [
+        "AAPL",
+        "TSLA",
+        "NVDA",
+        "AMD",
+        "MSFT"
+    ],
+    "alerts": [
+        {
+            "id": 1,
+            "symbol": "MSFT",
+            "condition": "rsi_above",
+            "value": 70.0,
+            "triggered": false
+        }
+    ],
+    "metrics_config": {
+        "momentum": {
+            "min_top_gainers_pct": 5,
+            "min_volume_ratio": 1.5,
+            "period_vol_comparison": "30d"
+        },
+        "value": {
+            "min_cashflow_per_share_diff": 0,
+            "max_peg_ratio": 2.0,
+            "use_industry_peers": true
+        },
+        "growth": {
+            "trending_industries": [
+                "Software - Infrastructure",
+                "Semiconductors",
+                "Biotechnology",
+                "Solar"
+            ],
+            "min_earnings_growth": 10
+        },
+        "crypto_bots": [
+            {
+                "name": "Moonshot",
+                "enabled": true,
+                "strategy": "moonshot",
+                "symbols": [
+                    "DOGE/USD",
+                    "SHIB/USD",
+                    "SOL/USD",
+                    "AVAX/USD",
+                    "LTC/USD"
+                ],
+                "max_position_size_usd": 1000
+            },
+            {
+                "name": "Conservative",
+                "enabled": true,
+                "strategy": "dip_buy",
+                "symbols": [
+                    "BTC/USD",
+                    "ETH/USD"
+                ],
+                "max_position_size_usd": 2000
+            },
+            {
+                "name": "Custom",
+                "enabled": true,
+                "strategy": "custom",
+                "symbols": [
+                    "LINK/USD"
+                ],
+                "max_position_size_usd": 500
+            }
+        ]
+    }
+}

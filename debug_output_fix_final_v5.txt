@@ -1,0 +1,4764 @@
+[96m[2025-12-07 18:19:50] [92m[INFO][0m    Loaded strategy weights: {'momentum': 0.547945205479452, 'growth': 0.22602739726027396, 'value': 0.22602739726027396}
+[96m[2025-12-07 18:19:50] [92m[INFO][0m    Knowledge base initialized
+[96m[2025-12-07 18:19:50] [92m[INFO][0m    📁 Research archiver initialized
+[96m[2025-12-07 18:19:50] [92m[INFO][0m    Alpaca client initialized (paper trading)
+[96m[2025-12-07 18:19:50] [92m[INFO][0m    Initializing Research Bot components...
+[96m[2025-12-07 18:19:50] [92m[INFO][0m    Knowledge base initialized
+[96m[2025-12-07 18:19:50] [92m[INFO][0m    📁 Research archiver initialized
+[96m[2025-12-07 18:19:50] [92m[INFO][0m    Loaded 5 watchlist items and 1 alerts
+============================================================
+🤖 Robinhood AI Trading Bot - Web GUI
+============================================================
+Opening GUI at: http://localhost:5003
+Press Ctrl+C to stop the server
+============================================================
+[96m[2025-12-07 18:19:50] [92m[INFO][0m    🚀 Starting GUI server on port 5003
+ * Serving Flask app 'gui'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5003
+ * Running on http://192.168.1.189:5003
+[33mPress CTRL+C to quit[0m
+127.0.0.1 - - [07/Dec/2025 18:19:52] "GET /socket.io/?EIO=4&transport=polling&t=Phx7KhO HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:19:52] "POST /socket.io/?EIO=4&transport=polling&t=Phx7KhT&sid=2ypPH3cGMdKygHAFAAAA HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:19:52] "GET /socket.io/?EIO=4&transport=polling&t=Phx7KhU&sid=2ypPH3cGMdKygHAFAAAA HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:19:54] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:19:54] "GET /static/style.css?v=3 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:19:54] "[36mGET /static/fullscreen.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [07/Dec/2025 18:19:54] "[36mGET /static/app.js?v=4 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [07/Dec/2025 18:19:54] "[36mGET /static/activity-log.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [07/Dec/2025 18:19:54] "GET /api/debug_log?msg=DOMContentLoaded HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:19:54] "GET /socket.io/?EIO=4&transport=polling&t=Phx7LC9 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:19:54] "GET /api/debug_log?msg=setupEventListeners_Start HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:19:54] "POST /socket.io/?EIO=4&transport=polling&t=Phx7LCT&sid=1fb9q1tP6oJi-jtHAAAC HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:19:54] "GET /socket.io/?EIO=4&transport=polling&t=Phx7LCU&sid=1fb9q1tP6oJi-jtHAAAC HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:19:54] "GET /socket.io/?EIO=4&transport=polling&t=Phx7LCa&sid=1fb9q1tP6oJi-jtHAAAC HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:19:54] "GET /socket.io/?EIO=4&transport=polling&t=Phx7LE9 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:19:54] "POST /socket.io/?EIO=4&transport=polling&t=Phx7LEH&sid=Z8jsA4uzc-0_-625AAAE HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:19:54] "GET /socket.io/?EIO=4&transport=polling&t=Phx7LEI&sid=Z8jsA4uzc-0_-625AAAE HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:19:54] "GET /api/status/data HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:20:01] "GET /api/debug_log?msg=switchView_strategy HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:20:01] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:20:01] "GET /api/strategy/history HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:36:05] "GET /socket.io/?EIO=4&transport=websocket&sid=1fb9q1tP6oJi-jtHAAAC HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:36:05] "GET /socket.io/?EIO=4&transport=websocket&sid=2ypPH3cGMdKygHAFAAAA HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:36:05] "GET /socket.io/?EIO=4&transport=websocket&sid=Z8jsA4uzc-0_-625AAAE HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:36:06] "GET /socket.io/?EIO=4&transport=polling&t=PhxB2Zx HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:36:06] "POST /socket.io/?EIO=4&transport=polling&t=PhxB2a1&sid=lSLxPQJhFIr_drdjAAAG HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:36:06] "GET /socket.io/?EIO=4&transport=polling&t=PhxB2a2&sid=lSLxPQJhFIr_drdjAAAG HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:36:07] "GET /socket.io/?EIO=4&transport=polling&t=PhxB2hl HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:36:07] "GET /socket.io/?EIO=4&transport=polling&t=PhxB2hl HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:36:07] "POST /socket.io/?EIO=4&transport=polling&t=PhxB2hu&sid=9NvLOpL8cNwwSlbPAAAI HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:36:07] "GET /socket.io/?EIO=4&transport=polling&t=PhxB2hv&sid=9NvLOpL8cNwwSlbPAAAI HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:36:07] "GET /socket.io/?EIO=4&transport=polling&t=PhxB2i4&sid=9NvLOpL8cNwwSlbPAAAI HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:36:07] "POST /socket.io/?EIO=4&transport=polling&t=PhxB2i5&sid=h6KfFPJFF8E6VMpwAAAJ HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:36:07] "GET /socket.io/?EIO=4&transport=polling&t=PhxB2i6&sid=h6KfFPJFF8E6VMpwAAAJ HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:36:07] "GET /socket.io/?EIO=4&transport=polling&t=PhxB2iC&sid=h6KfFPJFF8E6VMpwAAAJ HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:59:50] "GET /socket.io/?EIO=4&transport=websocket&sid=h6KfFPJFF8E6VMpwAAAJ HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 18:59:50] "GET /socket.io/?EIO=4&transport=websocket&sid=9NvLOpL8cNwwSlbPAAAI HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:00:04] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:00:06] "GET /api/debug_log?msg=switchView_strategy HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:00:06] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:00:06] "GET /api/strategy/history HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:01:47] "GET /api/debug_log?msg=switchView_research HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:01:47] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:01:52] "GET /api/research/summary HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:01:52] "GET /api/research/predictions HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:01:52] "GET /api/research/trends HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:01:52] "GET /api/research/news HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:02:01] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:02:06] "POST /api/research/force HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:02:07] "GET /api/research/summary HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:02:07] "GET /api/research/predictions HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:02:08] "GET /api/research/trends HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:02:08] "GET /api/research/news HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:02:18] "GET /api/research/summary HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:02:18] "GET /api/research/predictions HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:02:18] "GET /api/research/trends HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:02:18] "GET /api/research/news HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:02:18] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:02:48] "GET /api/research/summary HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:02:48] "GET /api/research/predictions HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:02:48] "GET /api/research/trends HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:02:48] "GET /api/research/news HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:02:56] "GET /api/debug_log?msg=switchView_day-trading HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:02:56] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:02:56] "GET /api/watchlist HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:02:58] "GET /api/debug_log?msg=switchView_research HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:02:58] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:02:58] "GET /api/research/summary HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:02:58] "GET /api/research/predictions HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:02:58] "GET /api/research/trends HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:02:58] "GET /api/research/news HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:02:59] "GET /api/debug_log?msg=switchView_readme HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:02:59] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:03:00] "GET /api/day-trading/dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:03:06] "GET /api/debug_log?msg=switchView_strategy HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:03:06] "GET /api/strategy/history HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:03:06] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:03:07] "GET /api/debug_log?msg=switchView_trading HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:03:07] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:03:38] "POST /api/log_client_event HTTP/1.1" 200 -
+[96m[2025-12-07 18:19:52] [92m[INFO][0m    Client connected to GUI
+[96m[2025-12-07 18:19:54] [92m[INFO][0m    CLIENT DEBUG: DOMContentLoaded
+[96m[2025-12-07 18:19:54] [92m[INFO][0m    CLIENT DEBUG: setupEventListeners_Start
+[96m[2025-12-07 18:19:54] [92m[INFO][0m    Client connected to GUI
+[96m[2025-12-07 18:19:54] [92m[INFO][0m    Client connected to GUI
+[96m[2025-12-07 18:20:01] [92m[INFO][0m    CLIENT DEBUG: switchView_strategy
+[96m[2025-12-07 18:20:01] [92m[INFO][0m    🖱️ CLIENT_EVENT [click]: {'tagName': 'BUTTON', 'id': '', 'className': 'nav-tab active', 'innerText': 'Strategy', 'x': 0, 'y': 0} @ 2025-12-07T23:20:01.078Z
+[96m[2025-12-07 18:36:05] [92m[INFO][0m    Client disconnected from GUI
+[96m[2025-12-07 18:36:05] [92m[INFO][0m    Client disconnected from GUI
+[96m[2025-12-07 18:36:05] [92m[INFO][0m    Client disconnected from GUI
+[96m[2025-12-07 18:36:06] [92m[INFO][0m    Client connected to GUI
+[96m[2025-12-07 18:36:07] [92m[INFO][0m    Client connected to GUI
+[96m[2025-12-07 18:36:07] [92m[INFO][0m    Client connected to GUI
+[96m[2025-12-07 18:59:50] [92m[INFO][0m    Client disconnected from GUI
+[96m[2025-12-07 18:59:50] [92m[INFO][0m    Client disconnected from GUI
+[96m[2025-12-07 19:00:04] [92m[INFO][0m    🖱️ CLIENT_EVENT [click]: {'tagName': 'SPAN', 'id': 'headerBalance', 'className': 'value', 'innerText': '$195,716.80', 'x': 1046, 'y': 16} @ 2025-12-08T00:00:04.158Z
+[96m[2025-12-07 19:00:06] [92m[INFO][0m    CLIENT DEBUG: switchView_strategy
+[96m[2025-12-07 19:00:06] [92m[INFO][0m    🖱️ CLIENT_EVENT [click]: {'tagName': 'BUTTON', 'id': '', 'className': 'nav-tab active', 'innerText': 'Strategy', 'x': 54, 'y': 113} @ 2025-12-08T00:00:06.144Z
+[96m[2025-12-07 19:01:47] [92m[INFO][0m    CLIENT DEBUG: switchView_research
+[96m[2025-12-07 19:01:47] [92m[INFO][0m    🔍 Starting news research cycle...
+[96m[2025-12-07 19:01:47] [92m[INFO][0m    📰 Fetching fresh news from 3 configured sources
+[96m[2025-12-07 19:01:47] [92m[INFO][0m    🖱️ CLIENT_EVENT [click]: {'tagName': 'BUTTON', 'id': '', 'className': 'nav-tab active', 'innerText': 'Research & Insights', 'x': 463, 'y': 116} @ 2025-12-08T00:01:47.868Z
+[96m[2025-12-07 19:01:48] [92m[INFO][0m    ✅ NewsAPI: Fetched 2 articles
+[96m[2025-12-07 19:01:49] [92m[INFO][0m    ✅ Alpha Vantage: Fetched 0 articles with sentiment scores
+[96m[2025-12-07 19:01:50] [92m[INFO][0m    Fetched 8 articles from Finnhub
+[96m[2025-12-07 19:01:50] [92m[INFO][0m    Fetched 16 articles from Finnhub
+[96m[2025-12-07 19:01:51] [92m[INFO][0m    Deduplicated 26 articles to 26
+[96m[2025-12-07 19:01:51] [92m[INFO][0m    Filtered 26 articles to 16 relevant ones
+[96m[2025-12-07 19:01:51] [92m[INFO][0m    📊 Research Summary: 16 unique, relevant articles collected
+[96m[2025-12-07 19:01:52] [92m[INFO][0m    Using cached news (16 articles)
+[96m[2025-12-07 19:02:01] [92m[INFO][0m    🖱️ CLIENT_EVENT [click]: {'tagName': 'BUTTON', 'id': 'forceResearchBtn', 'className': 'primary', 'innerText': '🧠 Run Research', 'x': 101, 'y': 471} @ 2025-12-08T00:02:01.138Z
+[96m[2025-12-07 19:02:01] [92m[INFO][0m    🚀 Manual research triggered by user
+[96m[2025-12-07 19:02:01] [92m[INFO][0m    📋 Selected sources: newsapi, alphavantage, finnhub
+[96m[2025-12-07 19:02:01] [92m[INFO][0m    🔍 Starting manual research cycle...
+[96m[2025-12-07 19:02:01] [92m[INFO][0m    🔍 Starting news research cycle...
+[96m[2025-12-07 19:02:01] [92m[INFO][0m    📰 Fetching fresh news from 3 configured sources
+[96m[2025-12-07 19:02:01] [92m[INFO][0m    ✅ NewsAPI: Fetched 2 articles
+[96m[2025-12-07 19:02:02] [92m[INFO][0m    ✅ Alpha Vantage: Fetched 0 articles with sentiment scores
+[96m[2025-12-07 19:02:04] [92m[INFO][0m    Fetched 8 articles from Finnhub
+[96m[2025-12-07 19:02:04] [92m[INFO][0m    Fetched 16 articles from Finnhub
+[96m[2025-12-07 19:02:05] [92m[INFO][0m    Deduplicated 26 articles to 26
+[96m[2025-12-07 19:02:05] [92m[INFO][0m    Filtered 26 articles to 16 relevant ones
+[96m[2025-12-07 19:02:05] [92m[INFO][0m    📊 Research Summary: 16 unique, relevant articles collected
+[96m[2025-12-07 19:02:05] [92m[INFO][0m    ✅ Collected 16 articles
+[96m[2025-12-07 19:02:06] [92m[INFO][0m    🔎 Analyzing for trends...
+[96m[2025-12-07 19:02:06] [92m[INFO][0m    Using cached news (16 articles)
+[96m[2025-12-07 19:02:06] [92m[INFO][0m    Detected 0 emerging trends
+[96m[2025-12-07 19:02:06] [92m[INFO][0m    📊 Detected 0 trends
+[96m[2025-12-07 19:02:06] [92m[INFO][0m    🧠 Extracting insights...
+[96m[2025-12-07 19:02:06] [92m[INFO][0m    Using cached news (16 articles)
+[96m[2025-12-07 19:02:06] [92m[INFO][0m    Extracted 0 insights from 15 articles
+[96m[2025-12-07 19:02:06] [92m[INFO][0m    💡 Extracted 0 insights
+[96m[2025-12-07 19:02:06] [92m[INFO][0m    ✅ Manual research complete!
+[96m[2025-12-07 19:02:07] [92m[INFO][0m    Using cached news (16 articles)
+[96m[2025-12-07 19:02:08] [92m[INFO][0m    Using cached news (16 articles)
+[96m[2025-12-07 19:02:17] [92m[INFO][0m    Using cached news (16 articles)
+[96m[2025-12-07 19:02:18] [92m[INFO][0m    Using cached news (16 articles)
+[96m[2025-12-07 19:02:18] [92m[INFO][0m    🖱️ CLIENT_EVENT [click]: {'tagName': 'A', 'id': '', 'className': 'news-title', 'innerText': "Here are the 2 big things we're watching in the st", 'x': 295, 'y': 511} @ 2025-12-08T00:02:18.468Z
+[96m[2025-12-07 19:02:47] [92m[INFO][0m    Using cached news (16 articles)
+[96m[2025-12-07 19:02:48] [92m[INFO][0m    Using cached news (16 articles)
+[96m[2025-12-07 19:02:56] [92m[INFO][0m    CLIENT DEBUG: switchView_day-trading
+[96m[2025-12-07 19:02:56] [92m[INFO][0m    🖱️ CLIENT_EVENT [click]: {'tagName': 'BUTTON', 'id': '', 'className': 'nav-tab active', 'innerText': 'Day Trading ⚡', 'x': 324, 'y': 117} @ 2025-12-08T00:02:56.055Z
+[96m[2025-12-07 19:02:56] [92m[INFO][0m    Trade journal database initialized
+[96m[2025-12-07 19:02:56] [92m[INFO][0m    Scanning for Gappers (Gap > 3.0%, Price > $5.0)...
+[96m[2025-12-07 19:02:58] [92m[INFO][0m    CLIENT DEBUG: switchView_research
+[96m[2025-12-07 19:02:58] [92m[INFO][0m    Using cached news (16 articles)
+[96m[2025-12-07 19:02:58] [92m[INFO][0m    🖱️ CLIENT_EVENT [click]: {'tagName': 'BUTTON', 'id': '', 'className': 'nav-tab active', 'innerText': 'Research & Insights', 'x': 443, 'y': 109} @ 2025-12-08T00:02:58.221Z
+[96m[2025-12-07 19:02:58] [92m[INFO][0m    Using cached news (16 articles)
+[96m[2025-12-07 19:02:58] [92m[INFO][0m    Scanning for Momentum (RVOL > 2.0)...
+[96m[2025-12-07 19:02:59] [92m[INFO][0m    CLIENT DEBUG: switchView_readme
+[96m[2025-12-07 19:02:59] [92m[INFO][0m    🖱️ CLIENT_EVENT [click]: {'tagName': 'BUTTON', 'id': '', 'className': 'nav-tab active', 'innerText': 'Read Me 📖', 'x': 562, 'y': 119} @ 2025-12-08T00:02:59.379Z
+[96m[2025-12-07 19:03:00] [93m[WARNING][0m No Alpaca data found for SPY (span=1d)
+[96m[2025-12-07 19:03:06] [92m[INFO][0m    CLIENT DEBUG: switchView_strategy
+[96m[2025-12-07 19:03:06] [92m[INFO][0m    🖱️ CLIENT_EVENT [click]: {'tagName': 'BUTTON', 'id': '', 'className': 'nav-tab active', 'innerText': 'Strategy', 'x': 76, 'y': 104} @ 2025-12-08T00:03:06.839Z
+[96m[2025-12-07 19:03:07] [92m[INFO][0m    CLIENT DEBUG: switchView_trading
+[96m[2025-12-07 19:03:07] [92m[INFO][0m    🖱️ CLIENT_EVENT [click]: {'tagName': 'BUTTON', 'id': '', 'className': 'nav-tab active', 'innerText': 'Trading Dashboard', 'x': 182, 'y': 105} @ 2025-12-08T00:03:07.856Z
+[96m[2025-12-07 19:03:38] [92m[INFO][0m    Starting bot in demo mode...
+[96m[2025-12-07 19:03:38] [92m[INFO][0m    🖱️ CLIENT_EVENT [click]: {'tagName': 'BUTTON', 'id': 'startBtn', 'className': 'primary', 'innerText': '▶ Start', 'x': 79, 'y': 113} @ 2025-12-08T00:03:38.134Z
+[96m[2025-12-07 19:03:38] [92m[INFO][0m    Running trading bot in demo mode (Market Open: False)...
+[96m[2025-12-07 19:03:38] [92m[INFO][0m    Starting trading bot cycle...
+$BRK.B: possibly delisted; no price data found  (period=1y) (Yahoo error = "No data found, symbol may be delisted")
+$CEIX: possibly delisted; no price data found  (period=1y) (Yahoo error = "No data found, symbol may be delisted")
+HTTP Error 500: <!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Yahoo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <style>
+      html {
+          height: 100%;
+      }
+      body {
+          background: #fafafc url(https://s.yimg.com/nn/img/sad-panda-201402200631.png) 50% 50%;
+          background-size: cover;
+          height: 100%;
+          text-align: center;
+          font: 300 18px "helvetica neue", helvetica, verdana, tahoma, arial, sans-serif;
+          margin: 0;
+      }
+      table {
+          height: 100%;
+          width: 100%;
+          table-layout: fixed;
+          border-collapse: collapse;
+          border-spacing: 0;
+          border: none;
+      }
+      h1 {
+          font-size: 42px;
+          font-weight: 400;
+          color: #400090;
+      }
+      p {
+          color: #1A1A1A;
+      }
+      #message-1 {
+          font-weight: bold;
+          margin: 0;
+      }
+      #message-2 {
+          display: inline-block;
+          *display: inline;
+          zoom: 1;
+          max-width: 17em;
+          _width: 17em;
+      }
+      </style>
+      <script>
+      
+      </script>
+  </head>
+  <body>
+  <!-- status code : 500 -->
+  <!-- Unknown Host -->
+  <!-- host machine: ats-ncache-api--production-bf1-667d4f84db-kwkbj -->
+  <!-- timestamp: 1765152222.032 -->
+  <!-- url: https://default.finance-yql-production.finance-k8s.omega.yahoo.com/v10/finance/quoteSummary/BTC/USD?modules=financialData%2CquoteType%2CdefaultKeyStatistics%2CassetProfile%2CsummaryDetail&corsDomain=finance.yahoo.com&formatted=false&symbol=BTC%2FUSD&crumb=Z4ipnxurB3i-->
+  <script type="text/javascript">
+    function buildUrl(url, parameters){
+      var qs = [];
+      for(var key in parameters) {
+        var value = parameters[key];
+        qs.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+      }
+      url = url + "?" + qs.join('&');
+      return url;
+    }
+
+    function generateBRBMarkup(site) {
+      params.source = 'brb';
+      generateBeaconMarkup(params);
+      var englishHeader = 'Will be right back...';
+      var englishMessage1 = 'Thank you for your patience.';
+      var englishMessage2 = 'Our engineers are working quickly to resolve the issue.';
+      var defaultLogoStyle = '';
+      var siteDataMap = {
+        'default': {
+          logo: 'https://s.yimg.com/rz/p/yahoo_frontpage_en-US_s_f_p_205x58_frontpage.png',
+          logoAlt: 'Yahoo Logo',
+          logoStyle: defaultLogoStyle,
+          header: englishHeader,
+          message1: englishMessage1,
+          message2: englishMessage2
+        }
+      };
+
+      var siteDetails = siteDataMap['default'];
+
+      document.write('<table><tbody><tr><td>');
+      document.write('<div id="content">');
+      document.write('<img src="' + siteDetails['logo'] + '" alt="' + siteDetails['logoAlt'] + '" style="' + siteDetails['logoStyle'] + '">');
+      document.write('<h1 style="margin-top:20px;">' + siteDetails['header'] + '</h1>');
+      document.write('<p id="message-1">' + siteDetails['message1'] + '</p>');
+      document.write('<p id="message-2">' + siteDetails['message2'] + '</p>');
+      document.write('</div>');
+      document.write('</td></tr></tbody></table>');
+    }
+
+    function generateBeaconMarkup(params) {
+        document.write('<img src="' + buildUrl('//geo.yahoo.com/b', params) + '" style="display:none;" width="0px" height="0px"/>');
+        var beacon = new Image();
+        beacon.src = buildUrl('//bcn.fp.yahoo.com/p', params);
+    }
+
+    var hostname = window.location.hostname;
+    var device = 'desktop';
+    var ynet = ('-' === '1');
+    var time = new Date().getTime();
+    var params = {
+        s: '1197757129',
+        t: time,
+        err_url: document.URL,
+        err: '500',
+        test: '-',
+        ats_host: 'ats-ncache-api--production-bf1-667d4f84db-kwkbj',
+        rid: '-',
+        message: 'Unknown Host'
+    };
+
+    if(ynet) {
+        document.write('<div style="height: 5px; background-color: red;"></div>');
+    }
+    generateBRBMarkup(hostname, params);
+
+  </script>
+  <noscript>
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <div id="englishContent">
+            <h1 style="margin-top:20px;">Will be right back...</h1>
+            <p id="message-1">Thank you for your patience.</p>
+            <p id="message-2">Our engineers are working quickly to resolve the issue.</p>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </noscript>
+  </body>
+</html>
+
+HTTP Error 500: <!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Yahoo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <style>
+      html {
+          height: 100%;
+      }
+      body {
+          background: #fafafc url(https://s.yimg.com/nn/img/sad-panda-201402200631.png) 50% 50%;
+          background-size: cover;
+          height: 100%;
+          text-align: center;
+          font: 300 18px "helvetica neue", helvetica, verdana, tahoma, arial, sans-serif;
+          margin: 0;
+      }
+      table {
+          height: 100%;
+          width: 100%;
+          table-layout: fixed;
+          border-collapse: collapse;
+          border-spacing: 0;
+          border: none;
+      }
+      h1 {
+          font-size: 42px;
+          font-weight: 400;
+          color: #400090;
+      }
+      p {
+          color: #1A1A1A;
+      }
+      #message-1 {
+          font-weight: bold;
+          margin: 0;
+      }
+      #message-2 {
+          display: inline-block;
+          *display: inline;
+          zoom: 1;
+          max-width: 17em;
+          _width: 17em;
+      }
+      </style>
+      <script>
+      
+      </script>
+  </head>
+  <body>
+  <!-- status code : 500 -->
+  <!-- Unknown Host -->
+  <!-- host machine: ats-ncache-api--production-bf1-667d4f84db-hkc4w -->
+  <!-- timestamp: 1765152222.041 -->
+  <!-- url: https://default.finance-yql-production.finance-k8s.omega.yahoo.com/v10/finance/quoteSummary/LTC/USD?modules=financialData%2CquoteType%2CdefaultKeyStatistics%2CassetProfile%2CsummaryDetail&corsDomain=finance.yahoo.com&formatted=false&symbol=LTC%2FUSD&crumb=Z4ipnxurB3i-->
+  <script type="text/javascript">
+    function buildUrl(url, parameters){
+      var qs = [];
+      for(var key in parameters) {
+        var value = parameters[key];
+        qs.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+      }
+      url = url + "?" + qs.join('&');
+      return url;
+    }
+
+    function generateBRBMarkup(site) {
+      params.source = 'brb';
+      generateBeaconMarkup(params);
+      var englishHeader = 'Will be right back...';
+      var englishMessage1 = 'Thank you for your patience.';
+      var englishMessage2 = 'Our engineers are working quickly to resolve the issue.';
+      var defaultLogoStyle = '';
+      var siteDataMap = {
+        'default': {
+          logo: 'https://s.yimg.com/rz/p/yahoo_frontpage_en-US_s_f_p_205x58_frontpage.png',
+          logoAlt: 'Yahoo Logo',
+          logoStyle: defaultLogoStyle,
+          header: englishHeader,
+          message1: englishMessage1,
+          message2: englishMessage2
+        }
+      };
+
+      var siteDetails = siteDataMap['default'];
+
+      document.write('<table><tbody><tr><td>');
+      document.write('<div id="content">');
+      document.write('<img src="' + siteDetails['logo'] + '" alt="' + siteDetails['logoAlt'] + '" style="' + siteDetails['logoStyle'] + '">');
+      document.write('<h1 style="margin-top:20px;">' + siteDetails['header'] + '</h1>');
+      document.write('<p id="message-1">' + siteDetails['message1'] + '</p>');
+      document.write('<p id="message-2">' + siteDetails['message2'] + '</p>');
+      document.write('</div>');
+      document.write('</td></tr></tbody></table>');
+    }
+
+    function generateBeaconMarkup(params) {
+        document.write('<img src="' + buildUrl('//geo.yahoo.com/b', params) + '" style="display:none;" width="0px" height="0px"/>');
+        var beacon = new Image();
+        beacon.src = buildUrl('//bcn.fp.yahoo.com/p', params);
+    }
+
+    var hostname = window.location.hostname;
+    var device = 'desktop';
+    var ynet = ('-' === '1');
+    var time = new Date().getTime();
+    var params = {
+        s: '1197757129',
+        t: time,
+        err_url: document.URL,
+        err: '500',
+        test: '-',
+        ats_host: 'ats-ncache-api--production-bf1-667d4f84db-hkc4w',
+        rid: '-',
+        message: 'Unknown Host'
+    };
+
+    if(ynet) {
+        document.write('<div style="height: 5px; background-color: red;"></div>');
+    }
+    generateBRBMarkup(hostname, params);
+
+  </script>
+  <noscript>
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <div id="englishContent">
+            <h1 style="margin-top:20px;">Will be right back...</h1>
+            <p id="message-1">Thank you for your patience.</p>
+            <p id="message-2">Our engineers are working quickly to resolve the issue.</p>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </noscript>
+  </body>
+</html>
+
+HTTP Error 500: <!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Yahoo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <style>
+      html {
+          height: 100%;
+      }
+      body {
+          background: #fafafc url(https://s.yimg.com/nn/img/sad-panda-201402200631.png) 50% 50%;
+          background-size: cover;
+          height: 100%;
+          text-align: center;
+          font: 300 18px "helvetica neue", helvetica, verdana, tahoma, arial, sans-serif;
+          margin: 0;
+      }
+      table {
+          height: 100%;
+          width: 100%;
+          table-layout: fixed;
+          border-collapse: collapse;
+          border-spacing: 0;
+          border: none;
+      }
+      h1 {
+          font-size: 42px;
+          font-weight: 400;
+          color: #400090;
+      }
+      p {
+          color: #1A1A1A;
+      }
+      #message-1 {
+          font-weight: bold;
+          margin: 0;
+      }
+      #message-2 {
+          display: inline-block;
+          *display: inline;
+          zoom: 1;
+          max-width: 17em;
+          _width: 17em;
+      }
+      </style>
+      <script>
+      
+      </script>
+  </head>
+  <body>
+  <!-- status code : 500 -->
+  <!-- Unknown Host -->
+  <!-- host machine: ats-ncache-api--production-ne1-974b8956c-gccw9 -->
+  <!-- timestamp: 1765152222.049 -->
+  <!-- url: https://default.finance-yql-production.finance-k8s.omega.yahoo.com/v10/finance/quoteSummary/SOL/USD?modules=financialData%2CquoteType%2CdefaultKeyStatistics%2CassetProfile%2CsummaryDetail&corsDomain=finance.yahoo.com&formatted=false&symbol=SOL%2FUSD&crumb=Z4ipnxurB3i-->
+  <script type="text/javascript">
+    function buildUrl(url, parameters){
+      var qs = [];
+      for(var key in parameters) {
+        var value = parameters[key];
+        qs.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+      }
+      url = url + "?" + qs.join('&');
+      return url;
+    }
+
+    function generateBRBMarkup(site) {
+      params.source = 'brb';
+      generateBeaconMarkup(params);
+      var englishHeader = 'Will be right back...';
+      var englishMessage1 = 'Thank you for your patience.';
+      var englishMessage2 = 'Our engineers are working quickly to resolve the issue.';
+      var defaultLogoStyle = '';
+      var siteDataMap = {
+        'default': {
+          logo: 'https://s.yimg.com/rz/p/yahoo_frontpage_en-US_s_f_p_205x58_frontpage.png',
+          logoAlt: 'Yahoo Logo',
+          logoStyle: defaultLogoStyle,
+          header: englishHeader,
+          message1: englishMessage1,
+          message2: englishMessage2
+        }
+      };
+
+      var siteDetails = siteDataMap['default'];
+
+      document.write('<table><tbody><tr><td>');
+      document.write('<div id="content">');
+      document.write('<img src="' + siteDetails['logo'] + '" alt="' + siteDetails['logoAlt'] + '" style="' + siteDetails['logoStyle'] + '">');
+      document.write('<h1 style="margin-top:20px;">' + siteDetails['header'] + '</h1>');
+      document.write('<p id="message-1">' + siteDetails['message1'] + '</p>');
+      document.write('<p id="message-2">' + siteDetails['message2'] + '</p>');
+      document.write('</div>');
+      document.write('</td></tr></tbody></table>');
+    }
+
+    function generateBeaconMarkup(params) {
+        document.write('<img src="' + buildUrl('//geo.yahoo.com/b', params) + '" style="display:none;" width="0px" height="0px"/>');
+        var beacon = new Image();
+        beacon.src = buildUrl('//bcn.fp.yahoo.com/p', params);
+    }
+
+    var hostname = window.location.hostname;
+    var device = 'desktop';
+    var ynet = ('-' === '1');
+    var time = new Date().getTime();
+    var params = {
+        s: '1197757129',
+        t: time,
+        err_url: document.URL,
+        err: '500',
+        test: '-',
+        ats_host: 'ats-ncache-api--production-ne1-974b8956c-gccw9',
+        rid: '-',
+        message: 'Unknown Host'
+    };
+
+    if(ynet) {
+        document.write('<div style="height: 5px; background-color: red;"></div>');
+    }
+    generateBRBMarkup(hostname, params);
+
+  </script>
+  <noscript>
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <div id="englishContent">
+            <h1 style="margin-top:20px;">Will be right back...</h1>
+            <p id="message-1">Thank you for your patience.</p>
+            <p id="message-2">Our engineers are working quickly to resolve the issue.</p>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </noscript>
+  </body>
+</html>
+
+HTTP Error 500: <!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Yahoo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <style>
+      html {
+          height: 100%;
+      }
+      body {
+          background: #fafafc url(https://s.yimg.com/nn/img/sad-panda-201402200631.png) 50% 50%;
+          background-size: cover;
+          height: 100%;
+          text-align: center;
+          font: 300 18px "helvetica neue", helvetica, verdana, tahoma, arial, sans-serif;
+          margin: 0;
+      }
+      table {
+          height: 100%;
+          width: 100%;
+          table-layout: fixed;
+          border-collapse: collapse;
+          border-spacing: 0;
+          border: none;
+      }
+      h1 {
+          font-size: 42px;
+          font-weight: 400;
+          color: #400090;
+      }
+      p {
+          color: #1A1A1A;
+      }
+      #message-1 {
+          font-weight: bold;
+          margin: 0;
+      }
+      #message-2 {
+          display: inline-block;
+          *display: inline;
+          zoom: 1;
+          max-width: 17em;
+          _width: 17em;
+      }
+      </style>
+      <script>
+      
+      </script>
+  </head>
+  <body>
+  <!-- status code : 500 -->
+  <!-- Unknown Host -->
+  <!-- host machine: ats-ncache-api--production-ne1-974b8956c-rxf8c -->
+  <!-- timestamp: 1765152222.048 -->
+  <!-- url: https://default.finance-yql-production.finance-k8s.omega.yahoo.com/v10/finance/quoteSummary/SHIB/USD?modules=financialData%2CquoteType%2CdefaultKeyStatistics%2CassetProfile%2CsummaryDetail&corsDomain=finance.yahoo.com&formatted=false&symbol=SHIB%2FUSD&crumb=Z4ipnxurB3i-->
+  <script type="text/javascript">
+    function buildUrl(url, parameters){
+      var qs = [];
+      for(var key in parameters) {
+        var value = parameters[key];
+        qs.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+      }
+      url = url + "?" + qs.join('&');
+      return url;
+    }
+
+    function generateBRBMarkup(site) {
+      params.source = 'brb';
+      generateBeaconMarkup(params);
+      var englishHeader = 'Will be right back...';
+      var englishMessage1 = 'Thank you for your patience.';
+      var englishMessage2 = 'Our engineers are working quickly to resolve the issue.';
+      var defaultLogoStyle = '';
+      var siteDataMap = {
+        'default': {
+          logo: 'https://s.yimg.com/rz/p/yahoo_frontpage_en-US_s_f_p_205x58_frontpage.png',
+          logoAlt: 'Yahoo Logo',
+          logoStyle: defaultLogoStyle,
+          header: englishHeader,
+          message1: englishMessage1,
+          message2: englishMessage2
+        }
+      };
+
+      var siteDetails = siteDataMap['default'];
+
+      document.write('<table><tbody><tr><td>');
+      document.write('<div id="content">');
+      document.write('<img src="' + siteDetails['logo'] + '" alt="' + siteDetails['logoAlt'] + '" style="' + siteDetails['logoStyle'] + '">');
+      document.write('<h1 style="margin-top:20px;">' + siteDetails['header'] + '</h1>');
+      document.write('<p id="message-1">' + siteDetails['message1'] + '</p>');
+      document.write('<p id="message-2">' + siteDetails['message2'] + '</p>');
+      document.write('</div>');
+      document.write('</td></tr></tbody></table>');
+    }
+
+    function generateBeaconMarkup(params) {
+        document.write('<img src="' + buildUrl('//geo.yahoo.com/b', params) + '" style="display:none;" width="0px" height="0px"/>');
+        var beacon = new Image();
+        beacon.src = buildUrl('//bcn.fp.yahoo.com/p', params);
+    }
+
+    var hostname = window.location.hostname;
+    var device = 'desktop';
+    var ynet = ('-' === '1');
+    var time = new Date().getTime();
+    var params = {
+        s: '1197757129',
+        t: time,
+        err_url: document.URL,
+        err: '500',
+        test: '-',
+        ats_host: 'ats-ncache-api--production-ne1-974b8956c-rxf8c',
+        rid: '-',
+        message: 'Unknown Host'
+    };
+
+    if(ynet) {
+        document.write('<div style="height: 5px; background-color: red;"></div>');
+    }
+    generateBRBMarkup(hostname, params);
+
+  </script>
+  <noscript>
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <div id="englishContent">
+            <h1 style="margin-top:20px;">Will be right back...</h1>
+            <p id="message-1">Thank you for your patience.</p>
+            <p id="message-2">Our engineers are working quickly to resolve the issue.</p>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </noscript>
+  </body>
+</html>
+
+HTTP Error 500: <!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Yahoo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <style>
+      html {
+          height: 100%;
+      }
+      body {
+          background: #fafafc url(https://s.yimg.com/nn/img/sad-panda-201402200631.png) 50% 50%;
+          background-size: cover;
+          height: 100%;
+          text-align: center;
+          font: 300 18px "helvetica neue", helvetica, verdana, tahoma, arial, sans-serif;
+          margin: 0;
+      }
+      table {
+          height: 100%;
+          width: 100%;
+          table-layout: fixed;
+          border-collapse: collapse;
+          border-spacing: 0;
+          border: none;
+      }
+      h1 {
+          font-size: 42px;
+          font-weight: 400;
+          color: #400090;
+      }
+      p {
+          color: #1A1A1A;
+      }
+      #message-1 {
+          font-weight: bold;
+          margin: 0;
+      }
+      #message-2 {
+          display: inline-block;
+          *display: inline;
+          zoom: 1;
+          max-width: 17em;
+          _width: 17em;
+      }
+      </style>
+      <script>
+      
+      </script>
+  </head>
+  <body>
+  <!-- status code : 500 -->
+  <!-- Unknown Host -->
+  <!-- host machine: ats-ncache-api--production-ne1-974b8956c-cslrv -->
+  <!-- timestamp: 1765152222.051 -->
+  <!-- url: https://default.finance-yql-production.finance-k8s.omega.yahoo.com/v10/finance/quoteSummary/LINK/USD?modules=financialData%2CquoteType%2CdefaultKeyStatistics%2CassetProfile%2CsummaryDetail&corsDomain=finance.yahoo.com&formatted=false&symbol=LINK%2FUSD&crumb=Z4ipnxurB3i-->
+  <script type="text/javascript">
+    function buildUrl(url, parameters){
+      var qs = [];
+      for(var key in parameters) {
+        var value = parameters[key];
+        qs.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+      }
+      url = url + "?" + qs.join('&');
+      return url;
+    }
+
+    function generateBRBMarkup(site) {
+      params.source = 'brb';
+      generateBeaconMarkup(params);
+      var englishHeader = 'Will be right back...';
+      var englishMessage1 = 'Thank you for your patience.';
+      var englishMessage2 = 'Our engineers are working quickly to resolve the issue.';
+      var defaultLogoStyle = '';
+      var siteDataMap = {
+        'default': {
+          logo: 'https://s.yimg.com/rz/p/yahoo_frontpage_en-US_s_f_p_205x58_frontpage.png',
+          logoAlt: 'Yahoo Logo',
+          logoStyle: defaultLogoStyle,
+          header: englishHeader,
+          message1: englishMessage1,
+          message2: englishMessage2
+        }
+      };
+
+      var siteDetails = siteDataMap['default'];
+
+      document.write('<table><tbody><tr><td>');
+      document.write('<div id="content">');
+      document.write('<img src="' + siteDetails['logo'] + '" alt="' + siteDetails['logoAlt'] + '" style="' + siteDetails['logoStyle'] + '">');
+      document.write('<h1 style="margin-top:20px;">' + siteDetails['header'] + '</h1>');
+      document.write('<p id="message-1">' + siteDetails['message1'] + '</p>');
+      document.write('<p id="message-2">' + siteDetails['message2'] + '</p>');
+      document.write('</div>');
+      document.write('</td></tr></tbody></table>');
+    }
+
+    function generateBeaconMarkup(params) {
+        document.write('<img src="' + buildUrl('//geo.yahoo.com/b', params) + '" style="display:none;" width="0px" height="0px"/>');
+        var beacon = new Image();
+        beacon.src = buildUrl('//bcn.fp.yahoo.com/p', params);
+    }
+
+    var hostname = window.location.hostname;
+    var device = 'desktop';
+    var ynet = ('-' === '1');
+    var time = new Date().getTime();
+    var params = {
+        s: '1197757129',
+        t: time,
+        err_url: document.URL,
+        err: '500',
+        test: '-',
+        ats_host: 'ats-ncache-api--production-ne1-974b8956c-cslrv',
+        rid: '-',
+        message: 'Unknown Host'
+    };
+
+    if(ynet) {
+        document.write('<div style="height: 5px; background-color: red;"></div>');
+    }
+    generateBRBMarkup(hostname, params);
+
+  </script>
+  <noscript>
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <div id="englishContent">
+            <h1 style="margin-top:20px;">Will be right back...</h1>
+            <p id="message-1">Thank you for your patience.</p>
+            <p id="message-2">Our engineers are working quickly to resolve the issue.</p>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </noscript>
+  </body>
+</html>
+
+HTTP Error 500: <!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Yahoo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <style>
+      html {
+          height: 100%;
+      }
+      body {
+          background: #fafafc url(https://s.yimg.com/nn/img/sad-panda-201402200631.png) 50% 50%;
+          background-size: cover;
+          height: 100%;
+          text-align: center;
+          font: 300 18px "helvetica neue", helvetica, verdana, tahoma, arial, sans-serif;
+          margin: 0;
+      }
+      table {
+          height: 100%;
+          width: 100%;
+          table-layout: fixed;
+          border-collapse: collapse;
+          border-spacing: 0;
+          border: none;
+      }
+      h1 {
+          font-size: 42px;
+          font-weight: 400;
+          color: #400090;
+      }
+      p {
+          color: #1A1A1A;
+      }
+      #message-1 {
+          font-weight: bold;
+          margin: 0;
+      }
+      #message-2 {
+          display: inline-block;
+          *display: inline;
+          zoom: 1;
+          max-width: 17em;
+          _width: 17em;
+      }
+      </style>
+      <script>
+      
+      </script>
+  </head>
+  <body>
+  <!-- status code : 500 -->
+  <!-- Unknown Host -->
+  <!-- host machine: ats-ncache-api--production-bf1-667d4f84db-tqmlh -->
+  <!-- timestamp: 1765152222.041 -->
+  <!-- url: https://default.finance-yql-production.finance-k8s.omega.yahoo.com/v10/finance/quoteSummary/ETH/USD?modules=financialData%2CquoteType%2CdefaultKeyStatistics%2CassetProfile%2CsummaryDetail&corsDomain=finance.yahoo.com&formatted=false&symbol=ETH%2FUSD&crumb=Z4ipnxurB3i-->
+  <script type="text/javascript">
+    function buildUrl(url, parameters){
+      var qs = [];
+      for(var key in parameters) {
+        var value = parameters[key];
+        qs.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+      }
+      url = url + "?" + qs.join('&');
+      return url;
+    }
+
+    function generateBRBMarkup(site) {
+      params.source = 'brb';
+      generateBeaconMarkup(params);
+      var englishHeader = 'Will be right back...';
+      var englishMessage1 = 'Thank you for your patience.';
+      var englishMessage2 = 'Our engineers are working quickly to resolve the issue.';
+      var defaultLogoStyle = '';
+      var siteDataMap = {
+        'default': {
+          logo: 'https://s.yimg.com/rz/p/yahoo_frontpage_en-US_s_f_p_205x58_frontpage.png',
+          logoAlt: 'Yahoo Logo',
+          logoStyle: defaultLogoStyle,
+          header: englishHeader,
+          message1: englishMessage1,
+          message2: englishMessage2
+        }
+      };
+
+      var siteDetails = siteDataMap['default'];
+
+      document.write('<table><tbody><tr><td>');
+      document.write('<div id="content">');
+      document.write('<img src="' + siteDetails['logo'] + '" alt="' + siteDetails['logoAlt'] + '" style="' + siteDetails['logoStyle'] + '">');
+      document.write('<h1 style="margin-top:20px;">' + siteDetails['header'] + '</h1>');
+      document.write('<p id="message-1">' + siteDetails['message1'] + '</p>');
+      document.write('<p id="message-2">' + siteDetails['message2'] + '</p>');
+      document.write('</div>');
+      document.write('</td></tr></tbody></table>');
+    }
+
+    function generateBeaconMarkup(params) {
+        document.write('<img src="' + buildUrl('//geo.yahoo.com/b', params) + '" style="display:none;" width="0px" height="0px"/>');
+        var beacon = new Image();
+        beacon.src = buildUrl('//bcn.fp.yahoo.com/p', params);
+    }
+
+    var hostname = window.location.hostname;
+    var device = 'desktop';
+    var ynet = ('-' === '1');
+    var time = new Date().getTime();
+    var params = {
+        s: '1197757129',
+        t: time,
+        err_url: document.URL,
+        err: '500',
+        test: '-',
+        ats_host: 'ats-ncache-api--production-bf1-667d4f84db-tqmlh',
+        rid: '-',
+        message: 'Unknown Host'
+    };
+
+    if(ynet) {
+        document.write('<div style="height: 5px; background-color: red;"></div>');
+    }
+    generateBRBMarkup(hostname, params);
+
+  </script>
+  <noscript>
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <div id="englishContent">
+            <h1 style="margin-top:20px;">Will be right back...</h1>
+            <p id="message-1">Thank you for your patience.</p>
+            <p id="message-2">Our engineers are working quickly to resolve the issue.</p>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </noscript>
+  </body>
+</html>
+
+HTTP Error 500: <!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Yahoo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <style>
+      html {
+          height: 100%;
+      }
+      body {
+          background: #fafafc url(https://s.yimg.com/nn/img/sad-panda-201402200631.png) 50% 50%;
+          background-size: cover;
+          height: 100%;
+          text-align: center;
+          font: 300 18px "helvetica neue", helvetica, verdana, tahoma, arial, sans-serif;
+          margin: 0;
+      }
+      table {
+          height: 100%;
+          width: 100%;
+          table-layout: fixed;
+          border-collapse: collapse;
+          border-spacing: 0;
+          border: none;
+      }
+      h1 {
+          font-size: 42px;
+          font-weight: 400;
+          color: #400090;
+      }
+      p {
+          color: #1A1A1A;
+      }
+      #message-1 {
+          font-weight: bold;
+          margin: 0;
+      }
+      #message-2 {
+          display: inline-block;
+          *display: inline;
+          zoom: 1;
+          max-width: 17em;
+          _width: 17em;
+      }
+      </style>
+      <script>
+      
+      </script>
+  </head>
+  <body>
+  <!-- status code : 500 -->
+  <!-- Unknown Host -->
+  <!-- host machine: ats-ncache-api--production-ne1-974b8956c-z28x2 -->
+  <!-- timestamp: 1765152222.054 -->
+  <!-- url: https://default.finance-yql-production.finance-k8s.omega.yahoo.com/v10/finance/quoteSummary/ETC/USD?modules=financialData%2CquoteType%2CdefaultKeyStatistics%2CassetProfile%2CsummaryDetail&corsDomain=finance.yahoo.com&formatted=false&symbol=ETC%2FUSD&crumb=Z4ipnxurB3i-->
+  <script type="text/javascript">
+    function buildUrl(url, parameters){
+      var qs = [];
+      for(var key in parameters) {
+        var value = parameters[key];
+        qs.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+      }
+      url = url + "?" + qs.join('&');
+      return url;
+    }
+
+    function generateBRBMarkup(site) {
+      params.source = 'brb';
+      generateBeaconMarkup(params);
+      var englishHeader = 'Will be right back...';
+      var englishMessage1 = 'Thank you for your patience.';
+      var englishMessage2 = 'Our engineers are working quickly to resolve the issue.';
+      var defaultLogoStyle = '';
+      var siteDataMap = {
+        'default': {
+          logo: 'https://s.yimg.com/rz/p/yahoo_frontpage_en-US_s_f_p_205x58_frontpage.png',
+          logoAlt: 'Yahoo Logo',
+          logoStyle: defaultLogoStyle,
+          header: englishHeader,
+          message1: englishMessage1,
+          message2: englishMessage2
+        }
+      };
+
+      var siteDetails = siteDataMap['default'];
+
+      document.write('<table><tbody><tr><td>');
+      document.write('<div id="content">');
+      document.write('<img src="' + siteDetails['logo'] + '" alt="' + siteDetails['logoAlt'] + '" style="' + siteDetails['logoStyle'] + '">');
+      document.write('<h1 style="margin-top:20px;">' + siteDetails['header'] + '</h1>');
+      document.write('<p id="message-1">' + siteDetails['message1'] + '</p>');
+      document.write('<p id="message-2">' + siteDetails['message2'] + '</p>');
+      document.write('</div>');
+      document.write('</td></tr></tbody></table>');
+    }
+
+    function generateBeaconMarkup(params) {
+        document.write('<img src="' + buildUrl('//geo.yahoo.com/b', params) + '" style="display:none;" width="0px" height="0px"/>');
+        var beacon = new Image();
+        beacon.src = buildUrl('//bcn.fp.yahoo.com/p', params);
+    }
+
+    var hostname = window.location.hostname;
+    var device = 'desktop';
+    var ynet = ('-' === '1');
+    var time = new Date().getTime();
+    var params = {
+        s: '1197757129',
+        t: time,
+        err_url: document.URL,
+        err: '500',
+        test: '-',
+        ats_host: 'ats-ncache-api--production-ne1-974b8956c-z28x2',
+        rid: '-',
+        message: 'Unknown Host'
+    };
+
+    if(ynet) {
+        document.write('<div style="height: 5px; background-color: red;"></div>');
+    }
+    generateBRBMarkup(hostname, params);
+
+  </script>
+  <noscript>
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <div id="englishContent">
+            <h1 style="margin-top:20px;">Will be right back...</h1>
+            <p id="message-1">Thank you for your patience.</p>
+            <p id="message-2">Our engineers are working quickly to resolve the issue.</p>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </noscript>
+  </body>
+</html>
+
+HTTP Error 500: <!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Yahoo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <style>
+      html {
+          height: 100%;
+      }
+      body {
+          background: #fafafc url(https://s.yimg.com/nn/img/sad-panda-201402200631.png) 50% 50%;
+          background-size: cover;
+          height: 100%;
+          text-align: center;
+          font: 300 18px "helvetica neue", helvetica, verdana, tahoma, arial, sans-serif;
+          margin: 0;
+      }
+      table {
+          height: 100%;
+          width: 100%;
+          table-layout: fixed;
+          border-collapse: collapse;
+          border-spacing: 0;
+          border: none;
+      }
+      h1 {
+          font-size: 42px;
+          font-weight: 400;
+          color: #400090;
+      }
+      p {
+          color: #1A1A1A;
+      }
+      #message-1 {
+          font-weight: bold;
+          margin: 0;
+      }
+      #message-2 {
+          display: inline-block;
+          *display: inline;
+          zoom: 1;
+          max-width: 17em;
+          _width: 17em;
+      }
+      </style>
+      <script>
+      
+      </script>
+  </head>
+  <body>
+  <!-- status code : 500 -->
+  <!-- Unknown Host -->
+  <!-- host machine: ats-ncache-api--production-bf1-667d4f84db-w992h -->
+  <!-- timestamp: 1765152222.036 -->
+  <!-- url: https://default.finance-yql-production.finance-k8s.omega.yahoo.com/v10/finance/quoteSummary/DOGE/USD?modules=financialData%2CquoteType%2CdefaultKeyStatistics%2CassetProfile%2CsummaryDetail&corsDomain=finance.yahoo.com&formatted=false&symbol=DOGE%2FUSD&crumb=Z4ipnxurB3i-->
+  <script type="text/javascript">
+    function buildUrl(url, parameters){
+      var qs = [];
+      for(var key in parameters) {
+        var value = parameters[key];
+        qs.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+      }
+      url = url + "?" + qs.join('&');
+      return url;
+    }
+
+    function generateBRBMarkup(site) {
+      params.source = 'brb';
+      generateBeaconMarkup(params);
+      var englishHeader = 'Will be right back...';
+      var englishMessage1 = 'Thank you for your patience.';
+      var englishMessage2 = 'Our engineers are working quickly to resolve the issue.';
+      var defaultLogoStyle = '';
+      var siteDataMap = {
+        'default': {
+          logo: 'https://s.yimg.com/rz/p/yahoo_frontpage_en-US_s_f_p_205x58_frontpage.png',
+          logoAlt: 'Yahoo Logo',
+          logoStyle: defaultLogoStyle,
+          header: englishHeader,
+          message1: englishMessage1,
+          message2: englishMessage2
+        }
+      };
+
+      var siteDetails = siteDataMap['default'];
+
+      document.write('<table><tbody><tr><td>');
+      document.write('<div id="content">');
+      document.write('<img src="' + siteDetails['logo'] + '" alt="' + siteDetails['logoAlt'] + '" style="' + siteDetails['logoStyle'] + '">');
+      document.write('<h1 style="margin-top:20px;">' + siteDetails['header'] + '</h1>');
+      document.write('<p id="message-1">' + siteDetails['message1'] + '</p>');
+      document.write('<p id="message-2">' + siteDetails['message2'] + '</p>');
+      document.write('</div>');
+      document.write('</td></tr></tbody></table>');
+    }
+
+    function generateBeaconMarkup(params) {
+        document.write('<img src="' + buildUrl('//geo.yahoo.com/b', params) + '" style="display:none;" width="0px" height="0px"/>');
+        var beacon = new Image();
+        beacon.src = buildUrl('//bcn.fp.yahoo.com/p', params);
+    }
+
+    var hostname = window.location.hostname;
+    var device = 'desktop';
+    var ynet = ('-' === '1');
+    var time = new Date().getTime();
+    var params = {
+        s: '1197757129',
+        t: time,
+        err_url: document.URL,
+        err: '500',
+        test: '-',
+        ats_host: 'ats-ncache-api--production-bf1-667d4f84db-w992h',
+        rid: '-',
+        message: 'Unknown Host'
+    };
+
+    if(ynet) {
+        document.write('<div style="height: 5px; background-color: red;"></div>');
+    }
+    generateBRBMarkup(hostname, params);
+
+  </script>
+  <noscript>
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <div id="englishContent">
+            <h1 style="margin-top:20px;">Will be right back...</h1>
+            <p id="message-1">Thank you for your patience.</p>
+            <p id="message-2">Our engineers are working quickly to resolve the issue.</p>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </noscript>
+  </body>
+</html>
+
+HTTP Error 500: <!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Yahoo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <style>
+      html {
+          height: 100%;
+      }
+      body {
+          background: #fafafc url(https://s.yimg.com/nn/img/sad-panda-201402200631.png) 50% 50%;
+          background-size: cover;
+          height: 100%;
+          text-align: center;
+          font: 300 18px "helvetica neue", helvetica, verdana, tahoma, arial, sans-serif;
+          margin: 0;
+      }
+      table {
+          height: 100%;
+          width: 100%;
+          table-layout: fixed;
+          border-collapse: collapse;
+          border-spacing: 0;
+          border: none;
+      }
+      h1 {
+          font-size: 42px;
+          font-weight: 400;
+          color: #400090;
+      }
+      p {
+          color: #1A1A1A;
+      }
+      #message-1 {
+          font-weight: bold;
+          margin: 0;
+      }
+      #message-2 {
+          display: inline-block;
+          *display: inline;
+          zoom: 1;
+          max-width: 17em;
+          _width: 17em;
+      }
+      </style>
+      <script>
+      
+      </script>
+  </head>
+  <body>
+  <!-- status code : 500 -->
+  <!-- Unknown Host -->
+  <!-- host machine: ats-ncache-api--production-bf1-667d4f84db-q7z8x -->
+  <!-- timestamp: 1765152222.055 -->
+  <!-- url: https://default.finance-yql-production.finance-k8s.omega.yahoo.com/v10/finance/quoteSummary/BCH/USD?modules=financialData%2CquoteType%2CdefaultKeyStatistics%2CassetProfile%2CsummaryDetail&corsDomain=finance.yahoo.com&formatted=false&symbol=BCH%2FUSD&crumb=Z4ipnxurB3i-->
+  <script type="text/javascript">
+    function buildUrl(url, parameters){
+      var qs = [];
+      for(var key in parameters) {
+        var value = parameters[key];
+        qs.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+      }
+      url = url + "?" + qs.join('&');
+      return url;
+    }
+
+    function generateBRBMarkup(site) {
+      params.source = 'brb';
+      generateBeaconMarkup(params);
+      var englishHeader = 'Will be right back...';
+      var englishMessage1 = 'Thank you for your patience.';
+      var englishMessage2 = 'Our engineers are working quickly to resolve the issue.';
+      var defaultLogoStyle = '';
+      var siteDataMap = {
+        'default': {
+          logo: 'https://s.yimg.com/rz/p/yahoo_frontpage_en-US_s_f_p_205x58_frontpage.png',
+          logoAlt: 'Yahoo Logo',
+          logoStyle: defaultLogoStyle,
+          header: englishHeader,
+          message1: englishMessage1,
+          message2: englishMessage2
+        }
+      };
+
+      var siteDetails = siteDataMap['default'];
+
+      document.write('<table><tbody><tr><td>');
+      document.write('<div id="content">');
+      document.write('<img src="' + siteDetails['logo'] + '" alt="' + siteDetails['logoAlt'] + '" style="' + siteDetails['logoStyle'] + '">');
+      document.write('<h1 style="margin-top:20px;">' + siteDetails['header'] + '</h1>');
+      document.write('<p id="message-1">' + siteDetails['message1'] + '</p>');
+      document.write('<p id="message-2">' + siteDetails['message2'] + '</p>');
+      document.write('</div>');
+      document.write('</td></tr></tbody></table>');
+    }
+
+    function generateBeaconMarkup(params) {
+        document.write('<img src="' + buildUrl('//geo.yahoo.com/b', params) + '" style="display:none;" width="0px" height="0px"/>');
+        var beacon = new Image();
+        beacon.src = buildUrl('//bcn.fp.yahoo.com/p', params);
+    }
+
+    var hostname = window.location.hostname;
+    var device = 'desktop';
+    var ynet = ('-' === '1');
+    var time = new Date().getTime();
+    var params = {
+        s: '1197757129',
+        t: time,
+        err_url: document.URL,
+        err: '500',
+        test: '-',
+        ats_host: 'ats-ncache-api--production-bf1-667d4f84db-q7z8x',
+        rid: '-',
+        message: 'Unknown Host'
+    };
+
+    if(ynet) {
+        document.write('<div style="height: 5px; background-color: red;"></div>');
+    }
+    generateBRBMarkup(hostname, params);
+
+  </script>
+  <noscript>
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <div id="englishContent">
+            <h1 style="margin-top:20px;">Will be right back...</h1>
+            <p id="message-1">Thank you for your patience.</p>
+            <p id="message-2">Our engineers are working quickly to resolve the issue.</p>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </noscript>
+  </body>
+</html>
+
+HTTP Error 500: <!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Yahoo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <style>
+      html {
+          height: 100%;
+      }
+      body {
+          background: #fafafc url(https://s.yimg.com/nn/img/sad-panda-201402200631.png) 50% 50%;
+          background-size: cover;
+          height: 100%;
+          text-align: center;
+          font: 300 18px "helvetica neue", helvetica, verdana, tahoma, arial, sans-serif;
+          margin: 0;
+      }
+      table {
+          height: 100%;
+          width: 100%;
+          table-layout: fixed;
+          border-collapse: collapse;
+          border-spacing: 0;
+          border: none;
+      }
+      h1 {
+          font-size: 42px;
+          font-weight: 400;
+          color: #400090;
+      }
+      p {
+          color: #1A1A1A;
+      }
+      #message-1 {
+          font-weight: bold;
+          margin: 0;
+      }
+      #message-2 {
+          display: inline-block;
+          *display: inline;
+          zoom: 1;
+          max-width: 17em;
+          _width: 17em;
+      }
+      </style>
+      <script>
+      
+      </script>
+  </head>
+  <body>
+  <!-- status code : 500 -->
+  <!-- Unknown Host -->
+  <!-- host machine: ats-ncache-api--production-bf1-667d4f84db-p7648 -->
+  <!-- timestamp: 1765152222.058 -->
+  <!-- url: https://default.finance-yql-production.finance-k8s.omega.yahoo.com/v10/finance/quoteSummary/AVAX/USD?modules=financialData%2CquoteType%2CdefaultKeyStatistics%2CassetProfile%2CsummaryDetail&corsDomain=finance.yahoo.com&formatted=false&symbol=AVAX%2FUSD&crumb=Z4ipnxurB3i-->
+  <script type="text/javascript">
+    function buildUrl(url, parameters){
+      var qs = [];
+      for(var key in parameters) {
+        var value = parameters[key];
+        qs.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+      }
+      url = url + "?" + qs.join('&');
+      return url;
+    }
+
+    function generateBRBMarkup(site) {
+      params.source = 'brb';
+      generateBeaconMarkup(params);
+      var englishHeader = 'Will be right back...';
+      var englishMessage1 = 'Thank you for your patience.';
+      var englishMessage2 = 'Our engineers are working quickly to resolve the issue.';
+      var defaultLogoStyle = '';
+      var siteDataMap = {
+        'default': {
+          logo: 'https://s.yimg.com/rz/p/yahoo_frontpage_en-US_s_f_p_205x58_frontpage.png',
+          logoAlt: 'Yahoo Logo',
+          logoStyle: defaultLogoStyle,
+          header: englishHeader,
+          message1: englishMessage1,
+          message2: englishMessage2
+        }
+      };
+
+      var siteDetails = siteDataMap['default'];
+
+      document.write('<table><tbody><tr><td>');
+      document.write('<div id="content">');
+      document.write('<img src="' + siteDetails['logo'] + '" alt="' + siteDetails['logoAlt'] + '" style="' + siteDetails['logoStyle'] + '">');
+      document.write('<h1 style="margin-top:20px;">' + siteDetails['header'] + '</h1>');
+      document.write('<p id="message-1">' + siteDetails['message1'] + '</p>');
+      document.write('<p id="message-2">' + siteDetails['message2'] + '</p>');
+      document.write('</div>');
+      document.write('</td></tr></tbody></table>');
+    }
+
+    function generateBeaconMarkup(params) {
+        document.write('<img src="' + buildUrl('//geo.yahoo.com/b', params) + '" style="display:none;" width="0px" height="0px"/>');
+        var beacon = new Image();
+        beacon.src = buildUrl('//bcn.fp.yahoo.com/p', params);
+    }
+
+    var hostname = window.location.hostname;
+    var device = 'desktop';
+    var ynet = ('-' === '1');
+    var time = new Date().getTime();
+    var params = {
+        s: '1197757129',
+        t: time,
+        err_url: document.URL,
+        err: '500',
+        test: '-',
+        ats_host: 'ats-ncache-api--production-bf1-667d4f84db-p7648',
+        rid: '-',
+        message: 'Unknown Host'
+    };
+
+    if(ynet) {
+        document.write('<div style="height: 5px; background-color: red;"></div>');
+    }
+    generateBRBMarkup(hostname, params);
+
+  </script>
+  <noscript>
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <div id="englishContent">
+            <h1 style="margin-top:20px;">Will be right back...</h1>
+            <p id="message-1">Thank you for your patience.</p>
+            <p id="message-2">Our engineers are working quickly to resolve the issue.</p>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </noscript>
+  </body>
+</html>
+
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+127.0.0.1 - - [07/Dec/2025 19:03:56] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:04:12] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:04:22] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:04:36] "GET /api/debug_log?msg=switchView_day-trading HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:04:36] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:04:37] "GET /api/watchlist HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:04:37] "GET /api/debug_log?msg=switchView_trading HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:04:37] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:04:40] "GET /api/day-trading/dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:04:55] "GET /api/debug_log?msg=switchView_day-trading HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:04:55] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:04:55] "GET /api/watchlist HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:04:58] "GET /api/day-trading/dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:05:03] "GET /api/day-trading/dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:05:08] "GET /api/day-trading/dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:05:25] "GET /api/day-trading/dashboard HTTP/1.1" 200 -
+[96m[2025-12-07 19:03:38] [92m[INFO][0m    Risk Manager initialized with starting balance: $195716.86
+[96m[2025-12-07 19:03:38] [91m[1m[CRITICAL][0m🚨 CIRCUIT BREAKER TRIGGERED! Daily loss 37.80% exceeds limit 2.00%
+[96m[2025-12-07 19:03:38] [91m[ERROR][0m   🚨 PORTFOLIO HEALTH CRITICAL: Trading Halted
+[96m[2025-12-07 19:03:38] [93m[WARNING][0m ⚠️ CIRCUIT BREAKER TRIGGERED BUT PROCEEDING FOR DEMO
+[96m[2025-12-07 19:03:38] [91m[ERROR][0m   Error getting crypto quote for BTCUSD: {"message":"invalid symbol: BTCUSD does not match ^[A-Z]+/[A-Z]+$"}
+
+[96m[2025-12-07 19:03:38] [92m[INFO][0m    Fetching data for 60 stocks...
+[96m[2025-12-07 19:03:41] [92m[INFO][0m    Successfully fetched data for 58 stocks
+[96m[2025-12-07 19:03:41] [92m[INFO][0m    Running multi-strategy stock screening...
+[96m[2025-12-07 19:03:41] [92m[INFO][0m    Market Sentiment (SPY): 0.19% today
+[96m[2025-12-07 19:03:41] [92m[INFO][0m    Loaded strategy weights: {'momentum': 0.547945205479452, 'growth': 0.22602739726027396, 'value': 0.22602739726027396}
+[96m[2025-12-07 19:03:41] [92m[INFO][0m    Fetching data for 10 crypto assets...
+[96m[2025-12-07 19:03:42] [91m[ERROR][0m   Error fetching data for BCH/USD: Failed to parse json response from Yahoo Finance: {'code': 'Not Found', 'description': 'HTTP 404 Not Found'}
+[96m[2025-12-07 19:03:42] [91m[ERROR][0m   Error fetching data for SHIB/USD: Failed to parse json response from Yahoo Finance: {'code': 'Not Found', 'description': 'HTTP 404 Not Found'}
+[96m[2025-12-07 19:03:42] [91m[ERROR][0m   Error fetching data for LINK/USD: Failed to parse json response from Yahoo Finance: {'code': 'Not Found', 'description': 'HTTP 404 Not Found'}
+[96m[2025-12-07 19:03:42] [91m[ERROR][0m   Error fetching data for ETH/USD: Failed to parse json response from Yahoo Finance: {'code': 'Not Found', 'description': 'HTTP 404 Not Found'}
+[96m[2025-12-07 19:03:42] [91m[ERROR][0m   Error fetching data for AVAX/USD: Failed to parse json response from Yahoo Finance: {'code': 'Not Found', 'description': 'HTTP 404 Not Found'}
+[96m[2025-12-07 19:03:42] [91m[ERROR][0m   Error fetching data for DOGE/USD: Failed to parse json response from Yahoo Finance: {'code': 'Not Found', 'description': 'HTTP 404 Not Found'}
+[96m[2025-12-07 19:03:42] [91m[ERROR][0m   Error fetching data for SOL/USD: Failed to parse json response from Yahoo Finance: {'code': 'Not Found', 'description': 'HTTP 404 Not Found'}
+[96m[2025-12-07 19:03:42] [91m[ERROR][0m   Error fetching data for ETC/USD: Failed to parse json response from Yahoo Finance: {'code': 'Not Found', 'description': 'HTTP 404 Not Found'}
+[96m[2025-12-07 19:03:42] [91m[ERROR][0m   Error fetching data for BTC/USD: Failed to parse json response from Yahoo Finance: {'code': 'Not Found', 'description': 'HTTP 404 Not Found'}
+[96m[2025-12-07 19:03:42] [91m[ERROR][0m   Error fetching data for LTC/USD: Failed to parse json response from Yahoo Finance: {'code': 'Not Found', 'description': 'HTTP 404 Not Found'}
+[96m[2025-12-07 19:03:42] [92m[INFO][0m    Momentum picks (13): ['FIVE', 'SAIA', 'WFC', 'GOOGL', 'CRM', 'WMT', 'BOOT', 'TXN', 'AVGO', 'NFLX', 'TSLA', 'CSCO', 'MRK']
+[96m[2025-12-07 19:03:42] [92m[INFO][0m    Growth picks (5): ['FIVE', 'LLY', 'AVGO', 'DIS', 'NVDA']
+[96m[2025-12-07 19:03:42] [92m[INFO][0m    Value picks (5): ['UPS', 'VZ', 'CVX', 'PM', 'PEP']
+[96m[2025-12-07 19:03:42] [92m[INFO][0m    Crypto picks (0): []
+[96m[2025-12-07 19:03:42] [92m[INFO][0m    Saved screening results to data/screening_results.json
+[96m[2025-12-07 19:03:42] [92m[INFO][0m    Total unique stocks selected: 21
+[96m[2025-12-07 19:03:43] [92m[INFO][0m    Running ML learning cycle...
+[96m[2025-12-07 19:03:43] [92m[INFO][0m    Momentum - Trades: 1, Win Rate: 100.0%, Avg P&L: 3.33%
+[96m[2025-12-07 19:03:43] [92m[INFO][0m    Growth - Trades: 0, Win Rate: 0.0%, Avg P&L: 0.00%
+[96m[2025-12-07 19:03:43] [92m[INFO][0m    Value - Trades: 0, Win Rate: 0.0%, Avg P&L: 0.00%
+[96m[2025-12-07 19:03:43] [92m[INFO][0m    Saved strategy weights: {'momentum': np.float64(0.547945205479452), 'growth': np.float64(0.22602739726027396), 'value': np.float64(0.22602739726027396)}
+[96m[2025-12-07 19:03:43] [92m[INFO][0m    Adjusted strategy weights: {'momentum': np.float64(0.547945205479452), 'growth': np.float64(0.22602739726027396), 'value': np.float64(0.22602739726027396)}
+[96m[2025-12-07 19:03:43] [92m[INFO][0m    Changes: Momentum +32.2%, Growth +22.6%, Value +22.6%
+[96m[2025-12-07 19:03:43] [92m[INFO][0m    Updated Strategy Weights: {'momentum': np.float64(0.547945205479452), 'growth': np.float64(0.22602739726027396), 'value': np.float64(0.22602739726027396)}
+[96m[2025-12-07 19:03:43] [92m[INFO][0m    Logged strategy decision: updated
+[96m[2025-12-07 19:03:44] [92m[INFO][0m    Sold: None
+[96m[2025-12-07 19:03:44] [92m[INFO][0m    Bought: None
+[96m[2025-12-07 19:03:44] [92m[INFO][0m    Errors: None
+[96m[2025-12-07 19:03:56] [92m[INFO][0m    🖱️ CLIENT_EVENT [click]: {'tagName': 'BUTTON', 'id': '', 'className': 'maximize-btn', 'innerText': '⤡', 'x': 1398, 'y': 128} @ 2025-12-08T00:03:56.024Z
+[96m[2025-12-07 19:04:12] [92m[INFO][0m    🖱️ CLIENT_EVENT [click]: {'tagName': 'BUTTON', 'id': '', 'className': 'maximize-btn', 'innerText': '⤢', 'x': 1379, 'y': 58} @ 2025-12-08T00:04:12.554Z
+[96m[2025-12-07 19:04:22] [92m[INFO][0m    🖱️ CLIENT_EVENT [click]: {'tagName': 'DIV', 'id': 'activityLog', 'className': 'activity-log-content', 'innerText': "[7:04:12 PM] 🖱️ CLIENT_EVENT [click]: {'tagName':", 'x': 1250, 'y': 479} @ 2025-12-08T00:04:22.900Z
+[96m[2025-12-07 19:04:36] [92m[INFO][0m    CLIENT DEBUG: switchView_day-trading
+[96m[2025-12-07 19:04:36] [92m[INFO][0m    🖱️ CLIENT_EVENT [click]: {'tagName': 'BUTTON', 'id': '', 'className': 'nav-tab active', 'innerText': 'Day Trading ⚡', 'x': 314, 'y': 115} @ 2025-12-08T00:04:36.905Z
+[96m[2025-12-07 19:04:36] [92m[INFO][0m    Scanning for Gappers (Gap > 3.0%, Price > $5.0)...
+[96m[2025-12-07 19:04:37] [92m[INFO][0m    CLIENT DEBUG: switchView_trading
+[96m[2025-12-07 19:04:37] [92m[INFO][0m    🖱️ CLIENT_EVENT [click]: {'tagName': 'BUTTON', 'id': '', 'className': 'nav-tab active', 'innerText': 'Trading Dashboard', 'x': 191, 'y': 110} @ 2025-12-08T00:04:37.569Z
+[96m[2025-12-07 19:04:39] [92m[INFO][0m    Scanning for Momentum (RVOL > 2.0)...
+[96m[2025-12-07 19:04:40] [93m[WARNING][0m No Alpaca data found for SPY (span=1d)
+[96m[2025-12-07 19:04:55] [92m[INFO][0m    CLIENT DEBUG: switchView_day-trading
+[96m[2025-12-07 19:04:55] [92m[INFO][0m    🖱️ CLIENT_EVENT [click]: {'tagName': 'BUTTON', 'id': '', 'className': 'nav-tab active', 'innerText': 'Day Trading ⚡', 'x': 327, 'y': 118} @ 2025-12-08T00:04:55.270Z
+[96m[2025-12-07 19:04:55] [92m[INFO][0m    Scanning for Gappers (Gap > 3.0%, Price > $5.0)...
+[96m[2025-12-07 19:04:57] [92m[INFO][0m    Scanning for Momentum (RVOL > 2.0)...
+[96m[2025-12-07 19:04:58] [93m[WARNING][0m No Alpaca data found for SPY (span=1d)
+[96m[2025-12-07 19:05:00] [92m[INFO][0m    Scanning for Gappers (Gap > 3.0%, Price > $5.0)...
+[96m[2025-12-07 19:05:02] [92m[INFO][0m    Scanning for Momentum (RVOL > 2.0)...
+[96m[2025-12-07 19:05:03] [93m[WARNING][0m No Alpaca data found for SPY (span=1d)
+[96m[2025-12-07 19:05:05] [92m[INFO][0m    Scanning for Gappers (Gap > 3.0%, Price > $5.0)...
+[96m[2025-12-07 19:05:07] [92m[INFO][0m    Scanning for Momentum (RVOL > 2.0)...
+[96m[2025-12-07 19:05:08] [93m[WARNING][0m No Alpaca data found for SPY (span=1d)
+[96m[2025-12-07 19:05:10] [92m[INFO][0m    Scanning for Gappers (Gap > 3.0%, Price > $5.0)...
+[96m[2025-12-07 19:05:18] [92m[INFO][0m    Scanning for Momentum (RVOL > 2.0)...
+[96m[2025-12-07 19:05:25] [93m[WARNING][0m No Alpaca data found for SPY (span=1d)
+[96m[2025-12-07 19:05:25] [92m[INFO][0m    Scanning for Gappers (Gap > 3.0%, Price > $5.0)...
+127.0.0.1 - - [07/Dec/2025 19:05:31] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:05:33] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:05:35] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:05:44] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:05:45] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:05:46] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:05:57] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:06:48] "GET /api/day-trading/dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:07:13] "GET /api/day-trading/dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:07:13] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:07:13] "GET /api/debug_log?msg=switchView_readme HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:07:13] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:07:29] "GET /api/day-trading/dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:07:29] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:07:29] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:07:29] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:07:54] "GET /api/day-trading/dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:08:00] "GET /api/day-trading/dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:08:10] "GET /api/day-trading/dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:08:10] "GET /api/debug_log?msg=switchView_readme HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:08:54] "GET /api/day-trading/dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:09:04] "GET /api/day-trading/dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:09:14] "GET /api/day-trading/dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:09:24] "GET /api/day-trading/dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:09:24] "GET /api/day-trading/dashboard HTTP/1.1" 200 -
+$BRK.B: possibly delisted; no price data found  (period=1y) (Yahoo error = "No data found, symbol may be delisted")
+$CEIX: possibly delisted; no price data found  (period=1y) (Yahoo error = "No data found, symbol may be delisted")
+HTTP Error 500: <!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Yahoo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <style>
+      html {
+          height: 100%;
+      }
+      body {
+          background: #fafafc url(https://s.yimg.com/nn/img/sad-panda-201402200631.png) 50% 50%;
+          background-size: cover;
+          height: 100%;
+          text-align: center;
+          font: 300 18px "helvetica neue", helvetica, verdana, tahoma, arial, sans-serif;
+          margin: 0;
+      }
+      table {
+          height: 100%;
+          width: 100%;
+          table-layout: fixed;
+          border-collapse: collapse;
+          border-spacing: 0;
+          border: none;
+      }
+      h1 {
+          font-size: 42px;
+          font-weight: 400;
+          color: #400090;
+      }
+      p {
+          color: #1A1A1A;
+      }
+      #message-1 {
+          font-weight: bold;
+          margin: 0;
+      }
+      #message-2 {
+          display: inline-block;
+          *display: inline;
+          zoom: 1;
+          max-width: 17em;
+          _width: 17em;
+      }
+      </style>
+      <script>
+      
+      </script>
+  </head>
+  <body>
+  <!-- status code : 500 -->
+  <!-- Unknown Host -->
+  <!-- host machine: ats-ncache-api--production-bf1-667d4f84db-q7z8x -->
+  <!-- timestamp: 1765152829.338 -->
+  <!-- url: https://default.finance-yql-production.finance-k8s.omega.yahoo.com/v10/finance/quoteSummary/BCH/USD?modules=financialData%2CquoteType%2CdefaultKeyStatistics%2CassetProfile%2CsummaryDetail&corsDomain=finance.yahoo.com&formatted=false&symbol=BCH%2FUSD&crumb=Z4ipnxurB3i-->
+  <script type="text/javascript">
+    function buildUrl(url, parameters){
+      var qs = [];
+      for(var key in parameters) {
+        var value = parameters[key];
+        qs.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+      }
+      url = url + "?" + qs.join('&');
+      return url;
+    }
+
+    function generateBRBMarkup(site) {
+      params.source = 'brb';
+      generateBeaconMarkup(params);
+      var englishHeader = 'Will be right back...';
+      var englishMessage1 = 'Thank you for your patience.';
+      var englishMessage2 = 'Our engineers are working quickly to resolve the issue.';
+      var defaultLogoStyle = '';
+      var siteDataMap = {
+        'default': {
+          logo: 'https://s.yimg.com/rz/p/yahoo_frontpage_en-US_s_f_p_205x58_frontpage.png',
+          logoAlt: 'Yahoo Logo',
+          logoStyle: defaultLogoStyle,
+          header: englishHeader,
+          message1: englishMessage1,
+          message2: englishMessage2
+        }
+      };
+
+      var siteDetails = siteDataMap['default'];
+
+      document.write('<table><tbody><tr><td>');
+      document.write('<div id="content">');
+      document.write('<img src="' + siteDetails['logo'] + '" alt="' + siteDetails['logoAlt'] + '" style="' + siteDetails['logoStyle'] + '">');
+      document.write('<h1 style="margin-top:20px;">' + siteDetails['header'] + '</h1>');
+      document.write('<p id="message-1">' + siteDetails['message1'] + '</p>');
+      document.write('<p id="message-2">' + siteDetails['message2'] + '</p>');
+      document.write('</div>');
+      document.write('</td></tr></tbody></table>');
+    }
+
+    function generateBeaconMarkup(params) {
+        document.write('<img src="' + buildUrl('//geo.yahoo.com/b', params) + '" style="display:none;" width="0px" height="0px"/>');
+        var beacon = new Image();
+        beacon.src = buildUrl('//bcn.fp.yahoo.com/p', params);
+    }
+
+    var hostname = window.location.hostname;
+    var device = 'desktop';
+    var ynet = ('-' === '1');
+    var time = new Date().getTime();
+    var params = {
+        s: '1197757129',
+        t: time,
+        err_url: document.URL,
+        err: '500',
+        test: '-',
+        ats_host: 'ats-ncache-api--production-bf1-667d4f84db-q7z8x',
+        rid: '-',
+        message: 'Unknown Host'
+    };
+
+    if(ynet) {
+        document.write('<div style="height: 5px; background-color: red;"></div>');
+    }
+    generateBRBMarkup(hostname, params);
+
+  </script>
+  <noscript>
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <div id="englishContent">
+            <h1 style="margin-top:20px;">Will be right back...</h1>
+            <p id="message-1">Thank you for your patience.</p>
+            <p id="message-2">Our engineers are working quickly to resolve the issue.</p>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </noscript>
+  </body>
+</html>
+
+HTTP Error 500: <!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Yahoo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <style>
+      html {
+          height: 100%;
+      }
+      body {
+          background: #fafafc url(https://s.yimg.com/nn/img/sad-panda-201402200631.png) 50% 50%;
+          background-size: cover;
+          height: 100%;
+          text-align: center;
+          font: 300 18px "helvetica neue", helvetica, verdana, tahoma, arial, sans-serif;
+          margin: 0;
+      }
+      table {
+          height: 100%;
+          width: 100%;
+          table-layout: fixed;
+          border-collapse: collapse;
+          border-spacing: 0;
+          border: none;
+      }
+      h1 {
+          font-size: 42px;
+          font-weight: 400;
+          color: #400090;
+      }
+      p {
+          color: #1A1A1A;
+      }
+      #message-1 {
+          font-weight: bold;
+          margin: 0;
+      }
+      #message-2 {
+          display: inline-block;
+          *display: inline;
+          zoom: 1;
+          max-width: 17em;
+          _width: 17em;
+      }
+      </style>
+      <script>
+      
+      </script>
+  </head>
+  <body>
+  <!-- status code : 500 -->
+  <!-- Unknown Host -->
+  <!-- host machine: ats-ncache-api--production-ne1-974b8956c-b5tfq -->
+  <!-- timestamp: 1765152829.346 -->
+  <!-- url: https://default.finance-yql-production.finance-k8s.omega.yahoo.com/v10/finance/quoteSummary/ETH/USD?modules=financialData%2CquoteType%2CdefaultKeyStatistics%2CassetProfile%2CsummaryDetail&corsDomain=finance.yahoo.com&formatted=false&symbol=ETH%2FUSD&crumb=Z4ipnxurB3i-->
+  <script type="text/javascript">
+    function buildUrl(url, parameters){
+      var qs = [];
+      for(var key in parameters) {
+        var value = parameters[key];
+        qs.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+      }
+      url = url + "?" + qs.join('&');
+      return url;
+    }
+
+    function generateBRBMarkup(site) {
+      params.source = 'brb';
+      generateBeaconMarkup(params);
+      var englishHeader = 'Will be right back...';
+      var englishMessage1 = 'Thank you for your patience.';
+      var englishMessage2 = 'Our engineers are working quickly to resolve the issue.';
+      var defaultLogoStyle = '';
+      var siteDataMap = {
+        'default': {
+          logo: 'https://s.yimg.com/rz/p/yahoo_frontpage_en-US_s_f_p_205x58_frontpage.png',
+          logoAlt: 'Yahoo Logo',
+          logoStyle: defaultLogoStyle,
+          header: englishHeader,
+          message1: englishMessage1,
+          message2: englishMessage2
+        }
+      };
+
+      var siteDetails = siteDataMap['default'];
+
+      document.write('<table><tbody><tr><td>');
+      document.write('<div id="content">');
+      document.write('<img src="' + siteDetails['logo'] + '" alt="' + siteDetails['logoAlt'] + '" style="' + siteDetails['logoStyle'] + '">');
+      document.write('<h1 style="margin-top:20px;">' + siteDetails['header'] + '</h1>');
+      document.write('<p id="message-1">' + siteDetails['message1'] + '</p>');
+      document.write('<p id="message-2">' + siteDetails['message2'] + '</p>');
+      document.write('</div>');
+      document.write('</td></tr></tbody></table>');
+    }
+
+    function generateBeaconMarkup(params) {
+        document.write('<img src="' + buildUrl('//geo.yahoo.com/b', params) + '" style="display:none;" width="0px" height="0px"/>');
+        var beacon = new Image();
+        beacon.src = buildUrl('//bcn.fp.yahoo.com/p', params);
+    }
+
+    var hostname = window.location.hostname;
+    var device = 'desktop';
+    var ynet = ('-' === '1');
+    var time = new Date().getTime();
+    var params = {
+        s: '1197757129',
+        t: time,
+        err_url: document.URL,
+        err: '500',
+        test: '-',
+        ats_host: 'ats-ncache-api--production-ne1-974b8956c-b5tfq',
+        rid: '-',
+        message: 'Unknown Host'
+    };
+
+    if(ynet) {
+        document.write('<div style="height: 5px; background-color: red;"></div>');
+    }
+    generateBRBMarkup(hostname, params);
+
+  </script>
+  <noscript>
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <div id="englishContent">
+            <h1 style="margin-top:20px;">Will be right back...</h1>
+            <p id="message-1">Thank you for your patience.</p>
+            <p id="message-2">Our engineers are working quickly to resolve the issue.</p>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </noscript>
+  </body>
+</html>
+
+HTTP Error 500: <!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Yahoo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <style>
+      html {
+          height: 100%;
+      }
+      body {
+          background: #fafafc url(https://s.yimg.com/nn/img/sad-panda-201402200631.png) 50% 50%;
+          background-size: cover;
+          height: 100%;
+          text-align: center;
+          font: 300 18px "helvetica neue", helvetica, verdana, tahoma, arial, sans-serif;
+          margin: 0;
+      }
+      table {
+          height: 100%;
+          width: 100%;
+          table-layout: fixed;
+          border-collapse: collapse;
+          border-spacing: 0;
+          border: none;
+      }
+      h1 {
+          font-size: 42px;
+          font-weight: 400;
+          color: #400090;
+      }
+      p {
+          color: #1A1A1A;
+      }
+      #message-1 {
+          font-weight: bold;
+          margin: 0;
+      }
+      #message-2 {
+          display: inline-block;
+          *display: inline;
+          zoom: 1;
+          max-width: 17em;
+          _width: 17em;
+      }
+      </style>
+      <script>
+      
+      </script>
+  </head>
+  <body>
+  <!-- status code : 500 -->
+  <!-- Unknown Host -->
+  <!-- host machine: ats-ncache-api--production-bf1-667d4f84db-w992h -->
+  <!-- timestamp: 1765152829.346 -->
+  <!-- url: https://default.finance-yql-production.finance-k8s.omega.yahoo.com/v10/finance/quoteSummary/DOGE/USD?modules=financialData%2CquoteType%2CdefaultKeyStatistics%2CassetProfile%2CsummaryDetail&corsDomain=finance.yahoo.com&formatted=false&symbol=DOGE%2FUSD&crumb=Z4ipnxurB3i-->
+  <script type="text/javascript">
+    function buildUrl(url, parameters){
+      var qs = [];
+      for(var key in parameters) {
+        var value = parameters[key];
+        qs.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+      }
+      url = url + "?" + qs.join('&');
+      return url;
+    }
+
+    function generateBRBMarkup(site) {
+      params.source = 'brb';
+      generateBeaconMarkup(params);
+      var englishHeader = 'Will be right back...';
+      var englishMessage1 = 'Thank you for your patience.';
+      var englishMessage2 = 'Our engineers are working quickly to resolve the issue.';
+      var defaultLogoStyle = '';
+      var siteDataMap = {
+        'default': {
+          logo: 'https://s.yimg.com/rz/p/yahoo_frontpage_en-US_s_f_p_205x58_frontpage.png',
+          logoAlt: 'Yahoo Logo',
+          logoStyle: defaultLogoStyle,
+          header: englishHeader,
+          message1: englishMessage1,
+          message2: englishMessage2
+        }
+      };
+
+      var siteDetails = siteDataMap['default'];
+
+      document.write('<table><tbody><tr><td>');
+      document.write('<div id="content">');
+      document.write('<img src="' + siteDetails['logo'] + '" alt="' + siteDetails['logoAlt'] + '" style="' + siteDetails['logoStyle'] + '">');
+      document.write('<h1 style="margin-top:20px;">' + siteDetails['header'] + '</h1>');
+      document.write('<p id="message-1">' + siteDetails['message1'] + '</p>');
+      document.write('<p id="message-2">' + siteDetails['message2'] + '</p>');
+      document.write('</div>');
+      document.write('</td></tr></tbody></table>');
+    }
+
+    function generateBeaconMarkup(params) {
+        document.write('<img src="' + buildUrl('//geo.yahoo.com/b', params) + '" style="display:none;" width="0px" height="0px"/>');
+        var beacon = new Image();
+        beacon.src = buildUrl('//bcn.fp.yahoo.com/p', params);
+    }
+
+    var hostname = window.location.hostname;
+    var device = 'desktop';
+    var ynet = ('-' === '1');
+    var time = new Date().getTime();
+    var params = {
+        s: '1197757129',
+        t: time,
+        err_url: document.URL,
+        err: '500',
+        test: '-',
+        ats_host: 'ats-ncache-api--production-bf1-667d4f84db-w992h',
+        rid: '-',
+        message: 'Unknown Host'
+    };
+
+    if(ynet) {
+        document.write('<div style="height: 5px; background-color: red;"></div>');
+    }
+    generateBRBMarkup(hostname, params);
+
+  </script>
+  <noscript>
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <div id="englishContent">
+            <h1 style="margin-top:20px;">Will be right back...</h1>
+            <p id="message-1">Thank you for your patience.</p>
+            <p id="message-2">Our engineers are working quickly to resolve the issue.</p>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </noscript>
+  </body>
+</html>
+
+HTTP Error 500: <!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Yahoo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <style>
+      html {
+          height: 100%;
+      }
+      body {
+          background: #fafafc url(https://s.yimg.com/nn/img/sad-panda-201402200631.png) 50% 50%;
+          background-size: cover;
+          height: 100%;
+          text-align: center;
+          font: 300 18px "helvetica neue", helvetica, verdana, tahoma, arial, sans-serif;
+          margin: 0;
+      }
+      table {
+          height: 100%;
+          width: 100%;
+          table-layout: fixed;
+          border-collapse: collapse;
+          border-spacing: 0;
+          border: none;
+      }
+      h1 {
+          font-size: 42px;
+          font-weight: 400;
+          color: #400090;
+      }
+      p {
+          color: #1A1A1A;
+      }
+      #message-1 {
+          font-weight: bold;
+          margin: 0;
+      }
+      #message-2 {
+          display: inline-block;
+          *display: inline;
+          zoom: 1;
+          max-width: 17em;
+          _width: 17em;
+      }
+      </style>
+      <script>
+      
+      </script>
+  </head>
+  <body>
+  <!-- status code : 500 -->
+  <!-- Unknown Host -->
+  <!-- host machine: ats-ncache-api--production-ne1-974b8956c-rxf8c -->
+  <!-- timestamp: 1765152829.352 -->
+  <!-- url: https://default.finance-yql-production.finance-k8s.omega.yahoo.com/v10/finance/quoteSummary/SHIB/USD?modules=financialData%2CquoteType%2CdefaultKeyStatistics%2CassetProfile%2CsummaryDetail&corsDomain=finance.yahoo.com&formatted=false&symbol=SHIB%2FUSD&crumb=Z4ipnxurB3i-->
+  <script type="text/javascript">
+    function buildUrl(url, parameters){
+      var qs = [];
+      for(var key in parameters) {
+        var value = parameters[key];
+        qs.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+      }
+      url = url + "?" + qs.join('&');
+      return url;
+    }
+
+    function generateBRBMarkup(site) {
+      params.source = 'brb';
+      generateBeaconMarkup(params);
+      var englishHeader = 'Will be right back...';
+      var englishMessage1 = 'Thank you for your patience.';
+      var englishMessage2 = 'Our engineers are working quickly to resolve the issue.';
+      var defaultLogoStyle = '';
+      var siteDataMap = {
+        'default': {
+          logo: 'https://s.yimg.com/rz/p/yahoo_frontpage_en-US_s_f_p_205x58_frontpage.png',
+          logoAlt: 'Yahoo Logo',
+          logoStyle: defaultLogoStyle,
+          header: englishHeader,
+          message1: englishMessage1,
+          message2: englishMessage2
+        }
+      };
+
+      var siteDetails = siteDataMap['default'];
+
+      document.write('<table><tbody><tr><td>');
+      document.write('<div id="content">');
+      document.write('<img src="' + siteDetails['logo'] + '" alt="' + siteDetails['logoAlt'] + '" style="' + siteDetails['logoStyle'] + '">');
+      document.write('<h1 style="margin-top:20px;">' + siteDetails['header'] + '</h1>');
+      document.write('<p id="message-1">' + siteDetails['message1'] + '</p>');
+      document.write('<p id="message-2">' + siteDetails['message2'] + '</p>');
+      document.write('</div>');
+      document.write('</td></tr></tbody></table>');
+    }
+
+    function generateBeaconMarkup(params) {
+        document.write('<img src="' + buildUrl('//geo.yahoo.com/b', params) + '" style="display:none;" width="0px" height="0px"/>');
+        var beacon = new Image();
+        beacon.src = buildUrl('//bcn.fp.yahoo.com/p', params);
+    }
+
+    var hostname = window.location.hostname;
+    var device = 'desktop';
+    var ynet = ('-' === '1');
+    var time = new Date().getTime();
+    var params = {
+        s: '1197757129',
+        t: time,
+        err_url: document.URL,
+        err: '500',
+        test: '-',
+        ats_host: 'ats-ncache-api--production-ne1-974b8956c-rxf8c',
+        rid: '-',
+        message: 'Unknown Host'
+    };
+
+    if(ynet) {
+        document.write('<div style="height: 5px; background-color: red;"></div>');
+    }
+    generateBRBMarkup(hostname, params);
+
+  </script>
+  <noscript>
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <div id="englishContent">
+            <h1 style="margin-top:20px;">Will be right back...</h1>
+            <p id="message-1">Thank you for your patience.</p>
+            <p id="message-2">Our engineers are working quickly to resolve the issue.</p>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </noscript>
+  </body>
+</html>
+
+HTTP Error 500: <!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Yahoo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <style>
+      html {
+          height: 100%;
+      }
+      body {
+          background: #fafafc url(https://s.yimg.com/nn/img/sad-panda-201402200631.png) 50% 50%;
+          background-size: cover;
+          height: 100%;
+          text-align: center;
+          font: 300 18px "helvetica neue", helvetica, verdana, tahoma, arial, sans-serif;
+          margin: 0;
+      }
+      table {
+          height: 100%;
+          width: 100%;
+          table-layout: fixed;
+          border-collapse: collapse;
+          border-spacing: 0;
+          border: none;
+      }
+      h1 {
+          font-size: 42px;
+          font-weight: 400;
+          color: #400090;
+      }
+      p {
+          color: #1A1A1A;
+      }
+      #message-1 {
+          font-weight: bold;
+          margin: 0;
+      }
+      #message-2 {
+          display: inline-block;
+          *display: inline;
+          zoom: 1;
+          max-width: 17em;
+          _width: 17em;
+      }
+      </style>
+      <script>
+      
+      </script>
+  </head>
+  <body>
+  <!-- status code : 500 -->
+  <!-- Unknown Host -->
+  <!-- host machine: ats-ncache-api--production-bf1-667d4f84db-kwkbj -->
+  <!-- timestamp: 1765152829.356 -->
+  <!-- url: https://default.finance-yql-production.finance-k8s.omega.yahoo.com/v10/finance/quoteSummary/BTC/USD?modules=financialData%2CquoteType%2CdefaultKeyStatistics%2CassetProfile%2CsummaryDetail&corsDomain=finance.yahoo.com&formatted=false&symbol=BTC%2FUSD&crumb=Z4ipnxurB3i-->
+  <script type="text/javascript">
+    function buildUrl(url, parameters){
+      var qs = [];
+      for(var key in parameters) {
+        var value = parameters[key];
+        qs.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+      }
+      url = url + "?" + qs.join('&');
+      return url;
+    }
+
+    function generateBRBMarkup(site) {
+      params.source = 'brb';
+      generateBeaconMarkup(params);
+      var englishHeader = 'Will be right back...';
+      var englishMessage1 = 'Thank you for your patience.';
+      var englishMessage2 = 'Our engineers are working quickly to resolve the issue.';
+      var defaultLogoStyle = '';
+      var siteDataMap = {
+        'default': {
+          logo: 'https://s.yimg.com/rz/p/yahoo_frontpage_en-US_s_f_p_205x58_frontpage.png',
+          logoAlt: 'Yahoo Logo',
+          logoStyle: defaultLogoStyle,
+          header: englishHeader,
+          message1: englishMessage1,
+          message2: englishMessage2
+        }
+      };
+
+      var siteDetails = siteDataMap['default'];
+
+      document.write('<table><tbody><tr><td>');
+      document.write('<div id="content">');
+      document.write('<img src="' + siteDetails['logo'] + '" alt="' + siteDetails['logoAlt'] + '" style="' + siteDetails['logoStyle'] + '">');
+      document.write('<h1 style="margin-top:20px;">' + siteDetails['header'] + '</h1>');
+      document.write('<p id="message-1">' + siteDetails['message1'] + '</p>');
+      document.write('<p id="message-2">' + siteDetails['message2'] + '</p>');
+      document.write('</div>');
+      document.write('</td></tr></tbody></table>');
+    }
+
+    function generateBeaconMarkup(params) {
+        document.write('<img src="' + buildUrl('//geo.yahoo.com/b', params) + '" style="display:none;" width="0px" height="0px"/>');
+        var beacon = new Image();
+        beacon.src = buildUrl('//bcn.fp.yahoo.com/p', params);
+    }
+
+    var hostname = window.location.hostname;
+    var device = 'desktop';
+    var ynet = ('-' === '1');
+    var time = new Date().getTime();
+    var params = {
+        s: '1197757129',
+        t: time,
+        err_url: document.URL,
+        err: '500',
+        test: '-',
+        ats_host: 'ats-ncache-api--production-bf1-667d4f84db-kwkbj',
+        rid: '-',
+        message: 'Unknown Host'
+    };
+
+    if(ynet) {
+        document.write('<div style="height: 5px; background-color: red;"></div>');
+    }
+    generateBRBMarkup(hostname, params);
+
+  </script>
+  <noscript>
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <div id="englishContent">
+            <h1 style="margin-top:20px;">Will be right back...</h1>
+            <p id="message-1">Thank you for your patience.</p>
+            <p id="message-2">Our engineers are working quickly to resolve the issue.</p>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </noscript>
+  </body>
+</html>
+
+HTTP Error 500: <!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Yahoo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <style>
+      html {
+          height: 100%;
+      }
+      body {
+          background: #fafafc url(https://s.yimg.com/nn/img/sad-panda-201402200631.png) 50% 50%;
+          background-size: cover;
+          height: 100%;
+          text-align: center;
+          font: 300 18px "helvetica neue", helvetica, verdana, tahoma, arial, sans-serif;
+          margin: 0;
+      }
+      table {
+          height: 100%;
+          width: 100%;
+          table-layout: fixed;
+          border-collapse: collapse;
+          border-spacing: 0;
+          border: none;
+      }
+      h1 {
+          font-size: 42px;
+          font-weight: 400;
+          color: #400090;
+      }
+      p {
+          color: #1A1A1A;
+      }
+      #message-1 {
+          font-weight: bold;
+          margin: 0;
+      }
+      #message-2 {
+          display: inline-block;
+          *display: inline;
+          zoom: 1;
+          max-width: 17em;
+          _width: 17em;
+      }
+      </style>
+      <script>
+      
+      </script>
+  </head>
+  <body>
+  <!-- status code : 500 -->
+  <!-- Unknown Host -->
+  <!-- host machine: ats-ncache-api--production-bf1-667d4f84db-hkc4w -->
+  <!-- timestamp: 1765152829.351 -->
+  <!-- url: https://default.finance-yql-production.finance-k8s.omega.yahoo.com/v10/finance/quoteSummary/LTC/USD?modules=financialData%2CquoteType%2CdefaultKeyStatistics%2CassetProfile%2CsummaryDetail&corsDomain=finance.yahoo.com&formatted=false&symbol=LTC%2FUSD&crumb=Z4ipnxurB3i-->
+  <script type="text/javascript">
+    function buildUrl(url, parameters){
+      var qs = [];
+      for(var key in parameters) {
+        var value = parameters[key];
+        qs.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+      }
+      url = url + "?" + qs.join('&');
+      return url;
+    }
+
+    function generateBRBMarkup(site) {
+      params.source = 'brb';
+      generateBeaconMarkup(params);
+      var englishHeader = 'Will be right back...';
+      var englishMessage1 = 'Thank you for your patience.';
+      var englishMessage2 = 'Our engineers are working quickly to resolve the issue.';
+      var defaultLogoStyle = '';
+      var siteDataMap = {
+        'default': {
+          logo: 'https://s.yimg.com/rz/p/yahoo_frontpage_en-US_s_f_p_205x58_frontpage.png',
+          logoAlt: 'Yahoo Logo',
+          logoStyle: defaultLogoStyle,
+          header: englishHeader,
+          message1: englishMessage1,
+          message2: englishMessage2
+        }
+      };
+
+      var siteDetails = siteDataMap['default'];
+
+      document.write('<table><tbody><tr><td>');
+      document.write('<div id="content">');
+      document.write('<img src="' + siteDetails['logo'] + '" alt="' + siteDetails['logoAlt'] + '" style="' + siteDetails['logoStyle'] + '">');
+      document.write('<h1 style="margin-top:20px;">' + siteDetails['header'] + '</h1>');
+      document.write('<p id="message-1">' + siteDetails['message1'] + '</p>');
+      document.write('<p id="message-2">' + siteDetails['message2'] + '</p>');
+      document.write('</div>');
+      document.write('</td></tr></tbody></table>');
+    }
+
+    function generateBeaconMarkup(params) {
+        document.write('<img src="' + buildUrl('//geo.yahoo.com/b', params) + '" style="display:none;" width="0px" height="0px"/>');
+        var beacon = new Image();
+        beacon.src = buildUrl('//bcn.fp.yahoo.com/p', params);
+    }
+
+    var hostname = window.location.hostname;
+    var device = 'desktop';
+    var ynet = ('-' === '1');
+    var time = new Date().getTime();
+    var params = {
+        s: '1197757129',
+        t: time,
+        err_url: document.URL,
+        err: '500',
+        test: '-',
+        ats_host: 'ats-ncache-api--production-bf1-667d4f84db-hkc4w',
+        rid: '-',
+        message: 'Unknown Host'
+    };
+
+    if(ynet) {
+        document.write('<div style="height: 5px; background-color: red;"></div>');
+    }
+    generateBRBMarkup(hostname, params);
+
+  </script>
+  <noscript>
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <div id="englishContent">
+            <h1 style="margin-top:20px;">Will be right back...</h1>
+            <p id="message-1">Thank you for your patience.</p>
+            <p id="message-2">Our engineers are working quickly to resolve the issue.</p>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </noscript>
+  </body>
+</html>
+
+HTTP Error 500: <!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Yahoo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <style>
+      html {
+          height: 100%;
+      }
+      body {
+          background: #fafafc url(https://s.yimg.com/nn/img/sad-panda-201402200631.png) 50% 50%;
+          background-size: cover;
+          height: 100%;
+          text-align: center;
+          font: 300 18px "helvetica neue", helvetica, verdana, tahoma, arial, sans-serif;
+          margin: 0;
+      }
+      table {
+          height: 100%;
+          width: 100%;
+          table-layout: fixed;
+          border-collapse: collapse;
+          border-spacing: 0;
+          border: none;
+      }
+      h1 {
+          font-size: 42px;
+          font-weight: 400;
+          color: #400090;
+      }
+      p {
+          color: #1A1A1A;
+      }
+      #message-1 {
+          font-weight: bold;
+          margin: 0;
+      }
+      #message-2 {
+          display: inline-block;
+          *display: inline;
+          zoom: 1;
+          max-width: 17em;
+          _width: 17em;
+      }
+      </style>
+      <script>
+      
+      </script>
+  </head>
+  <body>
+  <!-- status code : 500 -->
+  <!-- Unknown Host -->
+  <!-- host machine: ats-ncache-api--production-ne1-974b8956c-z28x2 -->
+  <!-- timestamp: 1765152829.351 -->
+  <!-- url: https://default.finance-yql-production.finance-k8s.omega.yahoo.com/v10/finance/quoteSummary/ETC/USD?modules=financialData%2CquoteType%2CdefaultKeyStatistics%2CassetProfile%2CsummaryDetail&corsDomain=finance.yahoo.com&formatted=false&symbol=ETC%2FUSD&crumb=Z4ipnxurB3i-->
+  <script type="text/javascript">
+    function buildUrl(url, parameters){
+      var qs = [];
+      for(var key in parameters) {
+        var value = parameters[key];
+        qs.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+      }
+      url = url + "?" + qs.join('&');
+      return url;
+    }
+
+    function generateBRBMarkup(site) {
+      params.source = 'brb';
+      generateBeaconMarkup(params);
+      var englishHeader = 'Will be right back...';
+      var englishMessage1 = 'Thank you for your patience.';
+      var englishMessage2 = 'Our engineers are working quickly to resolve the issue.';
+      var defaultLogoStyle = '';
+      var siteDataMap = {
+        'default': {
+          logo: 'https://s.yimg.com/rz/p/yahoo_frontpage_en-US_s_f_p_205x58_frontpage.png',
+          logoAlt: 'Yahoo Logo',
+          logoStyle: defaultLogoStyle,
+          header: englishHeader,
+          message1: englishMessage1,
+          message2: englishMessage2
+        }
+      };
+
+      var siteDetails = siteDataMap['default'];
+
+      document.write('<table><tbody><tr><td>');
+      document.write('<div id="content">');
+      document.write('<img src="' + siteDetails['logo'] + '" alt="' + siteDetails['logoAlt'] + '" style="' + siteDetails['logoStyle'] + '">');
+      document.write('<h1 style="margin-top:20px;">' + siteDetails['header'] + '</h1>');
+      document.write('<p id="message-1">' + siteDetails['message1'] + '</p>');
+      document.write('<p id="message-2">' + siteDetails['message2'] + '</p>');
+      document.write('</div>');
+      document.write('</td></tr></tbody></table>');
+    }
+
+    function generateBeaconMarkup(params) {
+        document.write('<img src="' + buildUrl('//geo.yahoo.com/b', params) + '" style="display:none;" width="0px" height="0px"/>');
+        var beacon = new Image();
+        beacon.src = buildUrl('//bcn.fp.yahoo.com/p', params);
+    }
+
+    var hostname = window.location.hostname;
+    var device = 'desktop';
+    var ynet = ('-' === '1');
+    var time = new Date().getTime();
+    var params = {
+        s: '1197757129',
+        t: time,
+        err_url: document.URL,
+        err: '500',
+        test: '-',
+        ats_host: 'ats-ncache-api--production-ne1-974b8956c-z28x2',
+        rid: '-',
+        message: 'Unknown Host'
+    };
+
+    if(ynet) {
+        document.write('<div style="height: 5px; background-color: red;"></div>');
+    }
+    generateBRBMarkup(hostname, params);
+
+  </script>
+  <noscript>
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <div id="englishContent">
+            <h1 style="margin-top:20px;">Will be right back...</h1>
+            <p id="message-1">Thank you for your patience.</p>
+            <p id="message-2">Our engineers are working quickly to resolve the issue.</p>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </noscript>
+  </body>
+</html>
+
+HTTP Error 500: <!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Yahoo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <style>
+      html {
+          height: 100%;
+      }
+      body {
+          background: #fafafc url(https://s.yimg.com/nn/img/sad-panda-201402200631.png) 50% 50%;
+          background-size: cover;
+          height: 100%;
+          text-align: center;
+          font: 300 18px "helvetica neue", helvetica, verdana, tahoma, arial, sans-serif;
+          margin: 0;
+      }
+      table {
+          height: 100%;
+          width: 100%;
+          table-layout: fixed;
+          border-collapse: collapse;
+          border-spacing: 0;
+          border: none;
+      }
+      h1 {
+          font-size: 42px;
+          font-weight: 400;
+          color: #400090;
+      }
+      p {
+          color: #1A1A1A;
+      }
+      #message-1 {
+          font-weight: bold;
+          margin: 0;
+      }
+      #message-2 {
+          display: inline-block;
+          *display: inline;
+          zoom: 1;
+          max-width: 17em;
+          _width: 17em;
+      }
+      </style>
+      <script>
+      
+      </script>
+  </head>
+  <body>
+  <!-- status code : 500 -->
+  <!-- Unknown Host -->
+  <!-- host machine: ats-ncache-api--production-bf1-667d4f84db-d2cst -->
+  <!-- timestamp: 1765152829.350 -->
+  <!-- url: https://default.finance-yql-production.finance-k8s.omega.yahoo.com/v10/finance/quoteSummary/SOL/USD?modules=financialData%2CquoteType%2CdefaultKeyStatistics%2CassetProfile%2CsummaryDetail&corsDomain=finance.yahoo.com&formatted=false&symbol=SOL%2FUSD&crumb=Z4ipnxurB3i-->
+  <script type="text/javascript">
+    function buildUrl(url, parameters){
+      var qs = [];
+      for(var key in parameters) {
+        var value = parameters[key];
+        qs.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+      }
+      url = url + "?" + qs.join('&');
+      return url;
+    }
+
+    function generateBRBMarkup(site) {
+      params.source = 'brb';
+      generateBeaconMarkup(params);
+      var englishHeader = 'Will be right back...';
+      var englishMessage1 = 'Thank you for your patience.';
+      var englishMessage2 = 'Our engineers are working quickly to resolve the issue.';
+      var defaultLogoStyle = '';
+      var siteDataMap = {
+        'default': {
+          logo: 'https://s.yimg.com/rz/p/yahoo_frontpage_en-US_s_f_p_205x58_frontpage.png',
+          logoAlt: 'Yahoo Logo',
+          logoStyle: defaultLogoStyle,
+          header: englishHeader,
+          message1: englishMessage1,
+          message2: englishMessage2
+        }
+      };
+
+      var siteDetails = siteDataMap['default'];
+
+      document.write('<table><tbody><tr><td>');
+      document.write('<div id="content">');
+      document.write('<img src="' + siteDetails['logo'] + '" alt="' + siteDetails['logoAlt'] + '" style="' + siteDetails['logoStyle'] + '">');
+      document.write('<h1 style="margin-top:20px;">' + siteDetails['header'] + '</h1>');
+      document.write('<p id="message-1">' + siteDetails['message1'] + '</p>');
+      document.write('<p id="message-2">' + siteDetails['message2'] + '</p>');
+      document.write('</div>');
+      document.write('</td></tr></tbody></table>');
+    }
+
+    function generateBeaconMarkup(params) {
+        document.write('<img src="' + buildUrl('//geo.yahoo.com/b', params) + '" style="display:none;" width="0px" height="0px"/>');
+        var beacon = new Image();
+        beacon.src = buildUrl('//bcn.fp.yahoo.com/p', params);
+    }
+
+    var hostname = window.location.hostname;
+    var device = 'desktop';
+    var ynet = ('-' === '1');
+    var time = new Date().getTime();
+    var params = {
+        s: '1197757129',
+        t: time,
+        err_url: document.URL,
+        err: '500',
+        test: '-',
+        ats_host: 'ats-ncache-api--production-bf1-667d4f84db-d2cst',
+        rid: '-',
+        message: 'Unknown Host'
+    };
+
+    if(ynet) {
+        document.write('<div style="height: 5px; background-color: red;"></div>');
+    }
+    generateBRBMarkup(hostname, params);
+
+  </script>
+  <noscript>
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <div id="englishContent">
+            <h1 style="margin-top:20px;">Will be right back...</h1>
+            <p id="message-1">Thank you for your patience.</p>
+            <p id="message-2">Our engineers are working quickly to resolve the issue.</p>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </noscript>
+  </body>
+</html>
+
+HTTP Error 500: <!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Yahoo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <style>
+      html {
+          height: 100%;
+      }
+      body {
+          background: #fafafc url(https://s.yimg.com/nn/img/sad-panda-201402200631.png) 50% 50%;
+          background-size: cover;
+          height: 100%;
+          text-align: center;
+          font: 300 18px "helvetica neue", helvetica, verdana, tahoma, arial, sans-serif;
+          margin: 0;
+      }
+      table {
+          height: 100%;
+          width: 100%;
+          table-layout: fixed;
+          border-collapse: collapse;
+          border-spacing: 0;
+          border: none;
+      }
+      h1 {
+          font-size: 42px;
+          font-weight: 400;
+          color: #400090;
+      }
+      p {
+          color: #1A1A1A;
+      }
+      #message-1 {
+          font-weight: bold;
+          margin: 0;
+      }
+      #message-2 {
+          display: inline-block;
+          *display: inline;
+          zoom: 1;
+          max-width: 17em;
+          _width: 17em;
+      }
+      </style>
+      <script>
+      
+      </script>
+  </head>
+  <body>
+  <!-- status code : 500 -->
+  <!-- Unknown Host -->
+  <!-- host machine: ats-ncache-api--production-ne1-974b8956c-6gcq9 -->
+  <!-- timestamp: 1765152829.377 -->
+  <!-- url: https://default.finance-yql-production.finance-k8s.omega.yahoo.com/v10/finance/quoteSummary/AVAX/USD?modules=financialData%2CquoteType%2CdefaultKeyStatistics%2CassetProfile%2CsummaryDetail&corsDomain=finance.yahoo.com&formatted=false&symbol=AVAX%2FUSD&crumb=Z4ipnxurB3i-->
+  <script type="text/javascript">
+    function buildUrl(url, parameters){
+      var qs = [];
+      for(var key in parameters) {
+        var value = parameters[key];
+        qs.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+      }
+      url = url + "?" + qs.join('&');
+      return url;
+    }
+
+    function generateBRBMarkup(site) {
+      params.source = 'brb';
+      generateBeaconMarkup(params);
+      var englishHeader = 'Will be right back...';
+      var englishMessage1 = 'Thank you for your patience.';
+      var englishMessage2 = 'Our engineers are working quickly to resolve the issue.';
+      var defaultLogoStyle = '';
+      var siteDataMap = {
+        'default': {
+          logo: 'https://s.yimg.com/rz/p/yahoo_frontpage_en-US_s_f_p_205x58_frontpage.png',
+          logoAlt: 'Yahoo Logo',
+          logoStyle: defaultLogoStyle,
+          header: englishHeader,
+          message1: englishMessage1,
+          message2: englishMessage2
+        }
+      };
+
+      var siteDetails = siteDataMap['default'];
+
+      document.write('<table><tbody><tr><td>');
+      document.write('<div id="content">');
+      document.write('<img src="' + siteDetails['logo'] + '" alt="' + siteDetails['logoAlt'] + '" style="' + siteDetails['logoStyle'] + '">');
+      document.write('<h1 style="margin-top:20px;">' + siteDetails['header'] + '</h1>');
+      document.write('<p id="message-1">' + siteDetails['message1'] + '</p>');
+      document.write('<p id="message-2">' + siteDetails['message2'] + '</p>');
+      document.write('</div>');
+      document.write('</td></tr></tbody></table>');
+    }
+
+    function generateBeaconMarkup(params) {
+        document.write('<img src="' + buildUrl('//geo.yahoo.com/b', params) + '" style="display:none;" width="0px" height="0px"/>');
+        var beacon = new Image();
+        beacon.src = buildUrl('//bcn.fp.yahoo.com/p', params);
+    }
+
+    var hostname = window.location.hostname;
+    var device = 'desktop';
+    var ynet = ('-' === '1');
+    var time = new Date().getTime();
+    var params = {
+        s: '1197757129',
+        t: time,
+        err_url: document.URL,
+        err: '500',
+        test: '-',
+        ats_host: 'ats-ncache-api--production-ne1-974b8956c-6gcq9',
+        rid: '-',
+        message: 'Unknown Host'
+    };
+
+    if(ynet) {
+        document.write('<div style="height: 5px; background-color: red;"></div>');
+    }
+    generateBRBMarkup(hostname, params);
+
+  </script>
+  <noscript>
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <div id="englishContent">
+            <h1 style="margin-top:20px;">Will be right back...</h1>
+            <p id="message-1">Thank you for your patience.</p>
+            <p id="message-2">Our engineers are working quickly to resolve the issue.</p>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </noscript>
+  </body>
+</html>
+
+HTTP Error 500: <!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Yahoo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <style>
+      html {
+          height: 100%;
+      }
+      body {
+          background: #fafafc url(https://s.yimg.com/nn/img/sad-panda-201402200631.png) 50% 50%;
+          background-size: cover;
+          height: 100%;
+          text-align: center;
+          font: 300 18px "helvetica neue", helvetica, verdana, tahoma, arial, sans-serif;
+          margin: 0;
+      }
+      table {
+          height: 100%;
+          width: 100%;
+          table-layout: fixed;
+          border-collapse: collapse;
+          border-spacing: 0;
+          border: none;
+      }
+      h1 {
+          font-size: 42px;
+          font-weight: 400;
+          color: #400090;
+      }
+      p {
+          color: #1A1A1A;
+      }
+      #message-1 {
+          font-weight: bold;
+          margin: 0;
+      }
+      #message-2 {
+          display: inline-block;
+          *display: inline;
+          zoom: 1;
+          max-width: 17em;
+          _width: 17em;
+      }
+      </style>
+      <script>
+      
+      </script>
+  </head>
+  <body>
+  <!-- status code : 500 -->
+  <!-- Unknown Host -->
+  <!-- host machine: ats-ncache-api--production-bf1-667d4f84db-dn25d -->
+  <!-- timestamp: 1765152829.375 -->
+  <!-- url: https://default.finance-yql-production.finance-k8s.omega.yahoo.com/v10/finance/quoteSummary/LINK/USD?modules=financialData%2CquoteType%2CdefaultKeyStatistics%2CassetProfile%2CsummaryDetail&corsDomain=finance.yahoo.com&formatted=false&symbol=LINK%2FUSD&crumb=Z4ipnxurB3i-->
+  <script type="text/javascript">
+    function buildUrl(url, parameters){
+      var qs = [];
+      for(var key in parameters) {
+        var value = parameters[key];
+        qs.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+      }
+      url = url + "?" + qs.join('&');
+      return url;
+    }
+
+    function generateBRBMarkup(site) {
+      params.source = 'brb';
+      generateBeaconMarkup(params);
+      var englishHeader = 'Will be right back...';
+      var englishMessage1 = 'Thank you for your patience.';
+      var englishMessage2 = 'Our engineers are working quickly to resolve the issue.';
+      var defaultLogoStyle = '';
+      var siteDataMap = {
+        'default': {
+          logo: 'https://s.yimg.com/rz/p/yahoo_frontpage_en-US_s_f_p_205x58_frontpage.png',
+          logoAlt: 'Yahoo Logo',
+          logoStyle: defaultLogoStyle,
+          header: englishHeader,
+          message1: englishMessage1,
+          message2: englishMessage2
+        }
+      };
+
+      var siteDetails = siteDataMap['default'];
+
+      document.write('<table><tbody><tr><td>');
+      document.write('<div id="content">');
+      document.write('<img src="' + siteDetails['logo'] + '" alt="' + siteDetails['logoAlt'] + '" style="' + siteDetails['logoStyle'] + '">');
+      document.write('<h1 style="margin-top:20px;">' + siteDetails['header'] + '</h1>');
+      document.write('<p id="message-1">' + siteDetails['message1'] + '</p>');
+      document.write('<p id="message-2">' + siteDetails['message2'] + '</p>');
+      document.write('</div>');
+      document.write('</td></tr></tbody></table>');
+    }
+
+    function generateBeaconMarkup(params) {
+        document.write('<img src="' + buildUrl('//geo.yahoo.com/b', params) + '" style="display:none;" width="0px" height="0px"/>');
+        var beacon = new Image();
+        beacon.src = buildUrl('//bcn.fp.yahoo.com/p', params);
+    }
+
+    var hostname = window.location.hostname;
+    var device = 'desktop';
+    var ynet = ('-' === '1');
+    var time = new Date().getTime();
+    var params = {
+        s: '1197757129',
+        t: time,
+        err_url: document.URL,
+        err: '500',
+        test: '-',
+        ats_host: 'ats-ncache-api--production-bf1-667d4f84db-dn25d',
+        rid: '-',
+        message: 'Unknown Host'
+    };
+
+    if(ynet) {
+        document.write('<div style="height: 5px; background-color: red;"></div>');
+    }
+    generateBRBMarkup(hostname, params);
+
+  </script>
+  <noscript>
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <div id="englishContent">
+            <h1 style="margin-top:20px;">Will be right back...</h1>
+            <p id="message-1">Thank you for your patience.</p>
+            <p id="message-2">Our engineers are working quickly to resolve the issue.</p>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </noscript>
+  </body>
+</html>
+
+[96m[2025-12-07 19:05:31] [92m[INFO][0m    🖱️ CLIENT_EVENT [click]: {'tagName': 'SELECT', 'id': 'alertSymbol', 'className': '', 'innerText': 'Select Stock\nAAPL\nTSLA\nNVDA\nAMD\nMSFT', 'x': 635, 'y': 470} @ 2025-12-08T00:05:31.923Z
+[96m[2025-12-07 19:05:33] [92m[INFO][0m    🖱️ CLIENT_EVENT [click]: {'tagName': 'SELECT', 'id': 'alertSymbol', 'className': '', 'innerText': 'Select Stock\nAAPL\nTSLA\nNVDA\nAMD\nMSFT', 'x': 538, 'y': 455} @ 2025-12-08T00:05:33.527Z
+[96m[2025-12-07 19:05:35] [92m[INFO][0m    🖱️ CLIENT_EVENT [click]: {'tagName': 'SELECT', 'id': 'alertCondition', 'className': '', 'innerText': 'Price Above (>)\nPrice Below (<)< /option>\nRSI Abov', 'x': 722, 'y': 511} @ 2025-12-08T00:05:35.471Z
+[96m[2025-12-07 19:05:40] [92m[INFO][0m    Scanning for Momentum (RVOL > 2.0)...
+[96m[2025-12-07 19:05:40] [92m[INFO][0m    Scanning for Gappers (Gap > 3.0%, Price > $5.0)...
+[96m[2025-12-07 19:05:44] [92m[INFO][0m    🖱️ CLIENT_EVENT [click]: {'tagName': 'DIV', 'id': '', 'className': 'alert-item', 'innerText': 'MSFT < 70\n×', 'x': 587, 'y': 675} @ 2025-12-08T00:05:44.560Z
+[96m[2025-12-07 19:05:45] [92m[INFO][0m    🖱️ CLIENT_EVENT [click]: {'tagName': 'DIV', 'id': '', 'className': 'alert-item', 'innerText': 'MSFT < 70\n×', 'x': 636, 'y': 662} @ 2025-12-08T00:05:45.027Z
+[96m[2025-12-07 19:05:45] [92m[INFO][0m    Scanning for Gappers (Gap > 3.0%, Price > $5.0)...
+[96m[2025-12-07 19:05:46] [92m[INFO][0m    🖱️ CLIENT_EVENT [click]: {'tagName': 'DIV', 'id': '', 'className': 'alert-item', 'innerText': 'MSFT < 70\n×', 'x': 633, 'y': 662} @ 2025-12-08T00:05:46.310Z
+[96m[2025-12-07 19:05:50] [92m[INFO][0m    Scanning for Gappers (Gap > 3.0%, Price > $5.0)...
+[96m[2025-12-07 19:05:55] [92m[INFO][0m    Scanning for Gappers (Gap > 3.0%, Price > $5.0)...
+[96m[2025-12-07 19:05:57] [92m[INFO][0m    🖱️ CLIENT_EVENT [click]: {'tagName': 'BUTTON', 'id': '', 'className': 'maximize-btn', 'innerText': '⤡', 'x': 1396, 'y': 111} @ 2025-12-08T00:05:57.200Z
+[96m[2025-12-07 19:06:00] [92m[INFO][0m    Scanning for Gappers (Gap > 3.0%, Price > $5.0)...
+[96m[2025-12-07 19:06:17] [91m[ERROR][0m   Error getting price for COIN: {"message": "too many requests."}
+
+[96m[2025-12-07 19:06:39] [92m[INFO][0m    Scanning for Momentum (RVOL > 2.0)...
+[96m[2025-12-07 19:06:42] [92m[INFO][0m    Scanning for Momentum (RVOL > 2.0)...
+[96m[2025-12-07 19:06:42] [91m[ERROR][0m   Error calculating RVOL for LYFT: {"message": "too many requests."}
+
+[96m[2025-12-07 19:06:48] [93m[WARNING][0m No Alpaca data found for SPY (span=1d)
+[96m[2025-12-07 19:06:48] [92m[INFO][0m    Scanning for Gappers (Gap > 3.0%, Price > $5.0)...
+[96m[2025-12-07 19:07:07] [92m[INFO][0m    Scanning for Momentum (RVOL > 2.0)...
+[96m[2025-12-07 19:07:13] [92m[INFO][0m    Scanning for Momentum (RVOL > 2.0)...
+[96m[2025-12-07 19:07:13] [93m[WARNING][0m No Alpaca data found for SPY (span=1d)
+[96m[2025-12-07 19:07:13] [92m[INFO][0m    🖱️ CLIENT_EVENT [click]: {'tagName': 'BUTTON', 'id': '', 'className': 'maximize-btn', 'innerText': '⤢', 'x': 1386, 'y': 59} @ 2025-12-08T00:06:06.984Z
+[96m[2025-12-07 19:07:13] [92m[INFO][0m    CLIENT DEBUG: switchView_readme
+[96m[2025-12-07 19:07:13] [92m[INFO][0m    🖱️ CLIENT_EVENT [click]: {'tagName': 'BUTTON', 'id': '', 'className': 'nav-tab active', 'innerText': 'Read Me 📖', 'x': 590, 'y': 118} @ 2025-12-08T00:06:09.334Z
+[96m[2025-12-07 19:07:13] [92m[INFO][0m    Scanning for Gappers (Gap > 3.0%, Price > $5.0)...
+[96m[2025-12-07 19:07:23] [92m[INFO][0m    Scanning for Momentum (RVOL > 2.0)...
+[96m[2025-12-07 19:07:29] [93m[WARNING][0m No Alpaca data found for SPY (span=1d)
+[96m[2025-12-07 19:07:29] [92m[INFO][0m    🖱️ CLIENT_EVENT [click]: {'tagName': 'SELECT', 'id': 'modeSelector', 'className': 'mode-select', 'innerText': 'Swing Mode\nDay Trading', 'x': 1424, 'y': 20} @ 2025-12-08T00:06:11.439Z
+[96m[2025-12-07 19:07:29] [92m[INFO][0m    🖱️ CLIENT_EVENT [click]: {'tagName': 'SELECT', 'id': 'modeSelector', 'className': 'mode-select', 'innerText': 'Swing Mode\nDay Trading', 'x': 1350, 'y': 6} @ 2025-12-08T00:06:12.573Z
+[96m[2025-12-07 19:07:29] [92m[INFO][0m    🖱️ CLIENT_EVENT [click]: {'tagName': 'BUTTON', 'id': '', 'className': 'nav-tab active', 'innerText': 'Read Me 📖', 'x': 569, 'y': 110} @ 2025-12-08T00:06:14.527Z
+[96m[2025-12-07 19:07:29] [92m[INFO][0m    Scanning for Gappers (Gap > 3.0%, Price > $5.0)...
+[96m[2025-12-07 19:07:54] [93m[WARNING][0m No Alpaca data found for SPY (span=1d)
+[96m[2025-12-07 19:07:54] [92m[INFO][0m    Scanning for Gappers (Gap > 3.0%, Price > $5.0)...
+[96m[2025-12-07 19:08:00] [93m[WARNING][0m No Alpaca data found for SPY (span=1d)
+[96m[2025-12-07 19:08:00] [92m[INFO][0m    Scanning for Gappers (Gap > 3.0%, Price > $5.0)...
+[96m[2025-12-07 19:08:10] [93m[WARNING][0m No Alpaca data found for SPY (span=1d)
+[96m[2025-12-07 19:08:10] [92m[INFO][0m    CLIENT DEBUG: switchView_readme
+[96m[2025-12-07 19:08:13] [92m[INFO][0m    Scanning for Momentum (RVOL > 2.0)...
+[96m[2025-12-07 19:08:32] [92m[INFO][0m    Scanning for Momentum (RVOL > 2.0)...
+[96m[2025-12-07 19:08:44] [92m[INFO][0m    Scanning for Momentum (RVOL > 2.0)...
+[96m[2025-12-07 19:08:54] [93m[WARNING][0m No Alpaca data found for SPY (span=1d)
+[96m[2025-12-07 19:09:04] [92m[INFO][0m    Scanning for Momentum (RVOL > 2.0)...
+[96m[2025-12-07 19:09:04] [93m[WARNING][0m No Alpaca data found for SPY (span=1d)
+[96m[2025-12-07 19:09:07] [92m[INFO][0m    Scanning for Momentum (RVOL > 2.0)...
+[96m[2025-12-07 19:09:14] [93m[WARNING][0m No Alpaca data found for SPY (span=1d)
+[96m[2025-12-07 19:09:24] [93m[WARNING][0m No Alpaca data found for SPY (span=1d)
+[96m[2025-12-07 19:09:24] [93m[WARNING][0m No Alpaca data found for SPY (span=1d)
+[96m[2025-12-07 19:13:46] [92m[INFO][0m    Running trading bot in demo mode (Market Open: False)...
+[96m[2025-12-07 19:13:46] [92m[INFO][0m    Starting trading bot cycle...
+[96m[2025-12-07 19:13:46] [91m[ERROR][0m   🚨 PORTFOLIO HEALTH CRITICAL: Trading Halted
+[96m[2025-12-07 19:13:46] [93m[WARNING][0m ⚠️ CIRCUIT BREAKER TRIGGERED BUT PROCEEDING FOR DEMO
+[96m[2025-12-07 19:13:47] [91m[ERROR][0m   Error getting crypto quote for BTCUSD: {"message":"invalid symbol: BTCUSD does not match ^[A-Z]+/[A-Z]+$"}
+
+[96m[2025-12-07 19:13:47] [92m[INFO][0m    Fetching data for 60 stocks...
+[96m[2025-12-07 19:13:48] [92m[INFO][0m    Successfully fetched data for 58 stocks
+[96m[2025-12-07 19:13:48] [92m[INFO][0m    Running multi-strategy stock screening...
+[96m[2025-12-07 19:13:48] [92m[INFO][0m    Market Sentiment (SPY): 0.19% today
+[96m[2025-12-07 19:13:48] [92m[INFO][0m    Loaded strategy weights: {'momentum': 0.547945205479452, 'growth': 0.22602739726027396, 'value': 0.22602739726027396}
+[96m[2025-12-07 19:13:48] [92m[INFO][0m    Fetching data for 10 crypto assets...
+[96m[2025-12-07 19:13:49] [91m[ERROR][0m   Error fetching data for BCH/USD: Failed to parse json response from Yahoo Finance: {'code': 'Not Found', 'description': 'HTTP 404 Not Found'}
+[96m[2025-12-07 19:13:49] [91m[ERROR][0m   Error fetching data for ETH/USD: Failed to parse json response from Yahoo Finance: {'code': 'Not Found', 'description': 'HTTP 404 Not Found'}
+[96m[2025-12-07 19:13:49] [91m[ERROR][0m   Error fetching data for DOGE/USD: Failed to parse json response from Yahoo Finance: {'code': 'Not Found', 'description': 'HTTP 404 Not Found'}
+[96m[2025-12-07 19:13:49] [91m[ERROR][0m   Error fetching data for SHIB/USD: Failed to parse json response from Yahoo Finance: {'code': 'Not Found', 'description': 'HTTP 404 Not Found'}
+[96m[2025-12-07 19:13:49] [91m[ERROR][0m   Error fetching data for SOL/USD: Failed to parse json response from Yahoo Finance: {'code': 'Not Found', 'description': 'HTTP 404 Not Found'}
+[96m[2025-12-07 19:13:49] [91m[ERROR][0m   Error fetching data for BTC/USD: Failed to parse json response from Yahoo Finance: {'code': 'Not Found', 'description': 'HTTP 404 Not Found'}
+127.0.0.1 - - [07/Dec/2025 19:18:01] "GET /api/debug_log?msg=switchView_trading HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:18:01] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:18:03] "GET /api/debug_log?msg=switchView_strategy HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:18:03] "GET /api/strategy/history HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:18:03] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:18:10] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:22:32] "GET /api/debug_log?msg=switchView_trading HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:22:32] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:22:37] "POST /api/log_client_event HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 19:22:44] "POST /api/log_client_event HTTP/1.1" 200 -
+$BRK.B: possibly delisted; no price data found  (period=1y) (Yahoo error = "No data found, symbol may be delisted")
+$CEIX: possibly delisted; no price data found  (period=1y) (Yahoo error = "No data found, symbol may be delisted")
+HTTP Error 500: <!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Yahoo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <style>
+      html {
+          height: 100%;
+      }
+      body {
+          background: #fafafc url(https://s.yimg.com/nn/img/sad-panda-201402200631.png) 50% 50%;
+          background-size: cover;
+          height: 100%;
+          text-align: center;
+          font: 300 18px "helvetica neue", helvetica, verdana, tahoma, arial, sans-serif;
+          margin: 0;
+      }
+      table {
+          height: 100%;
+          width: 100%;
+          table-layout: fixed;
+          border-collapse: collapse;
+          border-spacing: 0;
+          border: none;
+      }
+      h1 {
+          font-size: 42px;
+          font-weight: 400;
+          color: #400090;
+      }
+      p {
+          color: #1A1A1A;
+      }
+      #message-1 {
+          font-weight: bold;
+          margin: 0;
+      }
+      #message-2 {
+          display: inline-block;
+          *display: inline;
+          zoom: 1;
+          max-width: 17em;
+          _width: 17em;
+      }
+      </style>
+      <script>
+      
+      </script>
+  </head>
+  <body>
+  <!-- status code : 500 -->
+  <!-- Unknown Host -->
+  <!-- host machine: ats-ncache-api--production-ne1-974b8956c-b5tfq -->
+  <!-- timestamp: 1765153437.277 -->
+  <!-- url: https://default.finance-yql-production.finance-k8s.omega.yahoo.com/v10/finance/quoteSummary/ETH/USD?modules=financialData%2CquoteType%2CdefaultKeyStatistics%2CassetProfile%2CsummaryDetail&corsDomain=finance.yahoo.com&formatted=false&symbol=ETH%2FUSD&crumb=Z4ipnxurB3i-->
+  <script type="text/javascript">
+    function buildUrl(url, parameters){
+      var qs = [];
+      for(var key in parameters) {
+        var value = parameters[key];
+        qs.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+      }
+      url = url + "?" + qs.join('&');
+      return url;
+    }
+
+    function generateBRBMarkup(site) {
+      params.source = 'brb';
+      generateBeaconMarkup(params);
+      var englishHeader = 'Will be right back...';
+      var englishMessage1 = 'Thank you for your patience.';
+      var englishMessage2 = 'Our engineers are working quickly to resolve the issue.';
+      var defaultLogoStyle = '';
+      var siteDataMap = {
+        'default': {
+          logo: 'https://s.yimg.com/rz/p/yahoo_frontpage_en-US_s_f_p_205x58_frontpage.png',
+          logoAlt: 'Yahoo Logo',
+          logoStyle: defaultLogoStyle,
+          header: englishHeader,
+          message1: englishMessage1,
+          message2: englishMessage2
+        }
+      };
+
+      var siteDetails = siteDataMap['default'];
+
+      document.write('<table><tbody><tr><td>');
+      document.write('<div id="content">');
+      document.write('<img src="' + siteDetails['logo'] + '" alt="' + siteDetails['logoAlt'] + '" style="' + siteDetails['logoStyle'] + '">');
+      document.write('<h1 style="margin-top:20px;">' + siteDetails['header'] + '</h1>');
+      document.write('<p id="message-1">' + siteDetails['message1'] + '</p>');
+      document.write('<p id="message-2">' + siteDetails['message2'] + '</p>');
+      document.write('</div>');
+      document.write('</td></tr></tbody></table>');
+    }
+
+    function generateBeaconMarkup(params) {
+        document.write('<img src="' + buildUrl('//geo.yahoo.com/b', params) + '" style="display:none;" width="0px" height="0px"/>');
+        var beacon = new Image();
+        beacon.src = buildUrl('//bcn.fp.yahoo.com/p', params);
+    }
+
+    var hostname = window.location.hostname;
+    var device = 'desktop';
+    var ynet = ('-' === '1');
+    var time = new Date().getTime();
+    var params = {
+        s: '1197757129',
+        t: time,
+        err_url: document.URL,
+        err: '500',
+        test: '-',
+        ats_host: 'ats-ncache-api--production-ne1-974b8956c-b5tfq',
+        rid: '-',
+        message: 'Unknown Host'
+    };
+
+    if(ynet) {
+        document.write('<div style="height: 5px; background-color: red;"></div>');
+    }
+    generateBRBMarkup(hostname, params);
+
+  </script>
+  <noscript>
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <div id="englishContent">
+            <h1 style="margin-top:20px;">Will be right back...</h1>
+            <p id="message-1">Thank you for your patience.</p>
+            <p id="message-2">Our engineers are working quickly to resolve the issue.</p>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </noscript>
+  </body>
+</html>
+
+HTTP Error 500: <!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Yahoo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <style>
+      html {
+          height: 100%;
+      }
+      body {
+          background: #fafafc url(https://s.yimg.com/nn/img/sad-panda-201402200631.png) 50% 50%;
+          background-size: cover;
+          height: 100%;
+          text-align: center;
+          font: 300 18px "helvetica neue", helvetica, verdana, tahoma, arial, sans-serif;
+          margin: 0;
+      }
+      table {
+          height: 100%;
+          width: 100%;
+          table-layout: fixed;
+          border-collapse: collapse;
+          border-spacing: 0;
+          border: none;
+      }
+      h1 {
+          font-size: 42px;
+          font-weight: 400;
+          color: #400090;
+      }
+      p {
+          color: #1A1A1A;
+      }
+      #message-1 {
+          font-weight: bold;
+          margin: 0;
+      }
+      #message-2 {
+          display: inline-block;
+          *display: inline;
+          zoom: 1;
+          max-width: 17em;
+          _width: 17em;
+      }
+      </style>
+      <script>
+      
+      </script>
+  </head>
+  <body>
+  <!-- status code : 500 -->
+  <!-- Unknown Host -->
+  <!-- host machine: ats-ncache-api--production-ne1-974b8956c-rxf8c -->
+  <!-- timestamp: 1765153437.274 -->
+  <!-- url: https://default.finance-yql-production.finance-k8s.omega.yahoo.com/v10/finance/quoteSummary/SHIB/USD?modules=financialData%2CquoteType%2CdefaultKeyStatistics%2CassetProfile%2CsummaryDetail&corsDomain=finance.yahoo.com&formatted=false&symbol=SHIB%2FUSD&crumb=Z4ipnxurB3i-->
+  <script type="text/javascript">
+    function buildUrl(url, parameters){
+      var qs = [];
+      for(var key in parameters) {
+        var value = parameters[key];
+        qs.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+      }
+      url = url + "?" + qs.join('&');
+      return url;
+    }
+
+    function generateBRBMarkup(site) {
+      params.source = 'brb';
+      generateBeaconMarkup(params);
+      var englishHeader = 'Will be right back...';
+      var englishMessage1 = 'Thank you for your patience.';
+      var englishMessage2 = 'Our engineers are working quickly to resolve the issue.';
+      var defaultLogoStyle = '';
+      var siteDataMap = {
+        'default': {
+          logo: 'https://s.yimg.com/rz/p/yahoo_frontpage_en-US_s_f_p_205x58_frontpage.png',
+          logoAlt: 'Yahoo Logo',
+          logoStyle: defaultLogoStyle,
+          header: englishHeader,
+          message1: englishMessage1,
+          message2: englishMessage2
+        }
+      };
+
+      var siteDetails = siteDataMap['default'];
+
+      document.write('<table><tbody><tr><td>');
+      document.write('<div id="content">');
+      document.write('<img src="' + siteDetails['logo'] + '" alt="' + siteDetails['logoAlt'] + '" style="' + siteDetails['logoStyle'] + '">');
+      document.write('<h1 style="margin-top:20px;">' + siteDetails['header'] + '</h1>');
+      document.write('<p id="message-1">' + siteDetails['message1'] + '</p>');
+      document.write('<p id="message-2">' + siteDetails['message2'] + '</p>');
+      document.write('</div>');
+      document.write('</td></tr></tbody></table>');
+    }
+
+    function generateBeaconMarkup(params) {
+        document.write('<img src="' + buildUrl('//geo.yahoo.com/b', params) + '" style="display:none;" width="0px" height="0px"/>');
+        var beacon = new Image();
+        beacon.src = buildUrl('//bcn.fp.yahoo.com/p', params);
+    }
+
+    var hostname = window.location.hostname;
+    var device = 'desktop';
+    var ynet = ('-' === '1');
+    var time = new Date().getTime();
+    var params = {
+        s: '1197757129',
+        t: time,
+        err_url: document.URL,
+        err: '500',
+        test: '-',
+        ats_host: 'ats-ncache-api--production-ne1-974b8956c-rxf8c',
+        rid: '-',
+        message: 'Unknown Host'
+    };
+
+    if(ynet) {
+        document.write('<div style="height: 5px; background-color: red;"></div>');
+    }
+    generateBRBMarkup(hostname, params);
+
+  </script>
+  <noscript>
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <div id="englishContent">
+            <h1 style="margin-top:20px;">Will be right back...</h1>
+            <p id="message-1">Thank you for your patience.</p>
+            <p id="message-2">Our engineers are working quickly to resolve the issue.</p>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </noscript>
+  </body>
+</html>
+
+HTTP Error 500: <!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Yahoo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <style>
+      html {
+          height: 100%;
+      }
+      body {
+          background: #fafafc url(https://s.yimg.com/nn/img/sad-panda-201402200631.png) 50% 50%;
+          background-size: cover;
+          height: 100%;
+          text-align: center;
+          font: 300 18px "helvetica neue", helvetica, verdana, tahoma, arial, sans-serif;
+          margin: 0;
+      }
+      table {
+          height: 100%;
+          width: 100%;
+          table-layout: fixed;
+          border-collapse: collapse;
+          border-spacing: 0;
+          border: none;
+      }
+      h1 {
+          font-size: 42px;
+          font-weight: 400;
+          color: #400090;
+      }
+      p {
+          color: #1A1A1A;
+      }
+      #message-1 {
+          font-weight: bold;
+          margin: 0;
+      }
+      #message-2 {
+          display: inline-block;
+          *display: inline;
+          zoom: 1;
+          max-width: 17em;
+          _width: 17em;
+      }
+      </style>
+      <script>
+      
+      </script>
+  </head>
+  <body>
+  <!-- status code : 500 -->
+  <!-- Unknown Host -->
+  <!-- host machine: ats-ncache-api--production-ne1-974b8956c-gccw9 -->
+  <!-- timestamp: 1765153437.289 -->
+  <!-- url: https://default.finance-yql-production.finance-k8s.omega.yahoo.com/v10/finance/quoteSummary/SOL/USD?modules=financialData%2CquoteType%2CdefaultKeyStatistics%2CassetProfile%2CsummaryDetail&corsDomain=finance.yahoo.com&formatted=false&symbol=SOL%2FUSD&crumb=Z4ipnxurB3i-->
+  <script type="text/javascript">
+    function buildUrl(url, parameters){
+      var qs = [];
+      for(var key in parameters) {
+        var value = parameters[key];
+        qs.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+      }
+      url = url + "?" + qs.join('&');
+      return url;
+    }
+
+    function generateBRBMarkup(site) {
+      params.source = 'brb';
+      generateBeaconMarkup(params);
+      var englishHeader = 'Will be right back...';
+      var englishMessage1 = 'Thank you for your patience.';
+      var englishMessage2 = 'Our engineers are working quickly to resolve the issue.';
+      var defaultLogoStyle = '';
+      var siteDataMap = {
+        'default': {
+          logo: 'https://s.yimg.com/rz/p/yahoo_frontpage_en-US_s_f_p_205x58_frontpage.png',
+          logoAlt: 'Yahoo Logo',
+          logoStyle: defaultLogoStyle,
+          header: englishHeader,
+          message1: englishMessage1,
+          message2: englishMessage2
+        }
+      };
+
+      var siteDetails = siteDataMap['default'];
+
+      document.write('<table><tbody><tr><td>');
+      document.write('<div id="content">');
+      document.write('<img src="' + siteDetails['logo'] + '" alt="' + siteDetails['logoAlt'] + '" style="' + siteDetails['logoStyle'] + '">');
+      document.write('<h1 style="margin-top:20px;">' + siteDetails['header'] + '</h1>');
+      document.write('<p id="message-1">' + siteDetails['message1'] + '</p>');
+      document.write('<p id="message-2">' + siteDetails['message2'] + '</p>');
+      document.write('</div>');
+      document.write('</td></tr></tbody></table>');
+    }
+
+    function generateBeaconMarkup(params) {
+        document.write('<img src="' + buildUrl('//geo.yahoo.com/b', params) + '" style="display:none;" width="0px" height="0px"/>');
+        var beacon = new Image();
+        beacon.src = buildUrl('//bcn.fp.yahoo.com/p', params);
+    }
+
+    var hostname = window.location.hostname;
+    var device = 'desktop';
+    var ynet = ('-' === '1');
+    var time = new Date().getTime();
+    var params = {
+        s: '1197757129',
+        t: time,
+        err_url: document.URL,
+        err: '500',
+        test: '-',
+        ats_host: 'ats-ncache-api--production-ne1-974b8956c-gccw9',
+        rid: '-',
+        message: 'Unknown Host'
+    };
+
+    if(ynet) {
+        document.write('<div style="height: 5px; background-color: red;"></div>');
+    }
+    generateBRBMarkup(hostname, params);
+
+  </script>
+  <noscript>
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <div id="englishContent">
+            <h1 style="margin-top:20px;">Will be right back...</h1>
+            <p id="message-1">Thank you for your patience.</p>
+            <p id="message-2">Our engineers are working quickly to resolve the issue.</p>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </noscript>
+  </body>
+</html>
+
+HTTP Error 500: <!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Yahoo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <style>
+      html {
+          height: 100%;
+      }
+      body {
+          background: #fafafc url(https://s.yimg.com/nn/img/sad-panda-201402200631.png) 50% 50%;
+          background-size: cover;
+          height: 100%;
+          text-align: center;
+          font: 300 18px "helvetica neue", helvetica, verdana, tahoma, arial, sans-serif;
+          margin: 0;
+      }
+      table {
+          height: 100%;
+          width: 100%;
+          table-layout: fixed;
+          border-collapse: collapse;
+          border-spacing: 0;
+          border: none;
+      }
+      h1 {
+          font-size: 42px;
+          font-weight: 400;
+          color: #400090;
+      }
+      p {
+          color: #1A1A1A;
+      }
+      #message-1 {
+          font-weight: bold;
+          margin: 0;
+      }
+      #message-2 {
+          display: inline-block;
+          *display: inline;
+          zoom: 1;
+          max-width: 17em;
+          _width: 17em;
+      }
+      </style>
+      <script>
+      
+      </script>
+  </head>
+  <body>
+  <!-- status code : 500 -->
+  <!-- Unknown Host -->
+  <!-- host machine: ats-ncache-api--production-ne1-974b8956c-cslrv -->
+  <!-- timestamp: 1765153437.281 -->
+  <!-- url: https://default.finance-yql-production.finance-k8s.omega.yahoo.com/v10/finance/quoteSummary/LINK/USD?modules=financialData%2CquoteType%2CdefaultKeyStatistics%2CassetProfile%2CsummaryDetail&corsDomain=finance.yahoo.com&formatted=false&symbol=LINK%2FUSD&crumb=Z4ipnxurB3i-->
+  <script type="text/javascript">
+    function buildUrl(url, parameters){
+      var qs = [];
+      for(var key in parameters) {
+        var value = parameters[key];
+        qs.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+      }
+      url = url + "?" + qs.join('&');
+      return url;
+    }
+
+    function generateBRBMarkup(site) {
+      params.source = 'brb';
+      generateBeaconMarkup(params);
+      var englishHeader = 'Will be right back...';
+      var englishMessage1 = 'Thank you for your patience.';
+      var englishMessage2 = 'Our engineers are working quickly to resolve the issue.';
+      var defaultLogoStyle = '';
+      var siteDataMap = {
+        'default': {
+          logo: 'https://s.yimg.com/rz/p/yahoo_frontpage_en-US_s_f_p_205x58_frontpage.png',
+          logoAlt: 'Yahoo Logo',
+          logoStyle: defaultLogoStyle,
+          header: englishHeader,
+          message1: englishMessage1,
+          message2: englishMessage2
+        }
+      };
+
+      var siteDetails = siteDataMap['default'];
+
+      document.write('<table><tbody><tr><td>');
+      document.write('<div id="content">');
+      document.write('<img src="' + siteDetails['logo'] + '" alt="' + siteDetails['logoAlt'] + '" style="' + siteDetails['logoStyle'] + '">');
+      document.write('<h1 style="margin-top:20px;">' + siteDetails['header'] + '</h1>');
+      document.write('<p id="message-1">' + siteDetails['message1'] + '</p>');
+      document.write('<p id="message-2">' + siteDetails['message2'] + '</p>');
+      document.write('</div>');
+      document.write('</td></tr></tbody></table>');
+    }
+
+    function generateBeaconMarkup(params) {
+        document.write('<img src="' + buildUrl('//geo.yahoo.com/b', params) + '" style="display:none;" width="0px" height="0px"/>');
+        var beacon = new Image();
+        beacon.src = buildUrl('//bcn.fp.yahoo.com/p', params);
+    }
+
+    var hostname = window.location.hostname;
+    var device = 'desktop';
+    var ynet = ('-' === '1');
+    var time = new Date().getTime();
+    var params = {
+        s: '1197757129',
+        t: time,
+        err_url: document.URL,
+        err: '500',
+        test: '-',
+        ats_host: 'ats-ncache-api--production-ne1-974b8956c-cslrv',
+        rid: '-',
+        message: 'Unknown Host'
+    };
+
+    if(ynet) {
+        document.write('<div style="height: 5px; background-color: red;"></div>');
+    }
+    generateBRBMarkup(hostname, params);
+
+  </script>
+  <noscript>
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <div id="englishContent">
+            <h1 style="margin-top:20px;">Will be right back...</h1>
+            <p id="message-1">Thank you for your patience.</p>
+            <p id="message-2">Our engineers are working quickly to resolve the issue.</p>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </noscript>
+  </body>
+</html>
+
+HTTP Error 500: <!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Yahoo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <style>
+      html {
+          height: 100%;
+      }
+      body {
+          background: #fafafc url(https://s.yimg.com/nn/img/sad-panda-201402200631.png) 50% 50%;
+          background-size: cover;
+          height: 100%;
+          text-align: center;
+          font: 300 18px "helvetica neue", helvetica, verdana, tahoma, arial, sans-serif;
+          margin: 0;
+      }
+      table {
+          height: 100%;
+          width: 100%;
+          table-layout: fixed;
+          border-collapse: collapse;
+          border-spacing: 0;
+          border: none;
+      }
+      h1 {
+          font-size: 42px;
+          font-weight: 400;
+          color: #400090;
+      }
+      p {
+          color: #1A1A1A;
+      }
+      #message-1 {
+          font-weight: bold;
+          margin: 0;
+      }
+      #message-2 {
+          display: inline-block;
+          *display: inline;
+          zoom: 1;
+          max-width: 17em;
+          _width: 17em;
+      }
+      </style>
+      <script>
+      
+      </script>
+  </head>
+  <body>
+  <!-- status code : 500 -->
+  <!-- Unknown Host -->
+  <!-- host machine: ats-ncache-api--production-bf1-667d4f84db-q7z8x -->
+  <!-- timestamp: 1765153437.285 -->
+  <!-- url: https://default.finance-yql-production.finance-k8s.omega.yahoo.com/v10/finance/quoteSummary/BCH/USD?modules=financialData%2CquoteType%2CdefaultKeyStatistics%2CassetProfile%2CsummaryDetail&corsDomain=finance.yahoo.com&formatted=false&symbol=BCH%2FUSD&crumb=Z4ipnxurB3i-->
+  <script type="text/javascript">
+    function buildUrl(url, parameters){
+      var qs = [];
+      for(var key in parameters) {
+        var value = parameters[key];
+        qs.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+      }
+      url = url + "?" + qs.join('&');
+      return url;
+    }
+
+    function generateBRBMarkup(site) {
+      params.source = 'brb';
+      generateBeaconMarkup(params);
+      var englishHeader = 'Will be right back...';
+      var englishMessage1 = 'Thank you for your patience.';
+      var englishMessage2 = 'Our engineers are working quickly to resolve the issue.';
+      var defaultLogoStyle = '';
+      var siteDataMap = {
+        'default': {
+          logo: 'https://s.yimg.com/rz/p/yahoo_frontpage_en-US_s_f_p_205x58_frontpage.png',
+          logoAlt: 'Yahoo Logo',
+          logoStyle: defaultLogoStyle,
+          header: englishHeader,
+          message1: englishMessage1,
+          message2: englishMessage2
+        }
+      };
+
+      var siteDetails = siteDataMap['default'];
+
+      document.write('<table><tbody><tr><td>');
+      document.write('<div id="content">');
+      document.write('<img src="' + siteDetails['logo'] + '" alt="' + siteDetails['logoAlt'] + '" style="' + siteDetails['logoStyle'] + '">');
+      document.write('<h1 style="margin-top:20px;">' + siteDetails['header'] + '</h1>');
+      document.write('<p id="message-1">' + siteDetails['message1'] + '</p>');
+      document.write('<p id="message-2">' + siteDetails['message2'] + '</p>');
+      document.write('</div>');
+      document.write('</td></tr></tbody></table>');
+    }
+
+    function generateBeaconMarkup(params) {
+        document.write('<img src="' + buildUrl('//geo.yahoo.com/b', params) + '" style="display:none;" width="0px" height="0px"/>');
+        var beacon = new Image();
+        beacon.src = buildUrl('//bcn.fp.yahoo.com/p', params);
+    }
+
+    var hostname = window.location.hostname;
+    var device = 'desktop';
+    var ynet = ('-' === '1');
+    var time = new Date().getTime();
+    var params = {
+        s: '1197757129',
+        t: time,
+        err_url: document.URL,
+        err: '500',
+        test: '-',
+        ats_host: 'ats-ncache-api--production-bf1-667d4f84db-q7z8x',
+        rid: '-',
+        message: 'Unknown Host'
+    };
+
+    if(ynet) {
+        document.write('<div style="height: 5px; background-color: red;"></div>');
+    }
+    generateBRBMarkup(hostname, params);
+
+  </script>
+  <noscript>
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <div id="englishContent">
+            <h1 style="margin-top:20px;">Will be right back...</h1>
+            <p id="message-1">Thank you for your patience.</p>
+            <p id="message-2">Our engineers are working quickly to resolve the issue.</p>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </noscript>
+  </body>
+</html>
+
+HTTP Error 500: <!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Yahoo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <style>
+      html {
+          height: 100%;
+      }
+      body {
+          background: #fafafc url(https://s.yimg.com/nn/img/sad-panda-201402200631.png) 50% 50%;
+          background-size: cover;
+          height: 100%;
+          text-align: center;
+          font: 300 18px "helvetica neue", helvetica, verdana, tahoma, arial, sans-serif;
+          margin: 0;
+      }
+      table {
+          height: 100%;
+          width: 100%;
+          table-layout: fixed;
+          border-collapse: collapse;
+          border-spacing: 0;
+          border: none;
+      }
+      h1 {
+          font-size: 42px;
+          font-weight: 400;
+          color: #400090;
+      }
+      p {
+          color: #1A1A1A;
+      }
+      #message-1 {
+          font-weight: bold;
+          margin: 0;
+      }
+      #message-2 {
+          display: inline-block;
+          *display: inline;
+          zoom: 1;
+          max-width: 17em;
+          _width: 17em;
+      }
+      </style>
+      <script>
+      
+      </script>
+  </head>
+  <body>
+  <!-- status code : 500 -->
+  <!-- Unknown Host -->
+  <!-- host machine: ats-ncache-api--production-ne1-974b8956c-6gcq9 -->
+  <!-- timestamp: 1765153437.295 -->
+  <!-- url: https://default.finance-yql-production.finance-k8s.omega.yahoo.com/v10/finance/quoteSummary/AVAX/USD?modules=financialData%2CquoteType%2CdefaultKeyStatistics%2CassetProfile%2CsummaryDetail&corsDomain=finance.yahoo.com&formatted=false&symbol=AVAX%2FUSD&crumb=Z4ipnxurB3i-->
+  <script type="text/javascript">
+    function buildUrl(url, parameters){
+      var qs = [];
+      for(var key in parameters) {
+        var value = parameters[key];
+        qs.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+      }
+      url = url + "?" + qs.join('&');
+      return url;
+    }
+
+    function generateBRBMarkup(site) {
+      params.source = 'brb';
+      generateBeaconMarkup(params);
+      var englishHeader = 'Will be right back...';
+      var englishMessage1 = 'Thank you for your patience.';
+      var englishMessage2 = 'Our engineers are working quickly to resolve the issue.';
+      var defaultLogoStyle = '';
+      var siteDataMap = {
+        'default': {
+          logo: 'https://s.yimg.com/rz/p/yahoo_frontpage_en-US_s_f_p_205x58_frontpage.png',
+          logoAlt: 'Yahoo Logo',
+          logoStyle: defaultLogoStyle,
+          header: englishHeader,
+          message1: englishMessage1,
+          message2: englishMessage2
+        }
+      };
+
+      var siteDetails = siteDataMap['default'];
+
+      document.write('<table><tbody><tr><td>');
+      document.write('<div id="content">');
+      document.write('<img src="' + siteDetails['logo'] + '" alt="' + siteDetails['logoAlt'] + '" style="' + siteDetails['logoStyle'] + '">');
+      document.write('<h1 style="margin-top:20px;">' + siteDetails['header'] + '</h1>');
+      document.write('<p id="message-1">' + siteDetails['message1'] + '</p>');
+      document.write('<p id="message-2">' + siteDetails['message2'] + '</p>');
+      document.write('</div>');
+      document.write('</td></tr></tbody></table>');
+    }
+
+    function generateBeaconMarkup(params) {
+        document.write('<img src="' + buildUrl('//geo.yahoo.com/b', params) + '" style="display:none;" width="0px" height="0px"/>');
+        var beacon = new Image();
+        beacon.src = buildUrl('//bcn.fp.yahoo.com/p', params);
+    }
+
+    var hostname = window.location.hostname;
+    var device = 'desktop';
+    var ynet = ('-' === '1');
+    var time = new Date().getTime();
+    var params = {
+        s: '1197757129',
+        t: time,
+        err_url: document.URL,
+        err: '500',
+        test: '-',
+        ats_host: 'ats-ncache-api--production-ne1-974b8956c-6gcq9',
+        rid: '-',
+        message: 'Unknown Host'
+    };
+
+    if(ynet) {
+        document.write('<div style="height: 5px; background-color: red;"></div>');
+    }
+    generateBRBMarkup(hostname, params);
+
+  </script>
+  <noscript>
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <div id="englishContent">
+            <h1 style="margin-top:20px;">Will be right back...</h1>
+            <p id="message-1">Thank you for your patience.</p>
+            <p id="message-2">Our engineers are working quickly to resolve the issue.</p>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </noscript>
+  </body>
+</html>
+
+HTTP Error 500: <!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Yahoo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <style>
+      html {
+          height: 100%;
+      }
+      body {
+          background: #fafafc url(https://s.yimg.com/nn/img/sad-panda-201402200631.png) 50% 50%;
+          background-size: cover;
+          height: 100%;
+          text-align: center;
+          font: 300 18px "helvetica neue", helvetica, verdana, tahoma, arial, sans-serif;
+          margin: 0;
+      }
+      table {
+          height: 100%;
+          width: 100%;
+          table-layout: fixed;
+          border-collapse: collapse;
+          border-spacing: 0;
+          border: none;
+      }
+      h1 {
+          font-size: 42px;
+          font-weight: 400;
+          color: #400090;
+      }
+      p {
+          color: #1A1A1A;
+      }
+      #message-1 {
+          font-weight: bold;
+          margin: 0;
+      }
+      #message-2 {
+          display: inline-block;
+          *display: inline;
+          zoom: 1;
+          max-width: 17em;
+          _width: 17em;
+      }
+      </style>
+      <script>
+      
+      </script>
+  </head>
+  <body>
+  <!-- status code : 500 -->
+  <!-- Unknown Host -->
+  <!-- host machine: ats-ncache-api--production-bf1-667d4f84db-w992h -->
+  <!-- timestamp: 1765153437.283 -->
+  <!-- url: https://default.finance-yql-production.finance-k8s.omega.yahoo.com/v10/finance/quoteSummary/DOGE/USD?modules=financialData%2CquoteType%2CdefaultKeyStatistics%2CassetProfile%2CsummaryDetail&corsDomain=finance.yahoo.com&formatted=false&symbol=DOGE%2FUSD&crumb=Z4ipnxurB3i-->
+  <script type="text/javascript">
+    function buildUrl(url, parameters){
+      var qs = [];
+      for(var key in parameters) {
+        var value = parameters[key];
+        qs.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+      }
+      url = url + "?" + qs.join('&');
+      return url;
+    }
+
+    function generateBRBMarkup(site) {
+      params.source = 'brb';
+      generateBeaconMarkup(params);
+      var englishHeader = 'Will be right back...';
+      var englishMessage1 = 'Thank you for your patience.';
+      var englishMessage2 = 'Our engineers are working quickly to resolve the issue.';
+      var defaultLogoStyle = '';
+      var siteDataMap = {
+        'default': {
+          logo: 'https://s.yimg.com/rz/p/yahoo_frontpage_en-US_s_f_p_205x58_frontpage.png',
+          logoAlt: 'Yahoo Logo',
+          logoStyle: defaultLogoStyle,
+          header: englishHeader,
+          message1: englishMessage1,
+          message2: englishMessage2
+        }
+      };
+
+      var siteDetails = siteDataMap['default'];
+
+      document.write('<table><tbody><tr><td>');
+      document.write('<div id="content">');
+      document.write('<img src="' + siteDetails['logo'] + '" alt="' + siteDetails['logoAlt'] + '" style="' + siteDetails['logoStyle'] + '">');
+      document.write('<h1 style="margin-top:20px;">' + siteDetails['header'] + '</h1>');
+      document.write('<p id="message-1">' + siteDetails['message1'] + '</p>');
+      document.write('<p id="message-2">' + siteDetails['message2'] + '</p>');
+      document.write('</div>');
+      document.write('</td></tr></tbody></table>');
+    }
+
+    function generateBeaconMarkup(params) {
+        document.write('<img src="' + buildUrl('//geo.yahoo.com/b', params) + '" style="display:none;" width="0px" height="0px"/>');
+        var beacon = new Image();
+        beacon.src = buildUrl('//bcn.fp.yahoo.com/p', params);
+    }
+
+    var hostname = window.location.hostname;
+    var device = 'desktop';
+    var ynet = ('-' === '1');
+    var time = new Date().getTime();
+    var params = {
+        s: '1197757129',
+        t: time,
+        err_url: document.URL,
+        err: '500',
+        test: '-',
+        ats_host: 'ats-ncache-api--production-bf1-667d4f84db-w992h',
+        rid: '-',
+        message: 'Unknown Host'
+    };
+
+    if(ynet) {
+        document.write('<div style="height: 5px; background-color: red;"></div>');
+    }
+    generateBRBMarkup(hostname, params);
+
+  </script>
+  <noscript>
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <div id="englishContent">
+            <h1 style="margin-top:20px;">Will be right back...</h1>
+            <p id="message-1">Thank you for your patience.</p>
+            <p id="message-2">Our engineers are working quickly to resolve the issue.</p>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </noscript>
+  </body>
+</html>
+
+HTTP Error 500: <!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Yahoo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <style>
+      html {
+          height: 100%;
+      }
+      body {
+          background: #fafafc url(https://s.yimg.com/nn/img/sad-panda-201402200631.png) 50% 50%;
+          background-size: cover;
+          height: 100%;
+          text-align: center;
+          font: 300 18px "helvetica neue", helvetica, verdana, tahoma, arial, sans-serif;
+          margin: 0;
+      }
+      table {
+          height: 100%;
+          width: 100%;
+          table-layout: fixed;
+          border-collapse: collapse;
+          border-spacing: 0;
+          border: none;
+      }
+      h1 {
+          font-size: 42px;
+          font-weight: 400;
+          color: #400090;
+      }
+      p {
+          color: #1A1A1A;
+      }
+      #message-1 {
+          font-weight: bold;
+          margin: 0;
+      }
+      #message-2 {
+          display: inline-block;
+          *display: inline;
+          zoom: 1;
+          max-width: 17em;
+          _width: 17em;
+      }
+      </style>
+      <script>
+      
+      </script>
+  </head>
+  <body>
+  <!-- status code : 500 -->
+  <!-- Unknown Host -->
+  <!-- host machine: ats-ncache-api--production-bf1-667d4f84db-kwkbj -->
+  <!-- timestamp: 1765153437.303 -->
+  <!-- url: https://default.finance-yql-production.finance-k8s.omega.yahoo.com/v10/finance/quoteSummary/BTC/USD?modules=financialData%2CquoteType%2CdefaultKeyStatistics%2CassetProfile%2CsummaryDetail&corsDomain=finance.yahoo.com&formatted=false&symbol=BTC%2FUSD&crumb=Z4ipnxurB3i-->
+  <script type="text/javascript">
+    function buildUrl(url, parameters){
+      var qs = [];
+      for(var key in parameters) {
+        var value = parameters[key];
+        qs.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+      }
+      url = url + "?" + qs.join('&');
+      return url;
+    }
+
+    function generateBRBMarkup(site) {
+      params.source = 'brb';
+      generateBeaconMarkup(params);
+      var englishHeader = 'Will be right back...';
+      var englishMessage1 = 'Thank you for your patience.';
+      var englishMessage2 = 'Our engineers are working quickly to resolve the issue.';
+      var defaultLogoStyle = '';
+      var siteDataMap = {
+        'default': {
+          logo: 'https://s.yimg.com/rz/p/yahoo_frontpage_en-US_s_f_p_205x58_frontpage.png',
+          logoAlt: 'Yahoo Logo',
+          logoStyle: defaultLogoStyle,
+          header: englishHeader,
+          message1: englishMessage1,
+          message2: englishMessage2
+        }
+      };
+
+      var siteDetails = siteDataMap['default'];
+
+      document.write('<table><tbody><tr><td>');
+      document.write('<div id="content">');
+      document.write('<img src="' + siteDetails['logo'] + '" alt="' + siteDetails['logoAlt'] + '" style="' + siteDetails['logoStyle'] + '">');
+      document.write('<h1 style="margin-top:20px;">' + siteDetails['header'] + '</h1>');
+      document.write('<p id="message-1">' + siteDetails['message1'] + '</p>');
+      document.write('<p id="message-2">' + siteDetails['message2'] + '</p>');
+      document.write('</div>');
+      document.write('</td></tr></tbody></table>');
+    }
+
+    function generateBeaconMarkup(params) {
+        document.write('<img src="' + buildUrl('//geo.yahoo.com/b', params) + '" style="display:none;" width="0px" height="0px"/>');
+        var beacon = new Image();
+        beacon.src = buildUrl('//bcn.fp.yahoo.com/p', params);
+    }
+
+    var hostname = window.location.hostname;
+    var device = 'desktop';
+    var ynet = ('-' === '1');
+    var time = new Date().getTime();
+    var params = {
+        s: '1197757129',
+        t: time,
+        err_url: document.URL,
+        err: '500',
+        test: '-',
+        ats_host: 'ats-ncache-api--production-bf1-667d4f84db-kwkbj',
+        rid: '-',
+        message: 'Unknown Host'
+    };
+
+    if(ynet) {
+        document.write('<div style="height: 5px; background-color: red;"></div>');
+    }
+    generateBRBMarkup(hostname, params);
+
+  </script>
+  <noscript>
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <div id="englishContent">
+            <h1 style="margin-top:20px;">Will be right back...</h1>
+            <p id="message-1">Thank you for your patience.</p>
+            <p id="message-2">Our engineers are working quickly to resolve the issue.</p>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </noscript>
+  </body>
+</html>
+
+HTTP Error 500: <!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Yahoo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <style>
+      html {
+          height: 100%;
+      }
+      body {
+          background: #fafafc url(https://s.yimg.com/nn/img/sad-panda-201402200631.png) 50% 50%;
+          background-size: cover;
+          height: 100%;
+          text-align: center;
+          font: 300 18px "helvetica neue", helvetica, verdana, tahoma, arial, sans-serif;
+          margin: 0;
+      }
+      table {
+          height: 100%;
+          width: 100%;
+          table-layout: fixed;
+          border-collapse: collapse;
+          border-spacing: 0;
+          border: none;
+      }
+      h1 {
+          font-size: 42px;
+          font-weight: 400;
+          color: #400090;
+      }
+      p {
+          color: #1A1A1A;
+      }
+      #message-1 {
+          font-weight: bold;
+          margin: 0;
+      }
+      #message-2 {
+          display: inline-block;
+          *display: inline;
+          zoom: 1;
+          max-width: 17em;
+          _width: 17em;
+      }
+      </style>
+      <script>
+      
+      </script>
+  </head>
+  <body>
+  <!-- status code : 500 -->
+  <!-- Unknown Host -->
+  <!-- host machine: ats-ncache-api--production-bf1-667d4f84db-hkc4w -->
+  <!-- timestamp: 1765153437.315 -->
+  <!-- url: https://default.finance-yql-production.finance-k8s.omega.yahoo.com/v10/finance/quoteSummary/LTC/USD?modules=financialData%2CquoteType%2CdefaultKeyStatistics%2CassetProfile%2CsummaryDetail&corsDomain=finance.yahoo.com&formatted=false&symbol=LTC%2FUSD&crumb=Z4ipnxurB3i-->
+  <script type="text/javascript">
+    function buildUrl(url, parameters){
+      var qs = [];
+      for(var key in parameters) {
+        var value = parameters[key];
+        qs.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+      }
+      url = url + "?" + qs.join('&');
+      return url;
+    }
+
+    function generateBRBMarkup(site) {
+      params.source = 'brb';
+      generateBeaconMarkup(params);
+      var englishHeader = 'Will be right back...';
+      var englishMessage1 = 'Thank you for your patience.';
+      var englishMessage2 = 'Our engineers are working quickly to resolve the issue.';
+      var defaultLogoStyle = '';
+      var siteDataMap = {
+        'default': {
+          logo: 'https://s.yimg.com/rz/p/yahoo_frontpage_en-US_s_f_p_205x58_frontpage.png',
+          logoAlt: 'Yahoo Logo',
+          logoStyle: defaultLogoStyle,
+          header: englishHeader,
+          message1: englishMessage1,
+          message2: englishMessage2
+        }
+      };
+
+      var siteDetails = siteDataMap['default'];
+
+      document.write('<table><tbody><tr><td>');
+      document.write('<div id="content">');
+      document.write('<img src="' + siteDetails['logo'] + '" alt="' + siteDetails['logoAlt'] + '" style="' + siteDetails['logoStyle'] + '">');
+      document.write('<h1 style="margin-top:20px;">' + siteDetails['header'] + '</h1>');
+      document.write('<p id="message-1">' + siteDetails['message1'] + '</p>');
+      document.write('<p id="message-2">' + siteDetails['message2'] + '</p>');
+      document.write('</div>');
+      document.write('</td></tr></tbody></table>');
+    }
+
+    function generateBeaconMarkup(params) {
+        document.write('<img src="' + buildUrl('//geo.yahoo.com/b', params) + '" style="display:none;" width="0px" height="0px"/>');
+        var beacon = new Image();
+        beacon.src = buildUrl('//bcn.fp.yahoo.com/p', params);
+    }
+
+    var hostname = window.location.hostname;
+    var device = 'desktop';
+    var ynet = ('-' === '1');
+    var time = new Date().getTime();
+    var params = {
+        s: '1197757129',
+        t: time,
+        err_url: document.URL,
+        err: '500',
+        test: '-',
+        ats_host: 'ats-ncache-api--production-bf1-667d4f84db-hkc4w',
+        rid: '-',
+        message: 'Unknown Host'
+    };
+
+    if(ynet) {
+        document.write('<div style="height: 5px; background-color: red;"></div>');
+    }
+    generateBRBMarkup(hostname, params);
+
+  </script>
+  <noscript>
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <div id="englishContent">
+            <h1 style="margin-top:20px;">Will be right back...</h1>
+            <p id="message-1">Thank you for your patience.</p>
+            <p id="message-2">Our engineers are working quickly to resolve the issue.</p>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </noscript>
+  </body>
+</html>
+
+HTTP Error 500: <!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Yahoo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <style>
+      html {
+          height: 100%;
+      }
+      body {
+          background: #fafafc url(https://s.yimg.com/nn/img/sad-panda-201402200631.png) 50% 50%;
+          background-size: cover;
+          height: 100%;
+          text-align: center;
+          font: 300 18px "helvetica neue", helvetica, verdana, tahoma, arial, sans-serif;
+          margin: 0;
+      }
+      table {
+          height: 100%;
+          width: 100%;
+          table-layout: fixed;
+          border-collapse: collapse;
+          border-spacing: 0;
+          border: none;
+      }
+      h1 {
+          font-size: 42px;
+          font-weight: 400;
+          color: #400090;
+      }
+      p {
+          color: #1A1A1A;
+      }
+      #message-1 {
+          font-weight: bold;
+          margin: 0;
+      }
+      #message-2 {
+          display: inline-block;
+          *display: inline;
+          zoom: 1;
+          max-width: 17em;
+          _width: 17em;
+      }
+      </style>
+      <script>
+      
+      </script>
+  </head>
+  <body>
+  <!-- status code : 500 -->
+  <!-- Unknown Host -->
+  <!-- host machine: ats-ncache-api--production-bf1-667d4f84db-pfzc5 -->
+  <!-- timestamp: 1765153437.289 -->
+  <!-- url: https://default.finance-yql-production.finance-k8s.omega.yahoo.com/v10/finance/quoteSummary/ETC/USD?modules=financialData%2CquoteType%2CdefaultKeyStatistics%2CassetProfile%2CsummaryDetail&corsDomain=finance.yahoo.com&formatted=false&symbol=ETC%2FUSD&crumb=Z4ipnxurB3i-->
+  <script type="text/javascript">
+    function buildUrl(url, parameters){
+      var qs = [];
+      for(var key in parameters) {
+        var value = parameters[key];
+        qs.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+      }
+      url = url + "?" + qs.join('&');
+      return url;
+    }
+
+    function generateBRBMarkup(site) {
+      params.source = 'brb';
+      generateBeaconMarkup(params);
+      var englishHeader = 'Will be right back...';
+      var englishMessage1 = 'Thank you for your patience.';
+      var englishMessage2 = 'Our engineers are working quickly to resolve the issue.';
+      var defaultLogoStyle = '';
+      var siteDataMap = {
+        'default': {
+          logo: 'https://s.yimg.com/rz/p/yahoo_frontpage_en-US_s_f_p_205x58_frontpage.png',
+          logoAlt: 'Yahoo Logo',
+          logoStyle: defaultLogoStyle,
+          header: englishHeader,
+          message1: englishMessage1,
+          message2: englishMessage2
+        }
+      };
+
+      var siteDetails = siteDataMap['default'];
+
+      document.write('<table><tbody><tr><td>');
+      document.write('<div id="content">');
+      document.write('<img src="' + siteDetails['logo'] + '" alt="' + siteDetails['logoAlt'] + '" style="' + siteDetails['logoStyle'] + '">');
+      document.write('<h1 style="margin-top:20px;">' + siteDetails['header'] + '</h1>');
+      document.write('<p id="message-1">' + siteDetails['message1'] + '</p>');
+      document.write('<p id="message-2">' + siteDetails['message2'] + '</p>');
+      document.write('</div>');
+      document.write('</td></tr></tbody></table>');
+    }
+
+    function generateBeaconMarkup(params) {
+        document.write('<img src="' + buildUrl('//geo.yahoo.com/b', params) + '" style="display:none;" width="0px" height="0px"/>');
+        var beacon = new Image();
+        beacon.src = buildUrl('//bcn.fp.yahoo.com/p', params);
+    }
+
+    var hostname = window.location.hostname;
+    var device = 'desktop';
+    var ynet = ('-' === '1');
+    var time = new Date().getTime();
+    var params = {
+        s: '1197757129',
+        t: time,
+        err_url: document.URL,
+        err: '500',
+        test: '-',
+        ats_host: 'ats-ncache-api--production-bf1-667d4f84db-pfzc5',
+        rid: '-',
+        message: 'Unknown Host'
+    };
+
+    if(ynet) {
+        document.write('<div style="height: 5px; background-color: red;"></div>');
+    }
+    generateBRBMarkup(hostname, params);
+
+  </script>
+  <noscript>
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <div id="englishContent">
+            <h1 style="margin-top:20px;">Will be right back...</h1>
+            <p id="message-1">Thank you for your patience.</p>
+            <p id="message-2">Our engineers are working quickly to resolve the issue.</p>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </noscript>
+  </body>
+</html>
+
+[96m[2025-12-07 19:13:49] [91m[ERROR][0m   Error fetching data for LINK/USD: Failed to parse json response from Yahoo Finance: {'code': 'Not Found', 'description': 'HTTP 404 Not Found'}
+[96m[2025-12-07 19:13:49] [91m[ERROR][0m   Error fetching data for LTC/USD: Failed to parse json response from Yahoo Finance: {'code': 'Not Found', 'description': 'HTTP 404 Not Found'}
+[96m[2025-12-07 19:13:49] [91m[ERROR][0m   Error fetching data for ETC/USD: Failed to parse json response from Yahoo Finance: {'code': 'Not Found', 'description': 'HTTP 404 Not Found'}
+[96m[2025-12-07 19:13:49] [91m[ERROR][0m   Error fetching data for AVAX/USD: Failed to parse json response from Yahoo Finance: {'code': 'Not Found', 'description': 'HTTP 404 Not Found'}
+[96m[2025-12-07 19:13:49] [92m[INFO][0m    Momentum picks (13): ['FIVE', 'SAIA', 'WFC', 'GOOGL', 'CRM', 'WMT', 'BOOT', 'TXN', 'AVGO', 'NFLX', 'TSLA', 'CSCO', 'MRK']
+[96m[2025-12-07 19:13:49] [92m[INFO][0m    Growth picks (5): ['FIVE', 'LLY', 'AVGO', 'DIS', 'NVDA']
+[96m[2025-12-07 19:13:49] [92m[INFO][0m    Value picks (5): ['UPS', 'VZ', 'CVX', 'PM', 'PEP']
+[96m[2025-12-07 19:13:49] [92m[INFO][0m    Crypto picks (0): []
+[96m[2025-12-07 19:13:49] [92m[INFO][0m    Saved screening results to data/screening_results.json
+[96m[2025-12-07 19:13:49] [92m[INFO][0m    Total unique stocks selected: 21
+[96m[2025-12-07 19:13:50] [92m[INFO][0m    Running ML learning cycle...
+[96m[2025-12-07 19:13:50] [92m[INFO][0m    Momentum - Trades: 1, Win Rate: 100.0%, Avg P&L: 3.33%
+[96m[2025-12-07 19:13:50] [92m[INFO][0m    Growth - Trades: 0, Win Rate: 0.0%, Avg P&L: 0.00%
+[96m[2025-12-07 19:13:50] [92m[INFO][0m    Value - Trades: 0, Win Rate: 0.0%, Avg P&L: 0.00%
+[96m[2025-12-07 19:13:50] [92m[INFO][0m    Saved strategy weights: {'momentum': np.float64(0.547945205479452), 'growth': np.float64(0.22602739726027396), 'value': np.float64(0.22602739726027396)}
+[96m[2025-12-07 19:13:50] [92m[INFO][0m    Adjusted strategy weights: {'momentum': np.float64(0.547945205479452), 'growth': np.float64(0.22602739726027396), 'value': np.float64(0.22602739726027396)}
+[96m[2025-12-07 19:13:50] [92m[INFO][0m    Changes: Momentum +32.2%, Growth +22.6%, Value +22.6%
+[96m[2025-12-07 19:13:50] [92m[INFO][0m    Updated Strategy Weights: {'momentum': np.float64(0.547945205479452), 'growth': np.float64(0.22602739726027396), 'value': np.float64(0.22602739726027396)}
+[96m[2025-12-07 19:13:50] [92m[INFO][0m    Logged strategy decision: updated
+[96m[2025-12-07 19:13:52] [92m[INFO][0m    Sold: None
+[96m[2025-12-07 19:13:52] [92m[INFO][0m    Bought: None
+[96m[2025-12-07 19:13:52] [92m[INFO][0m    Errors: None
+[96m[2025-12-07 19:18:01] [92m[INFO][0m    CLIENT DEBUG: switchView_trading
+[96m[2025-12-07 19:18:01] [92m[INFO][0m    🖱️ CLIENT_EVENT [click]: {'tagName': 'BUTTON', 'id': '', 'className': 'nav-tab active', 'innerText': 'Trading Dashboard', 'x': 165, 'y': 110} @ 2025-12-08T00:18:01.122Z
+[96m[2025-12-07 19:18:03] [92m[INFO][0m    CLIENT DEBUG: switchView_strategy
+[96m[2025-12-07 19:18:03] [92m[INFO][0m    🖱️ CLIENT_EVENT [click]: {'tagName': 'BUTTON', 'id': '', 'className': 'nav-tab active', 'innerText': 'Strategy', 'x': 72, 'y': 115} @ 2025-12-08T00:18:03.492Z
+[96m[2025-12-07 19:18:10] [92m[INFO][0m    🖱️ CLIENT_EVENT [click]: {'tagName': 'DIV', 'id': '', 'className': '', 'innerText': 'MOMENTUM\n\nStrong recent price action (>5% in 5d), ', 'x': 645, 'y': 283} @ 2025-12-08T00:18:10.230Z
+[96m[2025-12-07 19:22:32] [92m[INFO][0m    CLIENT DEBUG: switchView_trading
+[96m[2025-12-07 19:22:32] [92m[INFO][0m    🖱️ CLIENT_EVENT [click]: {'tagName': 'BUTTON', 'id': '', 'className': 'nav-tab active', 'innerText': 'Trading Dashboard', 'x': 173, 'y': 108} @ 2025-12-08T00:22:32.958Z
+[96m[2025-12-07 19:22:37] [92m[INFO][0m    🖱️ CLIENT_EVENT [click]: {'tagName': 'BUTTON', 'id': '', 'className': 'maximize-btn', 'innerText': '⤡', 'x': 1395, 'y': 136} @ 2025-12-08T00:22:37.256Z
+[96m[2025-12-07 19:22:44] [92m[INFO][0m    🖱️ CLIENT_EVENT [click]: {'tagName': 'BUTTON', 'id': '', 'className': 'maximize-btn', 'innerText': '⤢', 'x': 1386, 'y': 51} @ 2025-12-08T00:22:44.810Z
+[96m[2025-12-07 19:23:54] [92m[INFO][0m    Running trading bot in demo mode (Market Open: False)...
+[96m[2025-12-07 19:23:54] [92m[INFO][0m    Starting trading bot cycle...
+[96m[2025-12-07 19:23:54] [91m[ERROR][0m   🚨 PORTFOLIO HEALTH CRITICAL: Trading Halted
+[96m[2025-12-07 19:23:54] [93m[WARNING][0m ⚠️ CIRCUIT BREAKER TRIGGERED BUT PROCEEDING FOR DEMO
+[96m[2025-12-07 19:23:54] [91m[ERROR][0m   Error getting crypto quote for BTCUSD: {"message":"invalid symbol: BTCUSD does not match ^[A-Z]+/[A-Z]+$"}
+
+[96m[2025-12-07 19:23:54] [92m[INFO][0m    Fetching data for 60 stocks...
+[96m[2025-12-07 19:23:56] [92m[INFO][0m    Successfully fetched data for 58 stocks
+[96m[2025-12-07 19:23:56] [92m[INFO][0m    Running multi-strategy stock screening...
+[96m[2025-12-07 19:23:56] [92m[INFO][0m    Market Sentiment (SPY): 0.19% today
+[96m[2025-12-07 19:23:56] [92m[INFO][0m    Loaded strategy weights: {'momentum': 0.547945205479452, 'growth': 0.22602739726027396, 'value': 0.22602739726027396}
+[96m[2025-12-07 19:23:56] [92m[INFO][0m    Fetching data for 10 crypto assets...
+[96m[2025-12-07 19:23:57] [91m[ERROR][0m   Error fetching data for ETH/USD: Failed to parse json response from Yahoo Finance: {'code': 'Not Found', 'description': 'HTTP 404 Not Found'}
+[96m[2025-12-07 19:23:57] [91m[ERROR][0m   Error fetching data for SHIB/USD: Failed to parse json response from Yahoo Finance: {'code': 'Not Found', 'description': 'HTTP 404 Not Found'}
+[96m[2025-12-07 19:23:57] [91m[ERROR][0m   Error fetching data for AVAX/USD: Failed to parse json response from Yahoo Finance: {'code': 'Not Found', 'description': 'HTTP 404 Not Found'}
+[96m[2025-12-07 19:23:57] [91m[ERROR][0m   Error fetching data for DOGE/USD: Failed to parse json response from Yahoo Finance: {'code': 'Not Found', 'description': 'HTTP 404 Not Found'}
+[96m[2025-12-07 19:23:57] [91m[ERROR][0m   Error fetching data for BCH/USD: Failed to parse json response from Yahoo Finance: {'code': 'Not Found', 'description': 'HTTP 404 Not Found'}
+[96m[2025-12-07 19:23:57] [91m[ERROR][0m   Error fetching data for BTC/USD: Failed to parse json response from Yahoo Finance: {'code': 'Not Found', 'description': 'HTTP 404 Not Found'}
+[96m[2025-12-07 19:23:57] [91m[ERROR][0m   Error fetching data for LTC/USD: Failed to parse json response from Yahoo Finance: {'code': 'Not Found', 'description': 'HTTP 404 Not Found'}
+[96m[2025-12-07 19:23:57] [91m[ERROR][0m   Error fetching data for ETC/USD: Failed to parse json response from Yahoo Finance: {'code': 'Not Found', 'description': 'HTTP 404 Not Found'}
+[96m[2025-12-07 19:23:57] [91m[ERROR][0m   Error fetching data for SOL/USD: Failed to parse json response from Yahoo Finance: {'code': 'Not Found', 'description': 'HTTP 404 Not Found'}
+[96m[2025-12-07 19:23:57] [91m[ERROR][0m   Error fetching data for LINK/USD: Failed to parse json response from Yahoo Finance: {'code': 'Not Found', 'description': 'HTTP 404 Not Found'}
+[96m[2025-12-07 19:23:57] [92m[INFO][0m    Momentum picks (13): ['FIVE', 'SAIA', 'WFC', 'GOOGL', 'CRM', 'WMT', 'BOOT', 'TXN', 'AVGO', 'NFLX', 'TSLA', 'CSCO', 'MRK']
+[96m[2025-12-07 19:23:57] [92m[INFO][0m    Growth picks (5): ['FIVE', 'LLY', 'AVGO', 'DIS', 'NVDA']
+[96m[2025-12-07 19:23:57] [92m[INFO][0m    Value picks (5): ['UPS', 'VZ', 'CVX', 'PM', 'PEP']
+[96m[2025-12-07 19:23:57] [92m[INFO][0m    Crypto picks (0): []
+[96m[2025-12-07 19:23:57] [92m[INFO][0m    Saved screening results to data/screening_results.json
+[96m[2025-12-07 19:23:57] [92m[INFO][0m    Total unique stocks selected: 21
+[96m[2025-12-07 19:23:58] [92m[INFO][0m    Running ML learning cycle...
+[96m[2025-12-07 19:23:58] [92m[INFO][0m    Momentum - Trades: 1, Win Rate: 100.0%, Avg P&L: 3.33%
+[96m[2025-12-07 19:23:58] [92m[INFO][0m    Growth - Trades: 0, Win Rate: 0.0%, Avg P&L: 0.00%
+/Users/guyjaber/.pyenv/versions/3.10.12/lib/python3.10/multiprocessing/resource_tracker.py:224: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '

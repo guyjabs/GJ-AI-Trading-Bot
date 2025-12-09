@@ -102,7 +102,7 @@ class NewsAggregator:
                 'language': 'en',
                 'sortBy': 'publishedAt',
                 'pageSize': min(max_results, 100),
-                'from': (datetime.now() - timedelta(hours=24)).isoformat()
+                'from': datetime.now().replace(hour=0, minute=0, second=0, microsecond=0).isoformat()
             }
             
             response = self.session.get(url, params=params, timeout=10)
@@ -151,7 +151,8 @@ class NewsAggregator:
             params = {
                 'function': 'NEWS_SENTIMENT',
                 'apikey': self.alphavantage_key,
-                'limit': 50
+                'limit': 50,
+                'time_from': datetime.now().strftime('%Y%m%dT0000')
             }
             
             if tickers:
@@ -221,17 +222,20 @@ class NewsAggregator:
             articles = []
             
             for item in data:
-                articles.append({
-                    'source': 'finnhub',
-                    'title': item.get('headline', ''),
-                    'summary': item.get('summary', ''),
-                    'url': item.get('url', ''),
-                    'published_at': datetime.fromtimestamp(item.get('datetime', 0)).isoformat(),
-                    'fetched_at': datetime.now().isoformat(),
-                    'source_name': item.get('source', 'Unknown'),
-                    'category': item.get('category', category),
-                    'image': item.get('image', '')
-                })
+                # Filter for today only
+                pub_date = datetime.fromtimestamp(item.get('datetime', 0))
+                if pub_date >= datetime.now().replace(hour=0, minute=0, second=0, microsecond=0):
+                    articles.append({
+                        'source': 'finnhub',
+                        'title': item.get('headline', ''),
+                        'summary': item.get('summary', ''),
+                        'url': item.get('url', ''),
+                        'published_at': pub_date.isoformat(),
+                        'fetched_at': datetime.now().isoformat(),
+                        'source_name': item.get('source', 'Unknown'),
+                        'category': item.get('category', category),
+                        'image': item.get('image', '')
+                    })
             
             logger.info(f"Fetched {len(articles)} articles from Finnhub")
             return articles
@@ -295,44 +299,84 @@ class NewsAggregator:
         logger.info(f"Filtered {len(articles)} articles to {len(relevant_articles)} relevant ones")
         return relevant_articles
     
-    def fetch_all_news(self, use_cache: bool = True, force_refresh: bool = False) -> List[Dict]:
+    def fetch_all_news(self, use_cache: bool = True, force_refresh: bool = False, progress_callback=None) -> List[Dict]:
         """
         Fetch news from all configured sources.
         
         Args:
             use_cache: Whether to use cached results if available
             force_refresh: Force refresh even if cache is valid
+            progress_callback: Function to emit progress events
             
         Returns:
             Combined list of news articles from all sources
         """
+        # Report start
+        if progress_callback:
+            progress_callback("🔌 Connecting to news sources...", 10, 'detail')
+
         # Check cache first
         if use_cache and not force_refresh and self._is_cache_valid():
             logger.info(f"Using cached news ({len(self.cache['articles'])} articles)")
+            if progress_callback:
+                progress_callback(f"✅ Found {len(self.cache['articles'])} articles in local cache", 100, 'done')
             return self.cache['articles']
         
         logger.info("🔍 Starting news research cycle...")
         logger.info(f"📰 Fetching fresh news from {sum([1 for k in [self.newsapi_key, self.alphavantage_key, self.finnhub_key] if k])} configured sources")
+        
         all_articles = []
+        current_progress = 10
         
         # Fetch from NewsAPI
         if self.newsapi_key:
-            all_articles.extend(self.fetch_newsapi())
+            if progress_callback:
+                progress_callback("📰 Scavenging NewsAPI.org for global market news...", current_progress + 10, 'in-progress')
+            
+            newsapi_articles = self.fetch_newsapi()
+            all_articles.extend(newsapi_articles)
+            
+            if progress_callback:
+                progress_callback(f"✓ Found {len(newsapi_articles)} articles from NewsAPI", current_progress + 20, 'detail')
+            
             time.sleep(1)  # Rate limiting
+            current_progress += 20
         
         # Fetch from Alpha Vantage
         if self.alphavantage_key:
+            if progress_callback:
+                progress_callback("📊 Querying Alpha Vantage for sentiment data...", current_progress + 5, 'in-progress')
+            
             # Fetch general market news
-            all_articles.extend(self.fetch_alphavantage_news(topics=['technology', 'finance', 'blockchain']))
+            av_articles = self.fetch_alphavantage_news(topics=['technology', 'finance', 'blockchain'])
+            all_articles.extend(av_articles)
+            
+            if progress_callback:
+                progress_callback(f"✓ Found {len(av_articles)} sentiment-scored articles from Alpha Vantage", current_progress + 15, 'detail')
+                
             time.sleep(1)  # Rate limiting
+            current_progress += 15
         
         # Fetch from Finnhub
         if self.finnhub_key:
-            all_articles.extend(self.fetch_finnhub_news('general'))
-            all_articles.extend(self.fetch_finnhub_news('crypto'))
+            if progress_callback:
+                progress_callback("💎 Mining Finnhub for crypto & general news...", current_progress + 5, 'in-progress')
+                
+            fh_articles = []
+            fh_articles.extend(self.fetch_finnhub_news('general'))
+            fh_articles.extend(self.fetch_finnhub_news('crypto'))
+            all_articles.extend(fh_articles)
+            
+            if progress_callback:
+                progress_callback(f"✓ Retrieved {len(fh_articles)} articles from Finnhub", current_progress + 15, 'detail')
+                
             time.sleep(1)  # Rate limiting
+            current_progress += 15
         
         # Deduplicate and filter
+        if progress_callback:
+            progress_callback(f"🧹 Cleaning and deduplicating {len(all_articles)} raw articles...", current_progress + 5, 'in-progress')
+            
         all_articles = self.deduplicate_articles(all_articles)
         all_articles = self.filter_by_relevance(all_articles)
         
@@ -347,8 +391,13 @@ class NewsAggregator:
         self._save_cache()
         
         logger.info(f"📊 Research Summary: {len(all_articles)} unique, relevant articles collected")
-        logger.info(f"📈 Sentiment breakdown: {self.get_sentiment_summary(all_articles)}")
-        logger.info(f"💾 Saved to cache for future use")
+        
+        if progress_callback:
+            sentiment = self.get_sentiment_summary(all_articles)
+            avg_sent = sentiment['average']
+            sentiment_text = "Bullish 🟢" if avg_sent > 0.05 else "Bearish 🔴" if avg_sent < -0.05 else "Neutral ⚪"
+            progress_callback(f"🧠 Analysis Complete: {sentiment_text} (Score: {avg_sent:.2f})", 90, 'detail')
+            progress_callback(f"💾 Saved {len(all_articles)} articles to knowledge base", 100, 'done')
         
         return all_articles
     
@@ -490,7 +539,29 @@ if __name__ == "__main__":
             # Try Finnhub first for company specific news
             if self.finnhub_key:
                 # Finnhub company news implementation would go here
-                pass
+                # Finnhub Company News
+                # Endpoint: /company-news?symbol=AAPL&from=2021-09-01&to=2021-09-09
+                fh_url = "https://finnhub.io/api/v1/company-news"
+                fh_params = {
+                    'symbol': symbol,
+                    'from': from_date,
+                    'to': datetime.now().strftime('%Y-%m-%d'),
+                    'token': self.finnhub_key
+                }
+                fh_resp = self.session.get(fh_url, params=fh_params, timeout=10)
+                if fh_resp.status_code == 200:
+                    fh_data = fh_resp.json()
+                    # Convert to standard format
+                    for item in fh_data:
+                        articles.append({
+                            'source': 'finnhub',
+                            'title': item.get('headline', ''),
+                            'description': item.get('summary', ''),
+                            'url': item.get('url', ''),
+                            'publishedAt': datetime.fromtimestamp(item.get('datetime', 0)).isoformat(),
+                            'urlToImage': item.get('image', '')
+                        })
+                    logger.info(f"✅ Finnhub: Found {len(fh_data)} specific articles for {symbol}")
                 
             # Fallback to NewsAPI
             if not articles and self.newsapi_key:
@@ -525,8 +596,14 @@ if __name__ == "__main__":
                 catalyst_type = 'analyst'
             elif 'fda' in text or 'approval' in text:
                 catalyst_type = 'regulatory'
+            elif 'fda' in text or 'approval' in text:
+                catalyst_type = 'regulatory'
             elif 'merger' in text or 'acquisition' in text:
                 catalyst_type = 'merger'
+            elif any(x in text for x in ['layoff', 'job cut', 'downsizing', 'reduction in force', 'letting go', 'staff reduction']):
+                catalyst_type = 'layoffs'
+                # Extract snippet for reasoning if possible?
+                # Just return presence for now.
                 
             return {
                 'has_catalyst': True,

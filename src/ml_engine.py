@@ -247,6 +247,10 @@ class MLEngine:
             logger.info(f"Changes: Momentum {(self.strategy_weights['momentum'] - old_weight)*100:+.1f}%, "
                        f"Growth {(self.strategy_weights['growth'] - performance.get('growth', {}).get('win_rate', 0.33))*100:+.1f}%, "
                        f"Value {(self.strategy_weights['value'] - performance.get('value', {}).get('win_rate', 0.33))*100:+.1f}%")
+            
+            return self.strategy_weights
+            
+        return self.strategy_weights
     
     def get_performance_summary(self, days: int = 30) -> Dict:
         """Get overall performance summary"""

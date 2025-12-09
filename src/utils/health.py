@@ -52,9 +52,10 @@ health_check = HealthCheck()
 
 
 def check_database() -> bool:
-    """Check database connectivity"""
-    # TODO: Implement actual DB check when PostgreSQL is integrated
-    return True
+    """Check database connectivity (SQLite)"""
+    import os
+    db_path = 'data/trading_bot.db'
+    return os.path.exists(db_path)
 
 
 def check_alpaca_api() -> bool:
@@ -76,13 +77,6 @@ def check_alpaca_api() -> bool:
         return False
 
 
-def check_redis() -> bool:
-    """Check Redis connectivity"""
-    # TODO: Implement when Redis is integrated
-    return True
-
-
 # Register default checks
 health_check.register_check('database', check_database)
 health_check.register_check('alpaca_api', check_alpaca_api)
-health_check.register_check('redis', check_redis)

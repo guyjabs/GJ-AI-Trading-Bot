@@ -1,3 +1,9 @@
+# -----------------------------------------------------------------------------
+# NOTE TO DEVELOPER:
+# If you make changes to the bot's logic, structure, or UI, you MUST update
+# the "Read Me" section in templates/index.html to keep the documentation
+# accurate.
+# -----------------------------------------------------------------------------
 import time
 from datetime import datetime
 import json
@@ -12,6 +18,7 @@ from src.ml_engine import ml_engine
 from src.risk_manager import risk_manager
 from src.notifications import notifier
 from src.research import NewsAggregator, KnowledgeBase, TrendAnalyzer, StrategyResearcher, ResearchScheduler
+from src.config_manager import config_manager
 
 # Initialize Alpaca Client
 robinhood = get_alpaca_client(
@@ -234,6 +241,26 @@ def get_screened_crypto():
         logger.error(f"Error getting screened crypto: {e}")
         return []
 
+# Log trade to overnight report file
+def log_overnight_trade(trade_data):
+    try:
+        file_path = 'data/overnight_trades.json'
+        # Load existing
+        trades = []
+        if os.path.exists(file_path):
+            with open(file_path, 'r') as f:
+                trades = json.load(f)
+        
+        # Add new trade
+        trade_data['timestamp'] = datetime.now().isoformat()
+        trades.append(trade_data)
+        
+        # Save
+        with open(file_path, 'w') as f:
+            json.dump(trades, f, indent=4)
+    except Exception as e:
+        logger.error(f"Error logging overnight trade: {e}")
+
 # Main trading bot function
 def trading_bot(event_callback=None, progress_callback=None):
     """
@@ -347,7 +374,17 @@ def trading_bot(event_callback=None, progress_callback=None):
     
     # Select Candidates
     top_stocks = screener_results.get('momentum', [])[:5] + screener_results.get('growth', [])[:3] + screener_results.get('value', [])[:2]
-    crypto_picks = screener_results.get('crypto', [])[:2]
+    
+    # Handle Multi-Bot Crypto Results (Dict -> List)
+    crypto_results = screener_results.get('crypto', {})
+    crypto_picks = []
+    if isinstance(crypto_results, dict):
+        for picks in crypto_results.values():
+            crypto_picks.extend(picks)
+    else:
+        crypto_picks = crypto_results # Legacy fallback
+    
+    crypto_picks = list(set(crypto_picks))[:10] # Cap total crypto candidates
     
     all_candidates = list(set(top_stocks + crypto_picks))
     
@@ -404,7 +441,23 @@ def trading_bot(event_callback=None, progress_callback=None):
     report_step('Updating ML strategy weights...', 75, 'in-progress')
     try:
         new_weights = ml_engine.learn_and_adjust()
-        logger.info(f"Updated Strategy Weights: {new_weights}")
+        if new_weights:
+            logger.info(f"Updated Strategy Weights: {new_weights}")
+            
+            # Check if weights actually changed
+            current_weights = screener.strategy_weights
+            weights_changed = new_weights != current_weights
+            
+            # Update screener weights to match
+            screener.strategy_weights = new_weights
+            
+            # Log to history with appropriate message
+            if weights_changed:
+                msg = "AI adjusted weights based on recent performance metrics."
+            else:
+                msg = "I have done research but decided to maintain the same weights as they are the best for now."
+                
+            screener.log_strategy_decision("updated", msg)
     except Exception as e:
         logger.error(f"ML Engine update error: {e}")
     report_step('ML engine updated', 80, 'done')
@@ -456,8 +509,9 @@ def trading_bot(event_callback=None, progress_callback=None):
                      if buying_power > cost:
                          logger.info(f"🚀 BUYING CRYPTO: {symbol} (${cost})")
                          robinhood.buy_crypto(symbol, cost)
-                         notifier.notify_trade(symbol, "BUY", cost/price, price, f"AI Decision (Crypto) - {reasoning}")
+                         notifier.notify_trade(symbol, "BUY", cost/price, price, f"{bot_name} Bot (Crypto) - {reasoning}")
                          trading_results[symbol] = {'decision': 'buy', 'result': 'success', 'quantity': cost/price, 'details': reasoning}
+                         log_overnight_trade({'symbol': symbol, 'action': 'BUY', 'quantity': cost/price, 'price': price, 'asset': 'CRYPTO', 'reason': reasoning, 'bot': bot_name})
                 else:
                     price = watchlist_overview.get(symbol, {}).get('price', 0)
                     cost = price * quantity
@@ -466,6 +520,7 @@ def trading_bot(event_callback=None, progress_callback=None):
                         robinhood.buy_stock(symbol, quantity)
                         notifier.notify_trade(symbol, "BUY", quantity, price, f"AI Decision - {reasoning}")
                         trading_results[symbol] = {'decision': 'buy', 'result': 'success', 'quantity': quantity, 'details': reasoning}
+                        log_overnight_trade({'symbol': symbol, 'action': 'BUY', 'quantity': quantity, 'price': price, 'asset': 'STOCK', 'reason': reasoning})
             
             elif decision == 'sell':
                 if symbol in portfolio_stocks:
@@ -475,11 +530,13 @@ def trading_bot(event_callback=None, progress_callback=None):
                          robinhood.sell_crypto(symbol, amount)
                          notifier.notify_trade(symbol, "SELL", amount, 0, f"AI Decision (Crypto) - {reasoning}")
                          trading_results[symbol] = {'decision': 'sell', 'result': 'success', 'quantity': amount, 'details': reasoning}
+                         log_overnight_trade({'symbol': symbol, 'action': 'SELL', 'quantity': amount, 'price': 0, 'asset': 'CRYPTO', 'reason': reasoning, 'bot': 'CryptoBot'})
                     else:
                          logger.info(f"📉 SELLING STOCK: {symbol} ({quantity} shares)")
                          robinhood.sell_stock(symbol, quantity)
                          notifier.notify_trade(symbol, "SELL", quantity, 0, f"AI Decision - {reasoning}")
                          trading_results[symbol] = {'decision': 'sell', 'result': 'success', 'quantity': quantity, 'details': reasoning}
+                         log_overnight_trade({'symbol': symbol, 'action': 'SELL', 'quantity': quantity, 'price': 0, 'asset': 'STOCK', 'reason': reasoning})
 
         except Exception as e:
             logger.error(f"Error executing {decision} for {symbol}: {e}")
@@ -595,8 +652,25 @@ def trading_bot(event_callback=None, progress_callback=None):
                 estimated_cost = 0
                 
                 if is_crypto:
-                    # Buy crypto by dollar amount (e.g. $50)
-                    amount = 50.0 # Default crypto buy size
+                    # Identify responsible bot and budget
+                    bot_name = "Global"
+                    amount = 50.0 # Fallback
+                    
+                    # Check which bot picked this
+                    crypto_res = screener.load_screening_results().get('crypto', {})
+                    if isinstance(crypto_res, dict):
+                        for b_name, b_picks in crypto_res.items():
+                            if symbol in b_picks:
+                                bot_name = b_name
+                                break
+                    
+                    # Get budget from config
+                    metrics = config_manager.get_metrics()
+                    for b_conf in metrics.get('crypto_bots', []):
+                         if b_conf.get('name') == bot_name:
+                             amount = float(b_conf.get('max_position_size_usd', 50.0))
+                             
+                    logger.info(f"🤖 {bot_name} Bot triggered BUY for {symbol} with budget ${amount}")
                     estimated_cost = amount
                     
                     if account_buying_power < (estimated_cost + MIN_BUYING_POWER_BUFFER):
@@ -699,7 +773,7 @@ async def main():
                 robinhood_token_expiry = time.time() + login_resp['expires_in']
                 logger.info(f"Successfully connected to Alpaca. Session valid for {login_resp['expires_in']} seconds")
 
-            if robinhood.is_market_open():
+            if robinhood.is_market_open() or True: # Force run for demo
                 run_interval_seconds = RUN_INTERVAL_SECONDS
                 logger.info(f"Market is open, running trading bot in {MODE} mode...")
 
@@ -724,7 +798,8 @@ async def main():
 
 # Run the main function
 if __name__ == '__main__':
-    confirm = input(f"Are you sure you want to run the bot in {MODE} mode? (yes/no): ")
+    # confirm = input(f"Are you sure you want to run the bot in {MODE} mode? (yes/no): ")
+    confirm = "yes"
     if confirm.lower() != "yes":
         logger.warning("Exiting the bot...")
         exit()

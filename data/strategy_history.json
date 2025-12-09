@@ -1,0 +1,1572 @@
+[
+  {
+    "date": "2025-12-06T16:00:00",
+    "action": "initialized",
+    "reason": "Initial strategy setup. Momentum (55%), Growth (23%), Value (23%).",
+    "weights": {
+      "momentum": 0.55,
+      "growth": 0.23,
+      "value": 0.23
+    }
+  },
+  {
+    "date": "2025-12-06T17:14:32.629666",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-06T17:20:13.783088",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-06T17:23:29.355763",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-06T17:27:25.027838",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-06T17:31:05.253551",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-06T17:33:39.230737",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-06T17:43:48.083789",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-06T17:53:53.573613",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-06T17:54:34.764196",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-06T18:01:28.413751",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-06T18:11:34.123166",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-06T18:21:46.246053",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-06T18:29:22.591814",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-06T18:30:15.210783",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-06T18:32:38.070796",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-06T18:33:05.903477",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-06T18:42:46.910873",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-06T18:43:10.446798",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-06T18:52:59.818807",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-06T18:53:15.193279",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-06T19:03:28.784039",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-06T19:13:38.807490",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-06T19:18:21.549783",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-06T19:23:15.803687",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-06T19:23:55.862982",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-06T19:26:20.493271",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-06T19:30:01.602903",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-06T19:30:02.145533",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-06T19:34:11.592238",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-06T19:36:33.985947",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-06T19:37:56.391046",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-06T19:39:06.337358",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-06T19:40:10.494479",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-06T19:40:14.566388",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-06T19:43:20.121571",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-06T19:46:30.898983",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-07T01:15:21.747622",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-07T16:51:57.175256",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-07T17:08:52.400868",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-07T17:20:10.407456",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-07T17:53:37.852792",
+    "action": "updated",
+    "reason": "AI adjusted weights based on recent performance metrics.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-07T19:03:43.089976",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-07T19:13:50.279311",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-07T19:23:58.221068",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-07T22:05:33.018722",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-07T22:48:02.387410",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T00:10:07.272818",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T00:20:16.447320",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T00:30:27.226157",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T00:40:39.308937",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T00:50:49.576527",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T01:01:00.311934",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T01:11:11.409260",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T01:21:30.647797",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T01:31:41.160496",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T01:41:51.252859",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T01:52:02.984882",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T02:02:13.871755",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T02:12:24.670367",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T02:22:47.918699",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T02:32:59.152677",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T02:43:09.366943",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T02:53:19.555637",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T03:03:30.266624",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T03:13:40.934267",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T03:23:50.971135",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T03:34:01.735044",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T03:44:11.592497",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T03:54:22.797575",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T04:04:33.172789",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T04:14:42.992028",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T04:24:53.640033",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T04:35:03.922714",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T04:45:14.181316",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T04:55:24.619413",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T05:05:37.115370",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T05:15:47.682436",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T05:25:59.395125",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T05:36:09.924073",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T05:46:20.353037",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T05:56:30.429993",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T06:06:40.933203",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T06:16:51.668360",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T06:27:02.565867",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T06:37:13.044760",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T06:47:23.069024",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T06:57:33.953500",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T07:07:46.374956",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T07:17:56.480208",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T07:28:07.641033",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T07:38:19.177507",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T07:48:32.524778",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T07:58:43.184842",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T08:08:53.542878",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T08:19:03.553598",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T08:29:13.772540",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T08:39:25.441721",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T10:58:00.177877",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T10:59:08.974701",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T11:45:53.689222",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T12:15:54.557648",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T12:26:03.238557",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T12:27:15.109075",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T12:37:23.882854",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T12:47:32.536805",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T12:58:10.966289",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T13:08:18.964739",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T13:09:27.559342",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T13:19:35.379929",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T13:29:43.613283",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T13:30:49.830549",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T13:40:56.888989",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T13:42:03.463117",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T13:52:12.793701",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T14:02:20.760255",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T14:12:28.573156",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T14:22:43.514138",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T14:32:51.068845",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T14:42:59.423960",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T14:53:07.280076",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T15:03:14.895599",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T15:13:21.689467",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T15:23:29.442221",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T15:48:23.787528",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T17:41:59.272177",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T19:57:52.343990",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-08T21:37:13.250355",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-09T00:49:14.620121",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-09T04:49:33.114785",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-09T08:57:59.583332",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-09T09:00:35.544213",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-09T09:53:33.055741",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-09T10:03:41.015285",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-09T10:13:48.523426",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-09T10:23:55.902664",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-09T10:41:14.510674",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-09T11:06:21.385110",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-09T11:16:29.699451",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-09T11:26:40.813010",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-09T11:36:49.420260",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-09T11:46:58.471176",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-09T11:57:07.327611",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-09T12:07:16.051006",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-09T12:17:24.957712",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-09T12:27:33.201049",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-09T12:37:39.821563",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-09T12:38:47.428239",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-09T12:40:24.488143",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-09T12:49:42.873737",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-09T13:19:01.433365",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-09T13:29:09.716495",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-09T13:39:17.781333",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-09T13:49:24.728918",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-09T14:56:30.020919",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-09T15:06:37.741963",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  },
+  {
+    "date": "2025-12-09T15:16:45.200005",
+    "action": "updated",
+    "reason": "I have done research but decided to maintain the same weights as they are the best for now.",
+    "weights": {
+      "momentum": 0.547945205479452,
+      "growth": 0.22602739726027396,
+      "value": 0.22602739726027396
+    }
+  }
+]
