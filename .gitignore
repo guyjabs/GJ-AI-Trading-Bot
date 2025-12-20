@@ -182,3 +182,8 @@ launch_bot.py
 analyze_pnl.py
 check_portfolio.py
 inspect_trades.py
+
+# Data Logs and DBs
+*.db
+data/client_events.json
+data/developer_changelog.json

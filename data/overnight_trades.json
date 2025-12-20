@@ -169,5 +169,298 @@
         "asset": "STOCK",
         "reason": "Potential growth, below average buy price",
         "timestamp": "2025-12-09T12:37:43.836648"
+    },
+    {
+        "symbol": "LLY",
+        "action": "SELL",
+        "quantity": 1,
+        "price": 0,
+        "asset": "STOCK",
+        "reason": "High average buy price, improving cash flow",
+        "timestamp": "2025-12-09T17:02:29.286913"
+    },
+    {
+        "symbol": "ADBE",
+        "action": "SELL",
+        "quantity": 1,
+        "price": 0,
+        "asset": "STOCK",
+        "reason": "Profit-taking on positive momentum",
+        "timestamp": "2025-12-09T17:02:29.329056"
+    },
+    {
+        "symbol": "CRM",
+        "action": "SELL",
+        "quantity": 1,
+        "price": 0,
+        "asset": "STOCK",
+        "reason": "Realize gains, price near peak",
+        "timestamp": "2025-12-09T17:02:29.378385"
+    },
+    {
+        "symbol": "QCOM",
+        "action": "BUY",
+        "quantity": 1,
+        "price": 179.58,
+        "asset": "STOCK",
+        "reason": "RSI is neutral, potential undervalue",
+        "timestamp": "2025-12-10T13:38:45.667770"
+    },
+    {
+        "symbol": "AVGO",
+        "action": "BUY",
+        "quantity": 1,
+        "price": 406.285,
+        "asset": "STOCK",
+        "reason": "Strong RSI, bullish trend",
+        "timestamp": "2025-12-10T13:38:45.722720"
+    },
+    {
+        "symbol": "AMD",
+        "action": "BUY",
+        "quantity": 1.0,
+        "price": 220.56,
+        "asset": "STOCK",
+        "reason": "RSI oversold, potential rebound",
+        "timestamp": "2025-12-10T14:01:38.920273"
+    },
+    {
+        "symbol": "NVDA",
+        "action": "BUY",
+        "quantity": 1.0,
+        "price": 183.43,
+        "asset": "STOCK",
+        "reason": "RSI low, buying opportunity",
+        "timestamp": "2025-12-10T14:01:38.973436"
+    },
+    {
+        "symbol": "TXN",
+        "action": "BUY",
+        "quantity": 10.0,
+        "price": 181.65,
+        "asset": "STOCK",
+        "reason": "RSI indicating oversold conditions",
+        "timestamp": "2025-12-11T05:38:06.116378"
+    },
+    {
+        "symbol": "QCOM",
+        "action": "SELL",
+        "quantity": 1.0,
+        "price": 0,
+        "asset": "STOCK",
+        "reason": "Profit taking due to price increase",
+        "timestamp": "2025-12-11T05:38:06.168083"
+    },
+    {
+        "symbol": "QCOM",
+        "action": "BUY",
+        "quantity": 1.0,
+        "price": 180.26,
+        "asset": "STOCK",
+        "reason": "RSI indicates oversold condition",
+        "timestamp": "2025-12-11T09:34:44.220264"
+    },
+    {
+        "symbol": "AMD",
+        "action": "SELL",
+        "quantity": 1.0,
+        "price": 0,
+        "asset": "STOCK",
+        "reason": "Below average buy price",
+        "timestamp": "2025-12-11T09:34:44.266715"
+    },
+    {
+        "symbol": "AVGO",
+        "action": "SELL",
+        "quantity": 1.0,
+        "price": 0,
+        "asset": "STOCK",
+        "reason": "Below average buy price",
+        "timestamp": "2025-12-11T09:34:44.309876"
+    },
+    {
+        "symbol": "NVDA",
+        "action": "SELL",
+        "quantity": 1.0,
+        "price": 0,
+        "asset": "STOCK",
+        "reason": "Below average buy price",
+        "timestamp": "2025-12-11T09:34:44.353123"
+    },
+    {
+        "symbol": "DOGEUSD",
+        "action": "SELL",
+        "quantity": 1774.0594822578328,
+        "price": 0,
+        "asset": "CRYPTO",
+        "reason": "Profit-taking opportunity",
+        "bot": "CryptoBot",
+        "timestamp": "2025-12-11T09:34:44.396913"
+    },
+    {
+        "symbol": "SHIBUSD",
+        "action": "SELL",
+        "quantity": 1794.9488076977448,
+        "price": 0,
+        "asset": "CRYPTO",
+        "reason": "Profit-taking opportunity",
+        "bot": "CryptoBot",
+        "timestamp": "2025-12-11T09:34:44.435597"
+    },
+    {
+        "symbol": "SUSHIUSD",
+        "action": "SELL",
+        "quantity": 1790.7026405221297,
+        "price": 0,
+        "asset": "CRYPTO",
+        "reason": "Profit-taking opportunity",
+        "bot": "CryptoBot",
+        "timestamp": "2025-12-11T09:34:44.484312"
+    },
+    {
+        "symbol": "TXN",
+        "action": "SELL",
+        "quantity": 1,
+        "price": 0,
+        "asset": "STOCK",
+        "reason": "Price below average buy price",
+        "timestamp": "2025-12-11T09:36:01.337017"
+    },
+    {
+        "symbol": "AAVEUSD",
+        "action": "SELL",
+        "quantity": 1827.2062483778,
+        "price": 0,
+        "asset": "CRYPTO",
+        "reason": "Price below average buy price",
+        "bot": "CryptoBot",
+        "timestamp": "2025-12-11T09:36:01.387118"
+    },
+    {
+        "symbol": "DOGEUSD",
+        "action": "SELL",
+        "quantity": 1776.4312539989896,
+        "price": 0,
+        "asset": "CRYPTO",
+        "reason": "Price below average buy price",
+        "bot": "CryptoBot",
+        "timestamp": "2025-12-11T09:36:01.437662"
+    },
+    {
+        "symbol": "CRVUSD",
+        "action": "SELL",
+        "quantity": 1818.0594244160095,
+        "price": 0,
+        "asset": "CRYPTO",
+        "reason": "Price below average buy price",
+        "bot": "CryptoBot",
+        "timestamp": "2025-12-11T09:36:01.476915"
+    },
+    {
+        "symbol": "DOTUSD",
+        "action": "SELL",
+        "quantity": 784.129432538292,
+        "price": 0,
+        "asset": "CRYPTO",
+        "reason": "Price below average buy price",
+        "bot": "CryptoBot",
+        "timestamp": "2025-12-11T09:36:01.525140"
+    },
+    {
+        "symbol": "ETHUSD",
+        "action": "SELL",
+        "quantity": 1734.89977967074,
+        "price": 0,
+        "asset": "CRYPTO",
+        "reason": "Price below average buy price",
+        "bot": "CryptoBot",
+        "timestamp": "2025-12-11T09:36:01.572683"
+    },
+    {
+        "symbol": "LINKUSD",
+        "action": "SELL",
+        "quantity": 913.85034475476,
+        "price": 0,
+        "asset": "CRYPTO",
+        "reason": "Price below average buy price",
+        "bot": "CryptoBot",
+        "timestamp": "2025-12-11T09:36:01.618182"
+    },
+    {
+        "symbol": "SOLUSD",
+        "action": "SELL",
+        "quantity": 926.924926538,
+        "price": 0,
+        "asset": "CRYPTO",
+        "reason": "Price below average buy price",
+        "bot": "CryptoBot",
+        "timestamp": "2025-12-11T09:36:01.665807"
+    },
+    {
+        "symbol": "SUSHIUSD",
+        "action": "SELL",
+        "quantity": 1791.874231556668,
+        "price": 0,
+        "asset": "CRYPTO",
+        "reason": "Price below average buy price",
+        "bot": "CryptoBot",
+        "timestamp": "2025-12-11T09:36:01.712305"
+    },
+    {
+        "symbol": "UNIUSD",
+        "action": "SELL",
+        "quantity": 2367.924905074726,
+        "price": 0,
+        "asset": "CRYPTO",
+        "reason": "Price below average buy price",
+        "bot": "CryptoBot",
+        "timestamp": "2025-12-11T09:36:01.763493"
+    },
+    {
+        "symbol": "NVDA",
+        "action": "BUY",
+        "quantity": 1.0,
+        "price": 177.86,
+        "asset": "STOCK",
+        "reason": "RSI oversold, potential rebound",
+        "timestamp": "2025-12-11T09:47:34.314798"
+    },
+    {
+        "symbol": "AAVEUSD",
+        "action": "SELL",
+        "quantity": 1830.0822288317,
+        "price": 0,
+        "asset": "CRYPTO",
+        "reason": "Below average buy price, reduce loss",
+        "bot": "CryptoBot",
+        "timestamp": "2025-12-11T09:47:34.359698"
+    },
+    {
+        "symbol": "DOGEUSD",
+        "action": "SELL",
+        "quantity": 1775.3484886388962,
+        "price": 0,
+        "asset": "CRYPTO",
+        "reason": "Below average buy price, reduce loss",
+        "bot": "CryptoBot",
+        "timestamp": "2025-12-11T09:47:34.400055"
+    },
+    {
+        "symbol": "ORCL",
+        "action": "BUY",
+        "quantity": 1,
+        "price": 190.72,
+        "asset": "STOCK",
+        "reason": "RSI indicates oversold conditions",
+        "timestamp": "2025-12-11T09:59:11.772586"
+    },
+    {
+        "symbol": "AVGO",
+        "action": "BUY",
+        "quantity": 1,
+        "price": 396.805,
+        "asset": "STOCK",
+        "reason": "Potential recovery as RSI improves",
+        "timestamp": "2025-12-11T09:59:11.818945"
     }
 ]

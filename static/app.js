@@ -268,6 +268,10 @@ function switchView(view) {
             loadScalpingData();
             if (researchInterval) clearInterval(researchInterval);
             researchInterval = setInterval(loadScalpingData, 1000); // Fast polling
+        } else if (view === 'trading') {
+            loadTradingDashboardStats();
+            if (researchInterval) clearInterval(researchInterval);
+            researchInterval = setInterval(loadTradingDashboardStats, 2000);
         } else if (view === 'strategy') {
             loadStrategyHistory();
         } else if (view === 'metrics') {
@@ -1627,3 +1631,34 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+// Load Trading Dashboard Stats (Day P&L, Win Rate, etc.)
+function loadTradingDashboardStats() {
+    fetch('/api/day-trading/dashboard')
+        .then(response => response.json())
+        .then(data => {
+            // Update Stats
+            if (data.pnl_formatted) {
+                const el = document.getElementById('tradingDayPnL');
+                if (el) {
+                    el.textContent = data.pnl_formatted;
+                    el.className = `text-xl font-mono font-semibold ${data.pnl >= 0 ? 'text-success' : 'text-destructive'}`;
+                }
+            }
+            if (data.win_rate) {
+                const el = document.getElementById('tradingWinRate');
+                if (el) el.textContent = data.win_rate;
+            }
+            if (data.trades_count !== undefined) {
+                const el = document.getElementById('tradingTradeCount');
+                if (el) el.textContent = data.trades_count;
+            }
+
+            // Update Open Positions Count (using active trades length or just a placeholder if not available)
+            // Ideally this comes from portfolio length, but let's use what we have
+            if (data.active_trades) {
+                const el = document.getElementById('tradingOpenPos');
+                if (el) el.textContent = data.active_trades.length;
+            }
+        })
+        .catch(err => console.error('Error loading trading dashboard stats:', err));
+}
