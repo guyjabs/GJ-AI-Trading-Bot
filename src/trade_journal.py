@@ -111,10 +111,27 @@ class TradeJournal:
             ''', (limit,))
             
             trades = [dict(row) for row in cursor.fetchall()]
-            conn.close()
             return trades
         except Exception as e:
             logger.error(f"Error fetching recent trades: {e}")
+            return []
+
+    def get_all_trades(self):
+        """Get ALL trades from history"""
+        try:
+            conn = sqlite3.connect(self.db_path)
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+            
+            cursor.execute('''
+                SELECT * FROM trades ORDER BY entry_time DESC
+            ''')
+            
+            trades = [dict(row) for row in cursor.fetchall()]
+            conn.close()
+            return trades
+        except Exception as e:
+            logger.error(f"Error fetching all trades: {e}")
             return []
 
 # Global instance

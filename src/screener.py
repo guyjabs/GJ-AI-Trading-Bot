@@ -54,59 +54,34 @@ class StockScreener:
         }
     
     def load_strategy_weights(self):
-        """Load learned strategy weights from file"""
-        weights_file = "data/strategy_weights.json"
-        if os.path.exists(weights_file):
-            try:
-                with open(weights_file, 'r') as f:
-                    self.strategy_weights = json.load(f)
-                logger.info(f"Loaded strategy weights: {self.strategy_weights}")
-            except Exception as e:
-                logger.error(f"Error loading strategy weights: {e}")
+        """Load learned strategy weights from DB"""
+        from .data.db import db
+        weights = db.load_latest_weights()
+        if weights:
+            self.strategy_weights = weights
+            logger.info(f"Loaded strategy weights: {self.strategy_weights}")
+        else:
+            logger.info("Using default strategy weights (no DB record found)")
     
     def save_strategy_weights(self):
-        """Save strategy weights to file"""
-        weights_file = "data/strategy_weights.json"
-        try:
-            os.makedirs("data", exist_ok=True)
-            with open(weights_file, 'w') as f:
-                json.dump(self.strategy_weights, f, indent=2)
-            logger.info(f"Saved strategy weights: {self.strategy_weights}")
-        except Exception as e:
-            logger.error(f"Error saving strategy weights: {e}")
+        """Save strategy weights to DB"""
+        from .data.db import db
+        db.save_weights(self.strategy_weights, reason="Screener Update")
 
     def log_strategy_decision(self, action: str, reason: str):
         """
-        Log a strategy decision to history.
-        
-        Args:
-            action: 'updated' or 'kept'
-            reason: Explanation for the decision
+        Log a strategy decision to DB.
+        Currently mapping to strategy_weights table update or can be just a log.
+        Since we don't have a dedicated 'decision log' table yet, we'll rely on logging 
+        and only save weights if they changed.
         """
-        history_file = "data/strategy_history.json"
-        try:
-            history = []
-            if os.path.exists(history_file):
-                with open(history_file, 'r') as f:
-                    history = json.load(f)
-            
-            entry = {
-                "date": datetime.now().isoformat(),
-                "action": action,
-                "reason": reason,
-                "weights": self.strategy_weights.copy()
-            }
-            
-            # Prepend to keep newest first, or append? Let's append and sort in UI or just append.
-            # User asked for a track.
-            history.append(entry)
-            
-            with open(history_file, 'w') as f:
-                json.dump(history, f, indent=2)
-                
-            logger.info(f"Logged strategy decision: {action}")
-        except Exception as e:
-            logger.error(f"Error logging strategy history: {e}")
+        # If action implies update, save weights with reason.
+        if action == "updated":
+            from .data.db import db
+            db.save_weights(self.strategy_weights, reason=reason)
+            logger.info(f"Logged strategy decision: {action} - {reason}")
+        else:
+            logger.info(f"Strategy decision: {action} - {reason}")
     
     def fetch_universe_data(self, progress_callback=None):
         """Fetch data for all stocks in universe with progress reporting"""
@@ -555,7 +530,11 @@ class StockScreener:
             else:
                 return "neutral"
         except Exception as e:
-            logger.error(f"Error checking market sentiment: {e}")
+            # Shorten error message to avoid spamming HTML in logs if Yahoo fails
+            error_str = str(e)
+            if len(error_str) > 200:
+                error_str = error_str[:200] + "..."
+            logger.error(f"Error checking market sentiment: {error_str}")
             return "neutral"
 
     def run_all_strategies(self, skip_fetch=False, progress_callback=None) -> Dict[str, List[str]]:
@@ -625,27 +604,24 @@ class StockScreener:
         
         return results
     
+    
     def save_screening_results(self, results: Dict):
-        """Save screening results to file"""
-        results_file = "data/screening_results.json"
+        """Save screening results to DB cache"""
+        from .data.db import db
         try:
-            os.makedirs("data", exist_ok=True)
-            with open(results_file, 'w') as f:
-                json.dump(results, f, indent=2)
-            logger.info(f"Saved screening results to {results_file}")
+            db.save_screening_cache(results)
+            logger.info("Saved screening results to DB")
         except Exception as e:
             logger.error(f"Error saving screening results: {e}")
     
     def load_screening_results(self) -> Dict:
-        """Load latest screening results"""
-        results_file = "data/screening_results.json"
-        if os.path.exists(results_file):
-            try:
-                with open(results_file, 'r') as f:
-                    return json.load(f)
-            except Exception as e:
-                logger.error(f"Error loading screening results: {e}")
-        return {'all': []}
+        """Load latest screening results from DB"""
+        from .data.db import db
+        try:
+            return db.load_screening_cache()
+        except Exception as e:
+            logger.error(f"Error loading screening results: {e}")
+            return {'all': []}
 
 # Global instance
 screener = StockScreener()

@@ -73,8 +73,13 @@ class StockDataProvider:
                 return cached_data
         
         try:
-            logger.debug(f"Fetching fresh data for {symbol}")
-            ticker = yf.Ticker(symbol)
+            # Handle Crypto Symbols (e.g., BTC/USD -> BTC-USD for Yahoo)
+            yf_symbol = symbol
+            if "/" in symbol:
+                yf_symbol = symbol.replace("/", "-")
+            
+            logger.debug(f"Fetching fresh data for {symbol} (using {yf_symbol})")
+            ticker = yf.Ticker(yf_symbol)
             
             # Get basic info
             info = ticker.info

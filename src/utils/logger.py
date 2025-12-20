@@ -39,3 +39,12 @@ def critical(message):
 # Print error log message
 def error(message):
     log("ERROR", message)
+
+def log_client_event(msg):
+    """Log client events to a dedicated file"""
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    try:
+        with open("client_events.log", "a") as f:
+            f.write(f"[{timestamp}] {msg}\n")
+    except Exception as e:
+        print(f"Error writing to client log: {e}")

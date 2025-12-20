@@ -132,7 +132,11 @@ class AlpacaClient:
         """Get crypto quote"""
         try:
             from alpaca.data.requests import CryptoLatestQuoteRequest
-            # Alpaca crypto symbols are like 'BTC/USD'
+            # Alpaca crypto symbols are like 'BTC/USD' but positions might be 'BTCUSD'
+            # Normalize symbol
+            if '/' not in symbol and symbol.endswith('USD'):
+                symbol = symbol[:-3] + '/USD'
+                
             req = CryptoLatestQuoteRequest(symbol_or_symbols=symbol)
             quote = self.crypto_data_client.get_crypto_latest_quote(req)
             return {'mark_price': float(quote[symbol].ask_price)} # Use ask or mid
@@ -201,7 +205,7 @@ class AlpacaClient:
         try:
             clock = self.trading_client.get_clock()
             return clock.is_open
-        except:
+        except Exception:
             return False
 
     # =========================================================================
@@ -281,6 +285,16 @@ class AlpacaClient:
     def extract_sell_response_data(self, resp):
         return resp
 
+    def close_all_positions(self):
+        """Close all open positions immediately"""
+        try:
+            # cancel_orders=True will cancel all open orders as well
+            self.trading_client.close_all_positions(cancel_orders=True)
+            return {'status': 'success', 'message': 'All positions closed and orders cancelled'}
+        except Exception as e:
+            logger.error(f"Error closing all positions: {e}")
+            return {'status': 'error', 'message': str(e)}
+
     # =========================================================================
     # TECHNICAL ANALYSIS & ENRICHMENT
     # =========================================================================
@@ -315,7 +329,7 @@ class AlpacaClient:
             tp = (historical_data['high'] + historical_data['low'] + historical_data['close']) / 3
             vwap = (tp * v).cumsum() / v.cumsum()
             stock_data['vwap'] = vwap.iloc[-1] if not pd.isna(vwap.iloc[-1]) else stock_data.get('price', 0)
-        except:
+        except Exception:
             stock_data['vwap'] = stock_data.get('price', 0)
         return stock_data
 
@@ -328,7 +342,7 @@ class AlpacaClient:
             close = historical_data['close']
             stock_data['sma_200'] = close.rolling(window=200).mean().iloc[-1]
             stock_data['sma_50'] = close.rolling(window=50).mean().iloc[-1]
-        except:
+        except Exception:
             pass
         return stock_data
 

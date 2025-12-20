@@ -1,0 +1,562 @@
+/* GJ AI Trading Bot V2 Styles - Ported from Next.js Import */
+:root {
+    /* Trading bot color palette */
+    --background: #f0f2f5;
+    --foreground: #1a1a2e;
+    --card: #ffffff;
+    --card-foreground: #1a1a2e;
+    --popover: #ffffff;
+    --popover-foreground: #1a1a2e;
+    --primary: #0066cc;
+    --primary-foreground: #ffffff;
+    --secondary: #f8f9fa;
+    --secondary-foreground: #1a1a2e;
+    --muted: #f8f9fa;
+    --muted-foreground: #6b7280;
+    --accent: #e8f4fd;
+    --accent-foreground: #0066cc;
+    --destructive: #dc3545;
+    --destructive-foreground: #ffffff;
+    --success: #28a745;
+    --success-foreground: #ffffff;
+    --border: #e5e7eb;
+    --input: #e5e7eb;
+    --ring: #0066cc;
+    --radius: 0.375rem;
+
+    /* Sidebar specific */
+    --sidebar: #ffffff;
+    --sidebar-foreground: #1a1a2e;
+    --sidebar-border: #e5e7eb;
+    --sidebar-accent: #e8f4fd;
+    --sidebar-accent-foreground: #0066cc;
+
+    /* Fonts */
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-mono: "SF Mono", "Consolas", "Monaco", monospace;
+    --font-size-base: 13px;
+}
+
+/* --- PREFLIGHT / RESET (Crucial for Tailwind Emulation) --- */
+*,
+::before,
+::after {
+    box-sizing: border-box;
+    border-width: 0;
+    border-style: solid;
+    border-color: #e5e7eb;
+}
+
+html {
+    line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
+    -moz-tab-size: 4;
+    tab-size: 4;
+    font-family: var(--font-sans);
+    font-feature-settings: normal;
+    font-variation-settings: normal;
+}
+
+body {
+    background-color: var(--background);
+    color: var(--foreground);
+    line-height: inherit;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    /* App-like feel */
+}
+
+/* Reset Lists */
+ul,
+ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* Reset Buttons */
+button,
+[type='button'],
+[type='reset'],
+[type='submit'] {
+    -webkit-appearance: button;
+    /* 1 */
+    background-color: transparent;
+    /* 2 */
+    background-image: none;
+    /* 2 */
+    cursor: pointer;
+    text-transform: none;
+    font-family: inherit;
+    font-size: 100%;
+    font-weight: inherit;
+    line-height: inherit;
+    color: inherit;
+    margin: 0;
+    padding: 0;
+}
+
+/* Reset Headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-size: inherit;
+    font-weight: inherit;
+    margin: 0;
+}
+
+/* Reset Paragraphs */
+p {
+    margin: 0;
+}
+
+/* --- Utility Classes (Tailwind Emulation) --- */
+.flex {
+    display: flex;
+}
+
+.flex-col {
+    flex-direction: column;
+}
+
+.flex-row {
+    flex-direction: row;
+}
+
+.flex-1 {
+    flex: 1 1 0%;
+}
+
+.shrink-0 {
+    flex-shrink: 0;
+}
+
+.grow {
+    flex-grow: 1;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.items-start {
+    align-items: flex-start;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.justify-end {
+    justify-content: flex-end;
+}
+
+.gap-1 {
+    gap: 0.25rem;
+}
+
+.gap-2 {
+    gap: 0.5rem;
+}
+
+.gap-2\.5 {
+    gap: 0.625rem;
+}
+
+.gap-3 {
+    gap: 0.75rem;
+}
+
+.gap-4 {
+    gap: 1rem;
+}
+
+.gap-6 {
+    gap: 1.5rem;
+}
+
+.h-screen {
+    height: 100vh;
+}
+
+.h-full {
+    height: 100%;
+}
+
+.w-full {
+    width: 100%;
+}
+
+.h-14 {
+    height: 3.5rem;
+}
+
+.h-8 {
+    height: 2rem;
+}
+
+.w-8 {
+    width: 2rem;
+}
+
+.w-\[200px\] {
+    width: 200px;
+}
+
+.w-\[280px\] {
+    width: 280px;
+}
+
+.min-w-0 {
+    min-width: 0;
+}
+
+.overflow-hidden {
+    overflow: hidden;
+}
+
+.overflow-auto {
+    overflow: auto;
+}
+
+.overflow-x-auto {
+    overflow-x: auto;
+}
+
+.p-1\.5 {
+    padding: 0.375rem;
+}
+
+.p-2 {
+    padding: 0.5rem;
+}
+
+.p-3 {
+    padding: 0.75rem;
+}
+
+.p-4 {
+    padding: 1rem;
+}
+
+.px-3 {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+}
+
+.px-4 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.py-1\.5 {
+    padding-top: 0.375rem;
+    padding-bottom: 0.375rem;
+}
+
+.py-2 {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+.bg-background {
+    background-color: var(--background);
+}
+
+.bg-card {
+    background-color: var(--card);
+}
+
+.bg-muted {
+    background-color: var(--muted);
+}
+
+.bg-muted\/50 {
+    background-color: rgba(248, 249, 250, 0.5);
+}
+
+.bg-accent {
+    background-color: var(--accent);
+}
+
+.bg-primary {
+    background-color: var(--primary);
+}
+
+.bg-success\/10 {
+    background-color: rgba(40, 167, 69, 0.1);
+}
+
+.bg-destructive\/10 {
+    background-color: rgba(220, 53, 69, 0.1);
+}
+
+.bg-amber-500\/10 {
+    background-color: rgba(245, 158, 11, 0.1);
+}
+
+.text-foreground {
+    color: var(--foreground);
+}
+
+.text-muted-foreground {
+    color: var(--muted-foreground);
+}
+
+.text-primary {
+    color: var(--primary);
+}
+
+.text-primary-foreground {
+    color: var(--primary-foreground);
+}
+
+.text-accent-foreground {
+    color: var(--accent-foreground);
+}
+
+.text-success {
+    color: var(--success);
+}
+
+.text-destructive {
+    color: var(--destructive);
+}
+
+.text-amber-500 {
+    color: #f59e0b;
+}
+
+.text-amber-600 {
+    color: #d97706;
+}
+
+.font-sans {
+    font-family: var(--font-sans);
+}
+
+.font-mono {
+    font-family: var(--font-mono);
+}
+
+.font-medium {
+    font-weight: 500;
+}
+
+.font-semibold {
+    font-weight: 600;
+}
+
+.text-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+}
+
+.text-xs,
+.text-\[12px\] {
+    font-size: 12px;
+}
+
+.text-\[11px\] {
+    font-size: 11px;
+}
+
+.text-\[10px\] {
+    font-size: 10px;
+}
+
+.text-lg {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+}
+
+.uppercase {
+    text-transform: uppercase;
+}
+
+.tracking-wide {
+    letter-spacing: 0.025em;
+}
+
+.whitespace-nowrap {
+    white-space: nowrap;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.border {
+    border: 1px solid var(--border);
+}
+
+.border-b {
+    border-bottom: 1px solid var(--border);
+}
+
+.border-r {
+    border-right: 1px solid var(--border);
+}
+
+.border-l {
+    border-left: 1px solid var(--border);
+}
+
+.border-t {
+    border-top: 1px solid var(--border);
+}
+
+.border-border {
+    border-color: var(--border);
+}
+
+.border-border\/50 {
+    border-color: rgba(229, 231, 235, 0.5);
+}
+
+.rounded-md {
+    border-radius: 0.375rem;
+}
+
+.rounded-full {
+    border-radius: 9999px;
+}
+
+.rounded {
+    border-radius: 0.25rem;
+}
+
+.hover\:bg-muted:hover {
+    background-color: var(--muted);
+}
+
+.transition-colors {
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+}
+
+.hover\:bg-muted:hover {
+    background-color: var(--muted);
+}
+
+/* Grid */
+.grid {
+    display: grid;
+}
+
+.grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* Components */
+.space-y-1> :not([hidden])~ :not([hidden]) {
+    --tw-space-y-reverse: 0;
+    margin-top: calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));
+    margin-bottom: calc(0.25rem * var(--tw-space-y-reverse));
+}
+
+.space-y-2> :not([hidden])~ :not([hidden]) {
+    --tw-space-y-reverse: 0;
+    margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
+    margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
+}
+
+.space-y-4> :not([hidden])~ :not([hidden]) {
+    --tw-space-y-reverse: 0;
+    margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));
+    margin-bottom: calc(1rem * var(--tw-space-y-reverse));
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+}
+
+/* Ticker Animation */
+@keyframes ticker {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.ticker-animate {
+    animation: ticker 30s linear infinite;
+    display: flex;
+    /* Ensure flex for ticker content */
+}
+
+/* Table Specifics */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 0.5rem;
+}
+
+/* Icons (Lucide sizing) */
+.lucide {
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.lucide.w-3 {
+    width: 0.75rem;
+    height: 0.75rem;
+}
+
+.lucide.w-4 {
+    width: 1rem;
+    height: 1rem;
+}
+
+.lucide.w-5 {
+    width: 1.25rem;
+    height: 1.25rem;
+}

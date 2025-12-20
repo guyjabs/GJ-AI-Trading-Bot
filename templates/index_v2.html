@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GJ AI Trading Bot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style_v2.css') }}">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+    <div class="flex h-screen overflow-hidden">
+        <!-- Left Sidebar - 200px (NavSidebar) -->
+        <aside class="w-[200px] bg-card border-r border-border flex flex-col">
+            <!-- Header -->
+            <div class="p-4 border-b border-border">
+                <div class="flex items-center gap-2" title="GJ AI Trading Bot Version 2.0">
+                    <div class="w-8 h-8 rounded-md bg-primary flex items-center justify-center">
+                        <i data-lucide="trending-up" class="w-5 h-5 text-primary-foreground"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-semibold text-sm text-foreground">GJ Trading</h1>
+                        <p class="text-[11px] text-muted-foreground">AI Bot v2.0</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="flex-1 p-2">
+                <ul class="space-y-1">
+                    <li>
+                        <!-- Active State: Strategy -->
+                        <button data-view="strategy"
+                            class="w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-[12px] font-normal transition-colors bg-accent text-accent-foreground whitespace-nowrap nav-link active"
+                            title="View current trading strategy breakdown and logic.">
+                            <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+                            Strategy
+                        </button>
+                    </li>
+                    <li>
+                        <button data-view="trading"
+                            class="w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-[12px] font-normal transition-colors text-muted-foreground hover:bg-muted hover:text-foreground whitespace-nowrap nav-link"
+                            title="Main dashboard for active trading and portfolio monitoring.">
+                            <i data-lucide="trending-up" class="w-4 h-4"></i>
+                            Trading Dashboard
+                        </button>
+                    </li>
+                    <li>
+                        <button data-view="day-trading"
+                            class="w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-[12px] font-normal transition-colors text-muted-foreground hover:bg-muted hover:text-foreground whitespace-nowrap nav-link"
+                            title="High-frequency day trading interface.">
+                            <i data-lucide="zap" class="w-4 h-4"></i>
+                            Day Trading
+                        </button>
+                    </li>
+                    <li>
+                        <button data-view="research"
+                            class="w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-[12px] font-normal transition-colors text-muted-foreground hover:bg-muted hover:text-foreground whitespace-nowrap nav-link"
+                            title="Market research, news analysis, and AI predictions.">
+                            <i data-lucide="search" class="w-4 h-4"></i>
+                            Research
+                        </button>
+                    </li>
+                    <li>
+                        <button data-view="scalping"
+                            class="w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-[12px] font-normal transition-colors text-muted-foreground hover:bg-muted hover:text-foreground whitespace-nowrap nav-link"
+                            title="Automated high-frequency scalping bot controls.">
+                            <i data-lucide="bot" class="w-4 h-4"></i>
+                            Scalping Bot
+                        </button>
+                    </li>
+                    <li>
+                        <button data-view="metrics"
+                            class="nav-link w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-[12px] font-normal transition-colors text-muted-foreground hover:bg-muted hover:text-foreground whitespace-nowrap"
+                            title="System performance and trading metrics.">
+                            <i data-lucide="settings" class="w-4 h-4"></i>
+                            Metrics
+                        </button>
+                    </li>
+                    <li>
+                        <button data-view="learning"
+                            class="nav-link w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-[12px] font-normal transition-colors text-muted-foreground hover:bg-muted hover:text-foreground whitespace-nowrap"
+                            title="Educational resources and strategy explanations.">
+                            <i data-lucide="book-open" class="w-4 h-4"></i>
+                            Learning
+                        </button>
+                    </li>
+                    <li>
+                        <button data-view="readme"
+                            class="nav-link w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-[12px] font-normal transition-colors text-muted-foreground hover:bg-muted hover:text-foreground whitespace-nowrap"
+                            title="Project documentation and help.">
+                            <i data-lucide="file-text" class="w-4 h-4"></i>
+                            Read Me
+                        </button>
+                    </li>
+                    <li>
+                    <li>
+                        <button data-view="history"
+                            class="nav-link w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-[12px] font-normal transition-colors text-muted-foreground hover:bg-muted hover:text-foreground whitespace-nowrap"
+                            title="View historical trade records.">
+                            <i data-lucide="history" class="w-4 h-4"></i>
+                            History
+                        </button>
+                    </li>
+                    <li>
+                        <button data-view="comparison"
+                            class="nav-link w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-[12px] font-normal transition-colors text-muted-foreground hover:bg-muted hover:text-foreground whitespace-nowrap"
+                            title="Compare AI reasoning with external data.">
+                            <i data-lucide="git-compare" class="w-4 h-4"></i>
+                            Comparison
+                        </button>
+                    </li>
+                    <li class="mt-4 pt-4 border-t border-border">
+                        <div class="px-3 text-[10px] font-semibold text-muted-foreground uppercase mb-2">System</div>
+                    </li>
+                    <li>
+                        <button data-view="developer"
+                            class="nav-link w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-[12px] font-normal transition-colors text-muted-foreground hover:bg-muted hover:text-foreground whitespace-nowrap"
+                            title="View developer changelog and debug events.">
+                            <i data-lucide="terminal-square" class="w-4 h-4"></i>
+                            Developer Log
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Connection Status -->
+            <div class="p-3 border-t border-border">
+                <div id="alpacaStatus" class="flex items-center gap-2 px-3 py-2 bg-success/10 rounded-md"
+                    title="Current connection status to Alpaca brokerage.">
+                    <i data-lucide="wifi" class="w-4 h-4 text-success"></i>
+                    <span id="alpacaStatusText" class="text-[12px] font-medium text-success">Alpaca Connected</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Center - Main Content -->
+        <main class="flex-1 flex flex-col min-w-0 bg-background">
+            <!-- Content Header -->
+            <header class="h-14 bg-card border-b border-border px-4 flex items-center justify-between shrink-0">
+                <!-- Left: Market Status -->
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="circle" class="w-2.5 h-2.5 fill-success text-success"
+                            style="fill: currentColor;"></i>
+                        <span class="text-[13px] font-medium text-foreground"
+                            title="Global market status (Open/Closed).">Market Open</span>
+                    </div>
+                    <div class="h-4 w-px bg-border"></div>
+                    <span class="text-[12px] text-muted-foreground">NYSE · NASDAQ</span>
+                </div>
+
+                <!-- Center: Balance & P&L -->
+                <div class="flex items-center gap-6">
+                    <div class="text-center" title="Total account equity.">
+                        <p class="text-[11px] text-muted-foreground uppercase tracking-wide">Balance</p>
+                        <p class="text-sm font-semibold font-mono text-foreground" id="headerBalance">$0.00</p>
+                    </div>
+                    <div class="text-center" title="Current Unrealized Profit/Loss on open positions.">
+                        <p class="text-[11px] text-muted-foreground uppercase tracking-wide">Unrealized P&L</p>
+                        <p class="text-sm font-semibold font-mono text-success" id="headerUnrealizedPL">+$0.00</p>
+                    </div>
+                    <div class="text-center" title="Profit or Loss for the current trading day.">
+                        <p class="text-[11px] text-muted-foreground uppercase tracking-wide">Day P&L</p>
+                        <p class="text-sm font-semibold font-mono text-success" id="headerDayPL">+$0.00</p>
+                    </div>
+                    <div class="text-center" title="All-time Profit or Loss.">
+                        <p class="text-[11px] text-muted-foreground uppercase tracking-wide">Total P&L</p>
+                        <p class="text-sm font-semibold font-mono text-success" id="headerPL">+$0.00</p>
+                    </div>
+                </div>
+
+                <!-- Right: Bot Controls -->
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-2 px-3 py-1.5 bg-success/10 rounded-full" id="botStatusPill"
+                        title="Current running state of the automation.">
+                        <i data-lucide="circle" class="w-2 h-2 fill-success text-success animate-pulse"
+                            style="fill: currentColor;"></i>
+                        <span class="text-[12px] font-medium text-success" id="botStatusText">Bot Running</span>
+                    </div>
+                    <!-- Reasoning Mode Selector -->
+                    <select id="aiModeSelect"
+                        class="text-[12px] px-2 py-1.5 bg-muted border border-border rounded-md text-foreground outline-none"
+                        title="Select AI Reasoning Complexity.">
+                        <option value="basic">Basic Logic</option>
+                        <option value="advanced">Advanced (CoT)</option>
+                    </select>
+                    <!-- Trading Mode Selector -->
+                    <select
+                        class="text-[12px] px-2 py-1.5 bg-muted border border-border rounded-md text-foreground outline-none"
+                        title="Switch between different trading modes (Swing/Day).">
+                        <option>Swing Mode</option>
+                        <option>Day Mode</option>
+                    </select>
+                    <button class="p-1.5 hover:bg-muted rounded-md transition-colors" title="Configure bot settings.">
+                        <i data-lucide="settings" class="w-4 h-4 text-muted-foreground"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Ticker Tape -->
+            <div class="h-8 bg-secondary border-b border-border overflow-hidden shrink-0"
+                title="Real-time price updates for watched assets.">
+                <div id="tickerBar" class="flex ticker-animate whitespace-nowrap items-center">
+                    <!-- Content will be populated by JS -->
+                </div>
+                <!-- Repeat for ticker effect (simulated) -->
+                <div class="flex items-center gap-1.5 px-4 h-8">
+                    <span class="text-[12px] font-medium text-foreground">NVDA</span>
+                    <span class="text-[12px] font-mono text-foreground">$875.28</span>
+                    <span class="flex items-center gap-0.5 text-[11px] font-mono text-success">
+                        <i data-lucide="trending-up" class="w-3 h-3"></i> +12.45%
+                    </span>
+                </div>
+            </div>
+
+
+            <!-- Content Area (Strategy View) -->
+            <div class="flex-1 overflow-auto p-4 space-y-4 relative">
+
+                <!-- STRATEGY VIEW -->
+                <div id="strategy-view" class="view-section active">
+                    <!-- Strategy Explanations -->
+                    <div class="bg-card border border-border rounded-md p-4 mb-4">
+                        <div class="border-b border-border pb-2 mb-3">
+                            <h3 class="text-sm font-semibold">Trading Strategy Logic</h3>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                            <!-- Momentum -->
+                            <div>
+                                <h3 class="text-xs font-bold text-primary uppercase tracking-wider mb-1 cursor-help"
+                                    title="Focuses on stocks with strong recent price trends, high volume, and positive technical indicators.">
+                                    Momentum</h3>
+                                <p class="text-[11px] text-muted-foreground">Strong recent price action (>5% in 5d),
+                                    high relative volume, positive RSI trends.</p>
+                            </div>
+                            <!-- Growth -->
+                            <div>
+                                <h3 class="text-xs font-bold text-success uppercase tracking-wider mb-1 cursor-help"
+                                    title="Targets companies with rapidly increasing revenue and earnings, often reinvesting profits for expansion.">
+                                    Growth</h3>
+                                <p class="text-[11px] text-muted-foreground">Solid revenue (>15%) and earnings growth.
+                                    Companies expanding rapidly.</p>
+                            </div>
+                            <!-- Value -->
+                            <div>
+                                <h3 class="text-xs font-bold text-warning uppercase tracking-wider mb-1 cursor-help"
+                                    title="Identifies undervalued solid companies with good fundamentals, often paying dividends.">
+                                    Value</h3>
+                                <p class="text-[11px] text-muted-foreground">Undervalued (P/E <15), good dividends,
+                                        strong balance sheets.</p>
+                            </div>
+                        </div>
+                        <div class="border-t border-border pt-3">
+                            <h4 class="text-xs font-semibold mb-2">Crypto & AI Logic</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-[11px] text-muted-foreground">
+                                <p><strong class="text-foreground cursor-help"
+                                        title="Trades digital assets like Bitcoin based on momentum and market cycles.">Crypto:</strong>
+                                    Momentum & Reversal on major assets (BTC, ETH, SOL). Buys on volume surges or
+                                    oversold bounces (RSI < 30).</p>
+                                        <p><strong class="text-foreground cursor-help"
+                                                title="Dynamically adjusts strategy parameters based on real-time market conditions and sentiment.">AI
+                                                Adaptation:</strong> Dynamically adjusts strategy weights based on
+                                            market sentiment. Bull market = Momentum; Bear market = Value/Cash.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Top Row: Chart + Allocation -->
+                    <div class="grid grid-cols-3 gap-4">
+                        <!-- Allocation Over Time Chart -->
+                        <div class="col-span-2 bg-card border border-border rounded-md">
+                            <div class="p-4 border-b border-border pb-2">
+                                <h3 class="text-sm font-semibold flex items-center gap-2"
+                                    title="Historical allocation of capital across strategies.">
+                                    <i data-lucide="trending-up" class="w-4 h-4 text-primary"></i>
+                                    Strategy Allocation Over Time
+                                </h3>
+                            </div>
+                            <div class="p-4 h-[240px] flex items-center justify-center relative">
+                                <canvas id="strategyChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Current Allocation Pie -->
+                        <div class="bg-card border border-border rounded-md">
+                            <div class="p-4 border-b border-border pb-2">
+                                <h3 class="text-sm font-semibold" title="Target portfolio distribution by sector.">
+                                    Current Allocation</h3>
+                            </div>
+                            <div class="p-4">
+                                <!-- SVG Pie Mock -->
+                                <div class="h-[160px] flex items-center justify-center">
+                                    <svg width="120" height="120" viewBox="0 0 40 40">
+                                        <circle cx="20" cy="20" r="15.91549430918954" fill="transparent"
+                                            stroke="#0066cc" stroke-width="5" stroke-dasharray="50 50"
+                                            stroke-dashoffset="25" />
+                                        <circle cx="20" cy="20" r="15.91549430918954" fill="transparent"
+                                            stroke="#28a745" stroke-width="5" stroke-dasharray="22 78"
+                                            stroke-dashoffset="-25" />
+                                        <circle cx="20" cy="20" r="15.91549430918954" fill="transparent"
+                                            stroke="#6366f1" stroke-width="5" stroke-dasharray="15 85"
+                                            stroke-dashoffset="-47" />
+                                        <circle cx="20" cy="20" r="15.91549430918954" fill="transparent"
+                                            stroke="#f59e0b" stroke-width="5" stroke-dasharray="13 87"
+                                            stroke-dashoffset="-62" />
+                                    </svg>
+                                </div>
+                                <div class="mt-2 grid grid-cols-2 gap-1.5">
+                                    <div class="flex items-center gap-1.5">
+                                        <div class="w-2.5 h-2.5 rounded-sm" style="background-color: #0066cc"></div>
+                                        <span class="text-[11px] text-muted-foreground truncate">Technology (50%)</span>
+                                    </div>
+                                    <div class="flex items-center gap-1.5">
+                                        <div class="w-2.5 h-2.5 rounded-sm" style="background-color: #28a745"></div>
+                                        <span class="text-[11px] text-muted-foreground truncate">Finance (22%)</span>
+                                    </div>
+                                    <div class="flex items-center gap-1.5">
+                                        <div class="w-2.5 h-2.5 rounded-sm" style="background-color: #6366f1"></div>
+                                        <span class="text-[11px] text-muted-foreground truncate">Healthcare (15%)</span>
+                                    </div>
+                                    <div class="flex items-center gap-1.5">
+                                        <div class="w-2.5 h-2.5 rounded-sm" style="background-color: #f59e0b"></div>
+                                        <span class="text-[11px] text-muted-foreground truncate">Energy (13%)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Strategy Timeline -->
+                    <div class="bg-card border border-border rounded-md mt-4">
+                        <div class="p-4 border-b border-border pb-2">
+                            <h3 class="text-sm font-semibold flex items-center gap-2"
+                                title="Log of recent strategic decisions made by the AI.">
+                                <i data-lucide="brain" class="w-4 h-4 text-primary"></i>
+                                AI Strategy Decisions
+                            </h3>
+                        </div>
+                        <div id="strategy-timeline"
+                            class="p-4 space-y-3 max-h-[400px] overflow-y-auto custom-scrollbar">
+                            <div class="flex gap-3 p-3 bg-muted/50 rounded-md border border-border/50">
+                                <div class="flex items-center gap-1.5 text-muted-foreground shrink-0">
+                                    <i data-lucide="loader" class="w-3.5 h-3.5 animate-spin"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-[13px] font-medium text-foreground">Loading history...</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Placeholder for other views (to be populated) -->
+                <!-- TRADING VIEW -->
+                <div id="trading-view" class="view-section" style="display: none;">
+                    <!-- Control Panel -->
+                    <div
+                        class="bg-card border border-border rounded-md p-4 flex gap-4 items-center justify-between mb-4">
+                        <div class="flex gap-2">
+                            <button id="startBtn"
+                                class="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 font-medium text-sm"
+                                title="Start the automated trading bot.">Start
+                                Bot</button>
+                            <button id="stopBtn"
+                                class="bg-destructive text-destructive-foreground px-4 py-2 rounded-md hover:bg-destructive/90 font-medium text-sm"
+                                disabled title="Stop the automated trading bot immediately.">Stop Bot</button>
+                        </div>
+                        <div class="flex gap-2 bg-muted p-1 rounded-md">
+                            <button class="mode-btn px-3 py-1 rounded text-xs font-medium bg-background shadow-sm"
+                                data-mode="demo" title="Simulate trading without using real money.">Demo</button>
+                            <button
+                                class="mode-btn px-3 py-1 rounded text-xs font-medium text-muted-foreground hover:bg-background/50 hover:text-foreground"
+                                data-mode="manual" title="Execute trades manually.">Manual</button>
+                            <button
+                                class="mode-btn px-3 py-1 rounded text-xs font-medium text-muted-foreground hover:bg-background/50 hover:text-foreground"
+                                data-mode="auto"
+                                title="Let the AI execute trades automatically based on strategy.">Auto</button>
+                        </div>
+                    </div>
+
+                    <!-- Chart -->
+                    <div class="bg-card border border-border rounded-md p-4 mb-4 h-[300px]">
+                        <canvas id="portfolioChart"></canvas>
+                    </div>
+
+                    <!-- Trading Stats Row -->
+                    <div class="grid grid-cols-4 gap-4 mb-4">
+                        <div class="bg-card border border-border rounded-md p-4 flex flex-col items-center justify-center"
+                            title="Key performance metrics for the current session.">
+                            <span class="text-[11px] text-muted-foreground uppercase">Day P&L</span>
+                            <span class="text-xl font-mono font-semibold text-success" id="tradingDayPnL">$0.00</span>
+                        </div>
+                        <div class="bg-card border border-border rounded-md p-4 flex flex-col items-center justify-center"
+                            title="Key performance metrics for the current session.">
+                            <span class="text-[11px] text-muted-foreground uppercase">Win Rate</span>
+                            <span class="text-xl font-mono font-semibold text-foreground" id="tradingWinRate">--%</span>
+                        </div>
+                        <div class="bg-card border border-border rounded-md p-4 flex flex-col items-center justify-center"
+                            title="Key performance metrics for the current session.">
+                            <span class="text-[11px] text-muted-foreground uppercase">Trades Today</span>
+                            <span class="text-xl font-mono font-semibold text-foreground"
+                                id="tradingTradeCount">0</span>
+                        </div>
+                        <div class="bg-card border border-border rounded-md p-4 flex flex-col items-center justify-center"
+                            title="Key performance metrics for the current session.">
+                            <span class="text-[11px] text-muted-foreground uppercase">Open Positions</span>
+                            <span class="text-xl font-mono font-semibold text-foreground" id="tradingOpenPos">0</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <!-- Portfolio Holdings -->
+                        <div class="bg-card border border-border rounded-md flex flex-col h-[400px]">
+                            <div class="p-4 border-b border-border flex justify-between items-center shrink-0">
+                                <h3 class="text-sm font-semibold flex items-center gap-2"
+                                    title="Current active positions.">
+                                    <i data-lucide="briefcase" class="w-4 h-4 text-primary"></i>
+                                    Current Holdings
+                                </h3>
+                                <div class="text-[11px] text-muted-foreground">Real-time</div>
+                            </div>
+                            <div class="overflow-auto flex-1 custom-scrollbar">
+                                <table class="w-full text-left text-sm">
+                                    <thead
+                                        class="bg-muted/50 text-[11px] text-muted-foreground uppercase sticky top-0 backdrop-blur-sm">
+                                        <tr>
+                                            <th class="p-3 font-medium">Symbol</th>
+                                            <th class="p-3 font-medium text-right">Qty</th>
+                                            <th class="p-3 font-medium text-right">Avg Price</th>
+                                            <th class="p-3 font-medium text-right">Current</th>
+                                            <th class="p-3 font-medium text-right">P&L</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="portfolioTableBody" class="divide-y divide-border/50">
+                                        <!-- Dynamic Content -->
+                                        <tr>
+                                            <td colspan="5" class="p-8 text-center text-muted-foreground text-[12px]">
+                                                No active positions
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Trade History -->
+                        <div class="bg-card border border-border rounded-md flex flex-col h-[400px]">
+                            <div class="p-4 border-b border-border flex justify-between items-center shrink-0">
+                                <h3 class="text-sm font-semibold flex items-center gap-2"
+                                    title="Recent executed trades.">
+                                    <i data-lucide="history" class="w-4 h-4 text-primary"></i>
+                                    Recent Trades
+                                </h3>
+                                <button class="text-[11px] text-primary hover:underline">View All</button>
+                            </div>
+                            <div class="overflow-auto flex-1 custom-scrollbar">
+                                <table class="w-full text-left text-sm">
+                                    <thead
+                                        class="bg-muted/50 text-[11px] text-muted-foreground uppercase sticky top-0 backdrop-blur-sm">
+                                        <tr>
+                                            <th class="p-3 font-medium">Time</th>
+                                            <th class="p-3 font-medium">Symbol</th>
+                                            <th class="p-3 font-medium">Side</th>
+                                            <th class="p-3 font-medium text-right">Price</th>
+                                            <th class="p-3 font-medium text-right">Qty</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tradeHistoryBody" class="divide-y divide-border/50">
+                                        <tr>
+                                            <td colspan="5" class="p-8 text-center text-muted-foreground text-[12px]">
+                                                No trades recorded
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+
+                <!-- DAY TRADING VIEW -->
+                <div id="day-trading-view" class="view-section" style="display: none;">
+                    <!-- Day Trading Header Stats -->
+                    <div class="grid grid-cols-4 gap-4 mb-4">
+                        <div class="bg-card border border-border rounded-md p-4 flex flex-col items-center justify-center"
+                            title="Day trading specific metrics.">
+                            <span class="text-[11px] text-muted-foreground uppercase">Realized P&L</span>
+                            <span class="text-xl font-mono font-semibold" id="dayPnL">$0.00</span>
+                        </div>
+                        <div class="bg-card border border-border rounded-md p-4 flex flex-col items-center justify-center"
+                            title="Day trading specific metrics.">
+                            <span class="text-[11px] text-muted-foreground uppercase">Win Rate</span>
+                            <span class="text-xl font-mono font-semibold text-foreground" id="dayWinRate">--%</span>
+                        </div>
+                        <div class="bg-card border border-border rounded-md p-4 flex flex-col items-center justify-center"
+                            title="Day trading specific metrics.">
+                            <span class="text-[11px] text-muted-foreground uppercase">Total Trades</span>
+                            <span class="text-xl font-mono font-semibold text-foreground" id="dayTradesCount">0</span>
+                        </div>
+                        <div class="bg-card border border-border rounded-md p-4 flex flex-col items-center justify-center"
+                            title="Day trading specific metrics.">
+                            <span class="text-[11px] text-muted-foreground uppercase">SPY Trend</span>
+                            <span class="text-lg font-semibold text-foreground" id="spyTrend">NEUTRAL</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                        <!-- Scanners Column -->
+                        <div class="lg:col-span-1 space-y-4">
+                            <!-- Gappers Scanner -->
+                            <div class="bg-card border border-border rounded-md h-[240px] flex flex-col">
+                                <div class="p-3 border-b border-border flex justify-between items-center bg-muted/20">
+                                    <h3 class="text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+                                        title="Live market scanners for opportunities.">
+                                        Top
+                                        Gappers</h3>
+                                    <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-success"></i>
+                                </div>
+                                <ul id="gappersList" class="overflow-auto flex-1 p-2 space-y-1 custom-scrollbar">
+                                    <li class="p-4 text-center text-[11px] text-muted-foreground">Scanning market...
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- Momentum Scanner -->
+                            <div class="bg-card border border-border rounded-md h-[240px] flex flex-col">
+                                <div class="p-3 border-b border-border flex justify-between items-center bg-muted/20">
+                                    <h3 class="text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+                                        title="Live market scanners for opportunities.">
+                                        Momentum</h3>
+                                    <i data-lucide="activity" class="w-3.5 h-3.5 text-primary"></i>
+                                </div>
+                                <ul id="momentumList" class="overflow-auto flex-1 p-2 space-y-1 custom-scrollbar">
+                                    <li class="p-4 text-center text-[11px] text-muted-foreground">Scanning market...
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Active Trades Table -->
+                        <div class="lg:col-span-2 bg-card border border-border rounded-md flex flex-col h-[500px]">
+                            <div class="p-4 border-b border-border flex justify-between items-center">
+                                <h3 class="text-sm font-semibold flex items-center gap-2"
+                                    title="Currently open day-trade positions.">
+                                    <i data-lucide="zap" class="w-4 h-4 text-warning"></i>
+                                    Active Day Trades
+                                </h3>
+                                <div class="flex gap-2">
+                                    <button id="panicSellBtn"
+                                        class="px-2 py-1 bg-destructive/10 text-destructive text-[10px] rounded hover:bg-destructive/20 transition">Panic
+                                        Sell All</button>
+                                </div>
+                            </div>
+                            <div class="overflow-auto flex-1 custom-scrollbar">
+                                <table class="w-full text-left text-sm">
+                                    <thead
+                                        class="bg-muted/50 text-[11px] text-muted-foreground uppercase sticky top-0 backdrop-blur-sm">
+                                        <tr>
+                                            <th class="p-3 font-medium">Symbol</th>
+                                            <th class="p-3 font-medium text-right">Entry</th>
+                                            <th class="p-3 font-medium text-right">Current</th>
+                                            <th class="p-3 font-medium text-right">Stop</th>
+                                            <th class="p-3 font-medium text-right">Target</th>
+                                            <th class="p-3 font-medium text-right">P&L</th>
+                                            <th class="p-3 font-medium text-right">R:R</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dayTradesBody" class="divide-y divide-border/50">
+                                        <tr>
+                                            <td colspan="7" class="p-12 text-center text-muted-foreground">
+                                                <div class="flex flex-col items-center gap-2">
+                                                    <i data-lucide="coffee"
+                                                        class="w-8 h-8 text-muted-foreground/50"></i>
+                                                    <span class="text-[13px]">No active day trades</span>
+                                                    <span class="text-[11px] text-muted-foreground/70">Waiting for
+                                                        setup...</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Watchlist & Alerts Row (Added for Parity) -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+                        <!-- Watchlist -->
+                        <div class="bg-card border border-border rounded-md flex flex-col h-[300px]">
+                            <div class="p-3 border-b border-border flex justify-between items-center bg-muted/20">
+                                <h3 class="text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+                                    title="Custom watchlist of assets.">
+                                    Watchlist</h3>
+                                <div class="flex gap-2">
+                                    <input type="text" id="newStockInput" placeholder="Symbol"
+                                        class="bg-background border border-border rounded px-2 py-1 text-xs w-20">
+                                    <button id="addStockBtn"
+                                        class="bg-primary text-primary-foreground px-2 py-1 rounded text-xs hover:bg-primary/90">+</button>
+                                </div>
+                            </div>
+                            <div class="overflow-auto flex-1 custom-scrollbar">
+                                <table class="w-full text-left text-sm">
+                                    <thead class="bg-muted/50 text-[10px] text-muted-foreground uppercase sticky top-0">
+                                        <tr>
+                                            <th class="p-2">Symbol</th>
+                                            <th class="p-2 text-right">Price</th>
+                                            <th class="p-2 text-right">Change</th>
+                                            <th class="p-2 text-right">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="watchlistBody">
+                                        <tr>
+                                            <td colspan="4" class="p-4 text-center text-xs text-muted-foreground">
+                                                Loading...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Custom Alerts -->
+                        <div class="bg-card border border-border rounded-md flex flex-col h-[300px]">
+                            <div class="p-3 border-b border-border flex justify-between items-center bg-muted/20">
+                                <h3 class="text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+                                    title="User-defined price alerts.">
+                                    Custom
+                                    Alerts</h3>
+                            </div>
+                            <div class="p-3 border-b border-border bg-muted/10 space-y-2">
+                                <div class="flex gap-2">
+                                    <select id="alertSymbol"
+                                        class="bg-background border border-border rounded px-2 py-1 text-xs flex-1">
+                                        <option value="">Select Stock</option>
+                                    </select>
+                                    <select id="alertCondition"
+                                        class="bg-background border border-border rounded px-2 py-1 text-xs flex-1">
+                                        <option value="price_above">Price ></option>
+                                        <option value="price_below">Price << /option>
+                                    </select>
+                                    <input type="number" id="alertValue" placeholder="0.00"
+                                        class="bg-background border border-border rounded px-2 py-1 text-xs w-20">
+                                </div>
+                                <button id="createAlertBtn"
+                                    class="w-full bg-primary text-primary-foreground py-1 rounded text-xs font-medium">Create
+                                    Alert</button>
+                            </div>
+                            <div id="activeAlertsList" class="overflow-auto flex-1 p-2 space-y-1 custom-scrollbar">
+                                <div class="text-center p-4 text-xs text-muted-foreground">No active alerts</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- RESEARCH VIEW -->
+                <div id="research-view" class="view-section" style="display: none;">
+                    <!-- Research Summary Row -->
+                    <div class="grid grid-cols-4 gap-4 mb-4">
+                        <div class="bg-card border border-border rounded-md p-4 flex flex-col items-center justify-center"
+                            title="Research metrics.">
+                            <span class="text-[11px] text-muted-foreground uppercase">Market Sentiment</span>
+                            <span class="text-xl font-mono font-semibold text-foreground"
+                                id="marketSentiment">NEUTRAL</span>
+                            <span class="text-[10px] text-muted-foreground mt-1" id="sentimentBreakdown">0 pos / 0
+                                neg</span>
+                        </div>
+                        <div class="bg-card border border-border rounded-md p-4 flex flex-col items-center justify-center"
+                            title="Research metrics.">
+                            <span class="text-[11px] text-muted-foreground uppercase">News Volume</span>
+                            <span class="text-xl font-mono font-semibold text-foreground" id="newsVolume">0</span>
+                        </div>
+                        <div class="bg-card border border-border rounded-md p-4 flex flex-col items-center justify-center"
+                            title="Research metrics.">
+                            <span class="text-[11px] text-muted-foreground uppercase">Prediction Accuracy</span>
+                            <span class="text-xl font-mono font-semibold text-success"
+                                id="predictionAccuracy">--%</span>
+                        </div>
+                        <div
+                            class="bg-card border border-border rounded-md p-4 flex flex-col items-center justify-center gap-2">
+                            <div class="flex gap-2 text-[10px] items-center mb-1">
+                                <label class="flex items-center gap-1 cursor-pointer"
+                                    title="Enable/disable specific data sources.">
+                                    <input type="checkbox" id="sourceNewsAPI" checked class="accent-primary">
+                                    NewsAPI
+                                </label>
+                                <label class="flex items-center gap-1 cursor-pointer"
+                                    title="Enable/disable specific data sources.">
+                                    <input type="checkbox" id="sourceAlpha" checked class="accent-primary"> Alpha
+                                </label>
+                                <label class="flex items-center gap-1 cursor-pointer"
+                                    title="Enable/disable specific data sources.">
+                                    <input type="checkbox" id="sourceFinnhub" checked class="accent-primary"> Finn
+                                </label>
+                            </div>
+                            <button id="forceResearchBtn"
+                                class="w-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors rounded-md p-2 flex items-center justify-center gap-2"
+                                title="Trigger immediate analysis.">
+                                <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                                <span class="text-xs font-semibold">Run Deep Research</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Research Columns -->
+                    <div class="grid grid-cols-3 gap-4 h-[500px]">
+                        <!-- AI Predictions -->
+                        <div class="bg-card border border-border rounded-md flex flex-col">
+                            <div class="p-4 border-b border-border flex justify-between items-center shrink-0">
+                                <h3 class="text-sm font-semibold flex items-center gap-2"
+                                    title="Price predictions generated by AI.">
+                                    <i data-lucide="brain-circuit" class="w-4 h-4 text-primary"></i>
+                                    AI Predictions
+                                </h3>
+                            </div>
+                            <div id="predictionsList" class="overflow-auto flex-1 p-3 space-y-3 custom-scrollbar">
+                                <div class="text-center p-8 text-muted-foreground text-xs">No active predictions
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Market Trends -->
+                        <div class="bg-card border border-border rounded-md flex flex-col">
+                            <div class="p-4 border-b border-border flex justify-between items-center shrink-0">
+                                <h3 class="text-sm font-semibold flex items-center gap-2"
+                                    title="Detected market trends.">
+                                    <i data-lucide="trending-up" class="w-4 h-4 text-warning"></i>
+                                    Emerging Trends
+                                </h3>
+                            </div>
+                            <div id="trendsList" class="overflow-auto flex-1 p-3 space-y-3 custom-scrollbar">
+                                <div class="text-center p-8 text-muted-foreground text-xs">Scanning trends...</div>
+                            </div>
+                        </div>
+
+                        <!-- Live News Feed -->
+                        <div class="bg-card border border-border rounded-md flex flex-col">
+                            <div class="p-4 border-b border-border flex justify-between items-center shrink-0">
+                                <h3 class="text-sm font-semibold flex items-center gap-2"
+                                    title="Real-time news articles.">
+                                    <i data-lucide="newspaper" class="w-4 h-4 text-success"></i>
+                                    Live News
+                                </h3>
+                            </div>
+                            <div id="newsFeed" class="overflow-auto flex-1 p-3 space-y-3 custom-scrollbar">
+                                <div class="text-center p-8 text-muted-foreground text-xs">Waiting for news...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Research Log -->
+                    <div class="mt-4 bg-card border border-border rounded-md h-[200px] flex flex-col">
+                        <div class="p-3 border-b border-border bg-muted/20">
+                            <h3 class="text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+                                title="Detailed logs of the research process.">
+                                Research
+                                Process Log</h3>
+                        </div>
+                        <div id="researchLog"
+                            class="overflow-auto flex-1 p-4 font-mono text-[11px] space-y-1 custom-scrollbar">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COMPARISON VIEW -->
+                <div id="comparison-view" class="view-section" style="display: none;">
+                    <div class="bg-card border border-border rounded-md flex flex-col h-[calc(100vh-140px)]">
+                        <div class="p-4 border-b border-border flex justify-between items-center shrink-0">
+                            <h3 class="text-sm font-semibold flex items-center gap-2">
+                                <i data-lucide="git-compare" class="w-4 h-4 text-primary"></i>
+                                AI Reasoning Comparison Log
+                            </h3>
+                            <button onclick="loadComparisonData()"
+                                class="text-xs flex items-center gap-1 hover:text-primary transition-colors">
+                                <i data-lucide="refresh-cw" class="w-3 h-3"></i> Refresh
+                            </button>
+                        </div>
+                        <div class="overflow-auto flex-1 custom-scrollbar">
+                            <table class="w-full text-left text-sm">
+                                <thead
+                                    class="bg-muted/50 text-[11px] text-muted-foreground uppercase sticky top-0 backdrop-blur-sm">
+                                    <tr>
+                                        <th class="p-3 font-medium w-32">Time</th>
+                                        <th class="p-3 font-medium w-24">Symbol</th>
+                                        <th class="p-3 font-medium w-24">Decision</th>
+                                        <th class="p-3 font-medium w-20">Conf</th>
+                                        <th class="p-3 font-medium">Reasoning Trace</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="comparisonTableBody" class="divide-y divide-border/50">
+                                    <tr>
+                                        <td colspan="5" class="p-8 text-center text-muted-foreground">Loading...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- DEVELOPER VIEW -->
+            <div id="developer-view" class="view-section" style="display: none;">
+                <div class="bg-card border border-border rounded-md flex flex-col h-[calc(100vh-140px)]">
+                    <div class="p-4 border-b border-border flex justify-between items-center shrink-0">
+                        <h3 class="text-sm font-semibold flex items-center gap-2">
+                            <i data-lucide="terminal-square" class="w-4 h-4 text-primary"></i>
+                            Developer Journey & System Logs
+                        </h3>
+                        <button onclick="loadDeveloperLog()"
+                            class="text-xs flex items-center gap-1 hover:text-primary transition-colors">
+                            <i data-lucide="refresh-cw" class="w-3 h-3"></i> Refresh
+                        </button>
+                    </div>
+                    <div class="overflow-auto flex-1 custom-scrollbar p-0">
+                        <!-- Timeline Feed style -->
+                        <div id="developerLogFeed" class="divide-y divide-border/50">
+                            <div class="p-8 text-center text-muted-foreground text-xs">Loading logs...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCALPING VIEW -->
+            <div id="scalping-view" class="view-section" style="display: none;">
+                <div class="space-y-4">
+                    <!-- Scalping Header & Controls -->
+                    <div class="bg-card border border-border rounded-md p-4 flex gap-4 items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <div class="flex flex-col">
+                                <h3 class="font-semibold text-lg flex items-center gap-2"
+                                    title="Automated high-frequency scalping bot controls.">
+                                    <i data-lucide="bot" class="w-5 h-5 text-primary"></i>
+                                    Scalping Bot
+                                </h3>
+                                <p class="text-[11px] text-muted-foreground">High-frequency automated trading
+                                </p>
+                            </div>
+                            <span id="scalper-status-badge"
+                                class="px-2 py-1 rounded bg-destructive/10 text-destructive text-xs font-bold uppercase"
+                                title="Scalper operational status.">OFFLINE</span>
+                        </div>
+
+                        <div class="flex gap-2">
+                            <button id="start-scalper-btn"
+                                class="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                                title="Control the scalping bot.">Start
+                                Scalping</button>
+                            <button id="stop-scalper-btn"
+                                class="bg-destructive text-destructive-foreground px-4 py-2 rounded-md hover:bg-destructive/90 font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                                title="Control the scalping bot.">Stop</button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                        <!-- Config Panel -->
+                        <div class="bg-card border border-border rounded-md p-4">
+                            <!-- Header (Clickable) -->
+                            <div id="scalp-params-header" class="cursor-pointer flex items-center justify-between">
+                                <h4 class="text-sm font-semibold flex items-center gap-2"
+                                    title="Configuration for the scalping algorithm.">
+                                    <i data-lucide="sliders" class="w-4 h-4 text-muted-foreground"></i>
+                                    Strategy Parameters
+                                </h4>
+                                <i id="scalp-chevron" data-lucide="chevron-down"
+                                    class="w-4 h-4 text-muted-foreground transition-transform duration-200"></i>
+                            </div>
+
+                            <!-- Collapsible Content (Hidden by Default) -->
+                            <div id="scalp-params-content" class="hidden mt-3 space-y-3 pt-3 border-t border-border">
+                                <div>
+                                    <label class="text-[11px] font-medium text-muted-foreground uppercase">Min
+                                        Volatility (%)</label>
+                                    <input type="number" id="scalp-vol" step="0.01" value="0.1"
+                                        class="w-full bg-muted border border-border rounded px-2 py-1 text-sm mt-1">
+                                </div>
+                                <div>
+                                    <label class="text-[11px] font-medium text-muted-foreground uppercase">Take
+                                        Profit (%)</label>
+                                    <input type="number" id="scalp-tp" step="0.01" value="0.5"
+                                        class="w-full bg-muted border border-border rounded px-2 py-1 text-sm mt-1">
+                                </div>
+                                <div>
+                                    <label class="text-[11px] font-medium text-muted-foreground uppercase">Stop
+                                        Loss
+                                        (%)</label>
+                                    <input type="number" id="scalp-sl" step="0.01" value="0.3"
+                                        class="w-full bg-muted border border-border rounded px-2 py-1 text-sm mt-1">
+                                </div>
+                                <button id="update-scalp-config-btn"
+                                    class="w-full bg-secondary text-secondary-foreground py-1.5 rounded text-xs font-medium hover:bg-secondary/80 mt-2">Update
+                                    Config</button>
+
+                                <!-- Monitored Pairs Info -->
+                                <div class="mt-2 pt-2 border-t border-border">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-[11px] text-muted-foreground">Monitored Pairs</span>
+                                        <span id="scalper-pair-count" class="text-sm font-mono font-bold">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Live Scalper Log -->
+                        <div class="lg:col-span-2 bg-card border border-border rounded-md flex flex-col h-[400px]">
+                            <div class="p-3 border-b border-border bg-muted/20 flex justify-between items-center">
+                                <h4 class="text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+                                    title="Detailed execution logs for scalping.">
+                                    Live Signals & Trades</h4>
+                                <!-- Last Signal Box -->
+                                <div class="flex items-center gap-2 text-[11px]">
+                                    <span class="text-muted-foreground">Last:</span>
+                                    <span id="scalper-last-signal" class="font-mono font-bold">--</span>
+                                    <span id="scalper-last-time" class="text-muted-foreground font-mono">--:--:--</span>
+                                </div>
+                            </div>
+                            <div id="scalper-log"
+                                class="overflow-auto flex-1 p-3 space-y-1 font-mono text-[11px] custom-scrollbar">
+                                <div class="text-center p-12 text-muted-foreground">
+                                    Waiting for signals...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HISTORY VIEW -->
+            <div id="history-view" class="view-section hidden">
+                <div class="bg-card border border-border rounded-md">
+                    <div class="p-4 border-b border-border flex items-center justify-between">
+                        <h3 class="text-sm font-semibold flex items-center gap-2">
+                            <i data-lucide="history" class="w-4 h-4 text-primary"></i>
+                            Trade History
+                        </h3>
+                        <button onclick="loadHistory()" class="p-1.5 hover:bg-muted rounded-md transition-colors"
+                            title="Refresh history">
+                            <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-muted-foreground"></i>
+                        </button>
+                    </div>
+                    <div class="p-0">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="bg-muted/50 border-b border-border">
+                                <tr>
+                                    <th
+                                        class="p-3 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
+                                        Date</th>
+                                    <th
+                                        class="p-3 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
+                                        Symbol</th>
+                                    <th
+                                        class="p-3 text-[11px] font-medium text-muted-foreground uppercase tracking-wider text-center">
+                                        Action</th>
+                                    <th
+                                        class="p-3 text-[11px] font-medium text-muted-foreground uppercase tracking-wider text-right">
+                                        Qty</th>
+                                    <th
+                                        class="p-3 text-[11px] font-medium text-muted-foreground uppercase tracking-wider text-right">
+                                        Price</th>
+                                    <th
+                                        class="p-3 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
+                                        Reason</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyTableBody" class="divide-y divide-border text-[12px]">
+                                <tr>
+                                    <td colspan="6" class="p-8 text-center text-muted-foreground">Loading history...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- METRICS VIEW -->
+            <div id="metrics-view" class="view-section" style="display: none;">
+                <div class="bg-card border border-border rounded-md p-6">
+                    <h2 class="text-xl font-bold mb-2">⚙️ Strategy Configuration</h2>
+                    <p class="text-muted-foreground mb-6">Customize the thresholds and metrics used by the AI to
+                        select stocks.</p>
+
+                    <!-- Custom Bot Config -->
+                    <div class="bg-muted/30 border border-border rounded-md p-4 mb-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-semibold flex items-center gap-2">🛠️ Custom Bot Targets</h3>
+                            <span class="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full" id="asset-count">0
+                                Assets</span>
+                        </div>
+
+                        <div class="flex gap-2 mb-4">
+                            <input type="text" id="new-asset-symbol" placeholder="SYMBOL (e.g. SOL)"
+                                onkeyup="handleAssetInput(event)"
+                                class="bg-background border border-border rounded-md px-3 py-2 text-sm flex-1 outline-none focus:border-primary">
+                            <button onclick="addAsset()"
+                                class="bg-primary text-primary-foreground px-4 py-2 rounded-md text-sm font-medium hover:bg-primary/90">
+                                + Add
+                            </button>
+                        </div>
+
+                        <div class="overflow-hidden border border-border rounded-md">
+                            <table class="w-full text-sm">
+                                <thead class="bg-muted text-muted-foreground">
+                                    <tr>
+                                        <th class="p-2 text-left">Asset Pair</th>
+                                        <th class="p-2 text-right">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="asset-list-body" class="divide-y divide-border"></tbody>
+                            </table>
+                            <div id="empty-state" class="p-4 text-center text-muted-foreground text-xs hidden">
+                                No
+                                assets configured.</div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Momentum Config -->
+                        <div class="bg-muted/10 border border-border rounded-md p-4">
+                            <h3 class="font-semibold mb-3">Momentum Strategy</h3>
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="text-xs font-medium text-muted-foreground">Min Price Gain (5
+                                        days)
+                                        %</label>
+                                    <input type="number" id="cfg_mom_min_gain" value="5.0" step="0.1"
+                                        class="w-full bg-background border border-border rounded-md px-2 py-1 text-sm mt-1">
+                                </div>
+                                <div>
+                                    <label class="text-xs font-medium text-muted-foreground">Min Volume
+                                        Ratio</label>
+                                    <input type="number" id="cfg_mom_min_vol" value="1.5" step="0.1"
+                                        class="w-full bg-background border border-border rounded-md px-2 py-1 text-sm mt-1">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Value Config -->
+                        <div class="bg-muted/10 border border-border rounded-md p-4">
+                            <h3 class="font-semibold mb-3">Value Strategy</h3>
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="text-xs font-medium text-muted-foreground">Max PEG
+                                        Ratio</label>
+                                    <input type="number" id="cfg_val_max_peg" value="2.0" step="0.1"
+                                        class="w-full bg-background border border-border rounded-md px-2 py-1 text-sm mt-1">
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <input type="checkbox" id="cfg_val_industry">
+                                    <label for="cfg_val_industry"
+                                        class="text-xs font-medium text-muted-foreground">Check
+                                        Industry
+                                        P/E</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Growth Config -->
+                        <div class="bg-muted/10 border border-border rounded-md p-4">
+                            <h3 class="font-semibold mb-3">Growth Strategy</h3>
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="text-xs font-medium text-muted-foreground">Min EPS Growth
+                                        %</label>
+                                    <input type="number" id="cfg_growth_min_eps" value="15.0" step="1.0"
+                                        class="w-full bg-background border border-border rounded-md px-2 py-1 text-sm mt-1">
+                                </div>
+                                <div>
+                                    <label class="text-xs font-medium text-muted-foreground">Trending
+                                        Industries</label>
+                                    <textarea id="cfg_growth_industries"
+                                        class="w-full bg-background border border-border rounded-md px-2 py-1 text-sm mt-1 h-20"
+                                        placeholder="Technology&#10;Biotech"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 flex justify-end">
+                        <button id="saveConfigBtn"
+                            class="bg-primary text-primary-foreground px-6 py-2 rounded-md font-medium hover:bg-primary/90">Save
+                            Configuration</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LEARNING VIEW -->
+            <div id="learning-view" class="view-section" style="display: none;">
+                <div class="bg-card border border-border rounded-md p-6">
+                    <h2 class="text-xl font-bold mb-4 border-b border-border pb-2">📚 Learning Strategy: Options
+                        Trading</h2>
+                    <div class="space-y-6 text-sm text-muted-foreground">
+                        <p>Learn how to build bots for commission-free options trading.</p>
+
+                        <div class="space-y-4">
+                            <h3 class="text-lg font-semibold text-foreground">Core Strategies</h3>
+
+                            <div class="p-4 bg-blue-500/10 border-l-4 border-blue-500 rounded-r-md">
+                                <strong class="text-foreground block mb-1">1. Straddles</strong>
+                                <p>A neutral strategy where you buy both a call and a put option with the same
+                                    strike price and expiration date.</p>
+                                <p class="mt-1"><strong class="text-foreground">Best for:</strong> High
+                                    volatility
+                                    when you expect a big move but don't know the direction.</p>
+                            </div>
+
+                            <div class="p-4 bg-purple-500/10 border-l-4 border-purple-500 rounded-r-md">
+                                <strong class="text-foreground block mb-1">2. Butterflies</strong>
+                                <p>A limited-risk, limited-profit strategy using multiple option contracts with
+                                    the
+                                    same expiration but different strike prices.</p>
+                                <p class="mt-1"><strong class="text-foreground">Best for:</strong> Low
+                                    volatility
+                                    when you expect the price to stay within a specific range.</p>
+                            </div>
+
+                            <div class="p-4 bg-orange-500/10 border-l-4 border-orange-500 rounded-r-md">
+                                <strong class="text-foreground block mb-1">3. Spreads</strong>
+                                <p>Buying and selling options of the same class (calls or puts) on the same
+                                    underlying security with different strike prices or expirations.</p>
+                                <p class="mt-1"><strong class="text-foreground">Best for:</strong> Directional
+                                    bets
+                                    with defined risk and reward.</p>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- READ ME VIEW -->
+            <div id="readme-view" class="view-section" style="display: none;">
+                <div class="bg-card border border-border rounded-md p-6 min-h-[400px]">
+                    <h2 class="text-xl font-bold mb-4">📖 Project Documentation</h2>
+                    <div class="prose prose-sm dark:prose-invert max-w-none">
+                        <h3 style="color: var(--foreground); margin-top: 25px; font-weight: 600;">1. System
+                            Overview
+                        </h3>
+                        <p>This AI Trading Bot is an advanced automated system that intelligently manages your
+                            portfolio on the Alpaca platform. It combines market data analysis, news sentiment
+                            tracking, and Artificial Intelligence to make informed decisions for you.</p>
+
+                        <h3 style="color: var(--foreground); margin-top: 25px; font-weight: 600;">2. Trading
+                            Modes
+                        </h3>
+                        <ul class="list-disc pl-5 space-y-1 mt-2">
+                            <li><strong>Swing Trading:</strong> Focuses on longer-term trends, holding positions
+                                for days or weeks to capture major moves.</li>
+                            <li><strong>Day Trading:</strong> Operates at high speed during market hours, buying
+                                and selling within the same day to profit from short-term volatility.</li>
+                        </ul>
+
+                        <h3 style="color: var(--foreground); margin-top: 25px; font-weight: 600;">3. The
+                            Decision
+                            Process</h3>
+                        <div class="space-y-4 mt-4">
+                            <div class="bg-muted/30 p-4 rounded-md border-l-4 border-primary">
+                                <strong class="text-foreground">Step 1: Risk Check</strong>
+                                <p class="text-muted-foreground text-xs mt-1">First, it ensures your portfolio
+                                    is
+                                    healthy and within safe risk limits. Safety is the #1 priority.</p>
+                            </div>
+                            <div class="bg-muted/30 p-4 rounded-md border-l-4 border-primary">
+                                <strong class="text-foreground">Step 2: Portfolio Check</strong>
+                                <p class="text-muted-foreground text-xs mt-1">It reviews what you currently own.
+                                    Is
+                                    it time to take profit? Should we cut a loss?</p>
+                            </div>
+                            <div class="bg-muted/30 p-4 rounded-md border-l-4 border-primary">
+                                <strong class="text-foreground">Step 3: Market Scan</strong>
+                                <p class="text-muted-foreground text-xs mt-1">Scans market for Momentum, Growth,
+                                    and
+                                    Value opportunities.</p>
+                            </div>
+                            <div class="bg-muted/30 p-4 rounded-md border-l-4 border-purple-500">
+                                <strong class="text-purple-500">Step 4: AI Analysis</strong>
+                                <p class="text-muted-foreground text-xs mt-1">Reads news, analyzes trends, and
+                                    decides Buy/Sell/Hold.</p>
+                            </div>
+                            <div class="bg-muted/30 p-4 rounded-md border-l-4 border-success">
+                                <strong class="text-success">Step 5: Execution</strong>
+                                <p class="text-muted-foreground text-xs mt-1">Executes trades instantly on your
+                                    broker account.</p>
+                            </div>
+                        </div>
+
+                        <h3 style="color: var(--foreground); margin-top: 25px; font-weight: 600;">4. Key Features
+                        </h3>
+                        <table class="w-full text-sm mt-2 border-collapse">
+                            <tr class="border-b border-border">
+                                <th class="text-left p-2 text-foreground font-semibold">Feature</th>
+                                <th class="text-left p-2 text-foreground font-semibold">Description</th>
+                            </tr>
+                            <tr class="border-b border-border">
+                                <td class="p-2 font-medium">Dashboard</td>
+                                <td class="p-2 text-muted-foreground">The central hub where you can see your status,
+                                    control the
+                                    bot, and view live activity.</td>
+                            </tr>
+                            <tr class="border-b border-border">
+                                <td class="p-2 font-medium">Research & Insights</td>
+                                <td class="p-2 text-muted-foreground">The bot constantly reads news from around the
+                                    web to sense
+                                    market sentiment and find emerging trends before they happen.</td>
+                            </tr>
+                            <tr class="border-b border-border">
+                                <td class="p-2 font-medium">Day Trading ⚡</td>
+                                <td class="p-2 text-muted-foreground">A specialized high-speed interface for valid
+                                    intraday
+                                    moves, featuring fast scanners and custom alerts.</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+    </main>
+
+    <!-- Right Sidebar - 280px (ActivitySidebar) -->
+    <aside class="w-[280px] bg-card border-l border-border flex flex-col">
+        <!-- Header -->
+        <div class="h-14 px-4 border-b border-border flex items-center justify-between shrink-0">
+            <h2 class="font-semibold text-[13px] text-foreground">Activity Log</h2>
+            <button class="p-1.5 hover:bg-muted rounded-md transition-colors">
+                <i data-lucide="maximize-2" class="w-4 h-4 text-muted-foreground"></i>
+            </button>
+        </div>
+
+        <!-- Activity List -->
+        <div id="activity-log-list" class="flex-1 overflow-auto custom-scrollbar p-3 space-y-2">
+            <!-- Dynamic Content Will Be Injected Here -->
+        </div>
+    </aside>
+    </div>
+
+    <!-- Init Icons -->
+    <script src="{{ url_for('static', filename='app_v2.js') }}"></script>
+</body>
+
+</html>

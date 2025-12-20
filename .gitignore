@@ -172,3 +172,13 @@ data/screening_results.json
 data/performance_history.json
 data/trade_journal.db
 .coverage 2
+
+# Temporary Audit Files
+debug_output_*.txt
+verify_*.py
+gui_parity_check.txt
+reproduce_yahoo_error.py
+launch_bot.py
+analyze_pnl.py
+check_portfolio.py
+inspect_trades.py
