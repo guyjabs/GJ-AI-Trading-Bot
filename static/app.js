@@ -664,6 +664,141 @@ function getTimeAgo(date) {
 // === Custom Bot Asset Management ===
 let customBotAssets = [];
 
+// ==========================================
+// SIMULATOR LOGIC
+// ==========================================
+
+let simChartInstance = null;
+
+function runSimulation() {
+    const startDetails = {
+        start_date: document.getElementById('simStartDate').value,
+        end_date: document.getElementById('simEndDate').value,
+        initial_cash: document.getElementById('simCapital').value,
+        universe: document.getElementById('simUniverse').value
+    };
+
+    if (!startDetails.start_date || !startDetails.end_date) {
+        showToast('Please select a date range', 'error');
+        return;
+    }
+
+    const btn = document.getElementById('runSimulationBtn');
+    btn.disabled = true;
+    btn.innerHTML = '⏳ Running Simulation...';
+
+    // Show loading state or hide results
+    document.getElementById('simResults').style.display = 'none';
+
+    fetch('/api/simulate', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(startDetails)
+    })
+        .then(response => response.json())
+        .then(data => {
+            btn.disabled = false;
+            btn.innerHTML = '▶ Run Simulation';
+
+            if (data.error) {
+                showToast('Simulation Failed: ' + data.error, 'error');
+                return;
+            }
+
+            renderSimulationResults(data);
+        })
+        .catch(error => {
+            console.error('Simulation error:', error);
+            showToast('Error running simulation', 'error');
+            btn.disabled = false;
+            btn.innerHTML = '▶ Run Simulation';
+        });
+}
+
+function renderSimulationResults(data) {
+    const resultsDiv = document.getElementById('simResults');
+    resultsDiv.style.display = 'block';
+
+    // Update Stats
+    const finalBal = data.final_balance || 0;
+    const initial = parseFloat(document.getElementById('simCapital').value);
+    const profit = finalBal - initial;
+    const profitPct = (profit / initial) * 100;
+
+    document.getElementById('simFinalBalance').textContent = '$' + finalBal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    const returnEl = document.getElementById('simReturn');
+    returnEl.textContent = (profitPct >= 0 ? '+' : '') + profitPct.toFixed(2) + '%';
+    returnEl.className = 'value ' + (profitPct >= 0 ? 'text-success' : 'text-danger'); // Assuming bootstrap-like classes or global styles
+
+    document.getElementById('simTrades').textContent = data.trades || 0;
+
+    // Render Chart
+    const ctx = document.getElementById('simChart').getContext('2d');
+
+    if (simChartInstance) {
+        simChartInstance.destroy();
+    }
+
+    // Prepare Data
+    const equityCurve = data.equity_curve || [];
+    const labels = equityCurve.map(p => new Date(p.timestamp).toLocaleDateString());
+    const values = equityCurve.map(p => p.equity);
+
+    simChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Portfolio Equity',
+                data: values,
+                borderColor: profitPct >= 0 ? '#2ecc71' : '#e74c3c',
+                backgroundColor: profitPct >= 0 ? 'rgba(46, 204, 113, 0.1)' : 'rgba(231, 76, 60, 0.1)',
+                borderWidth: 2,
+                pointRadius: 0,
+                fill: true,
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: { maxTicksLimit: 10 }
+                },
+                y: {
+                    grid: { color: 'rgba(255,255,255,0.05)' }
+                }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function (context) {
+                            return '$' + context.parsed.y.toLocaleString();
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Scroll to results
+    resultsDiv.scrollIntoView({ behavior: 'smooth' });
+}
+
+// Add event listener manually if setupEventListeners didn't catch it yet (it runs on load)
+// But we can add it safely here again or rely on the init.
+document.addEventListener('DOMContentLoaded', () => {
+    const simBtn = document.getElementById('runSimulationBtn');
+    if (simBtn) {
+        simBtn.addEventListener('click', runSimulation);
+    }
+});
+
 function renderAssetTable() {
     const tbody = document.getElementById('asset-list-body');
     const emptyState = document.getElementById('empty-state');

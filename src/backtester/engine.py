@@ -5,22 +5,48 @@ from src.utils import logger
 from .broker_mock import MockBroker
 
 class BacktestEngine:
-    def __init__(self, start_date, end_date, initial_cash=100000):
-        self.start_date = pd.Timestamp(start_date)
-        self.end_date = pd.Timestamp(end_date)
+    def __init__(self, start_date, end_date, initial_cash=100000, alpaca_client=None):
+        self.start_date = pd.Timestamp(start_date).tz_localize('UTC') if pd.Timestamp(start_date).tz is None else pd.Timestamp(start_date)
+        self.end_date = pd.Timestamp(end_date).tz_localize('UTC') if pd.Timestamp(end_date).tz is None else pd.Timestamp(end_date)
         self.broker = MockBroker(initial_cash)
-        self.universe = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'SPY'] # Default universe
+        self.universe = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'SPY', 'NVDA', 'AMD'] # Expanded universe
+        self.alpaca = alpaca_client
         
     def load_data(self):
         """Fetch historical data for universe"""
         logger.info("Fetching historical data...")
         data_cache = {}
+        
         for symbol in self.universe:
             try:
                 # Add buffer for indicators
-                start = self.start_date - timedelta(days=60)
-                df = yf.download(symbol, start=start, end=self.end_date, progress=False)
+                # start = self.start_date - timedelta(days=60)
+                
+                if self.alpaca:
+                    logger.info(f"Fetching {symbol} from Alpaca...")
+                    # Fetch daily bars for long term backtest
+                    df = self.alpaca.get_historical_data(symbol, interval="1day", span="year")
+                else:
+                    # Fallback to yfinance
+                    start = self.start_date - timedelta(days=60)
+                    df = yf.download(symbol, start=start, end=self.end_date, progress=False)
+                
                 if not df.empty:
+                    # Normalize columns if needed (Alpaca vs Yahoo)
+                    # Alpaca df usually has lowercase columns, Yahoo has Capitalized or MultiIndex
+                    df.columns = [c.lower() for c in df.columns]
+                    
+                    # Ensure index is DatetimeIndex and not MultiIndex
+                    if isinstance(df.index, pd.MultiIndex):
+                         # Alpaca sometimes returns (symbol, timestamp) MultiIndex
+                         # We want just timestamp as index for single symbol cache
+                         if 'timestamp' in df.index.names:
+                             df = df.reset_index().set_index('timestamp')
+                    
+                    # If still MultiIndex, try to flatten or pick level 0
+                    if isinstance(df.index, pd.MultiIndex):
+                        df = df.droplevel(0)
+
                     data_cache[symbol] = df
             except Exception as e:
                 logger.error(f"Error fetching {symbol}: {e}")

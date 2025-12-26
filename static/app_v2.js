@@ -11,6 +11,7 @@ let researchInterval = null;
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM loaded, initializing GUI2...');
+    if (window.lucide) lucide.createIcons();
 
     // Initialize Socket.IO safely
     if (typeof io !== 'undefined') {
@@ -502,7 +503,7 @@ function setupEventListeners() {
             elDayPL.className = `text-sm font-semibold font-mono ${data.total_pl >= 0 ? 'text-success' : 'text-destructive'}`;
         }
 
-        const elTotalPL = document.getElementById('headerTotalPL');
+        const elTotalPL = document.getElementById('headerPL');
         if (elTotalPL) {
             elTotalPL.innerText = (data.total_pl >= 0 ? '+' : '') + formatMoney(data.total_pl);
             elTotalPL.className = `text-sm font-semibold font-mono ${data.total_pl >= 0 ? 'text-success' : 'text-destructive'}`;
@@ -1065,8 +1066,67 @@ function loadTradingDashboardStats() {
         .catch(err => console.error('Error loading trading dashboard stats:', err));
 }
 
+
 // Initialize Scalper Listeners
 document.addEventListener('DOMContentLoaded', () => {
+    // --- SIMULATION BOT LOGIC ---
+    const btnRunSim = document.getElementById('btnRunSim');
+    if (btnRunSim) {
+        btnRunSim.addEventListener('click', async () => {
+            const startDate = document.getElementById('simStartDate').value;
+            const endDate = document.getElementById('simEndDate').value;
+            const universe = document.getElementById('simUniverse').value;
+            const cash = document.getElementById('simCash').value;
+
+            if (!startDate || !endDate) {
+                alert('Please select start and end dates.');
+                return;
+            }
+
+            btnRunSim.disabled = true;
+            btnRunSim.textContent = 'Running Simulation (this may take a while)...';
+
+            try {
+                const response = await fetch('/api/simulate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        start_date: startDate,
+                        end_date: endDate,
+                        universe: universe,
+                        initial_cash: cash
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    alert('Simulation Error: ' + data.error);
+                } else {
+                    // Show results
+                    document.getElementById('simResults').classList.remove('hidden');
+                    document.getElementById('simFinalBalance').textContent = formatMoney(data.final_balance);
+                    document.getElementById('simReturn').textContent = (data.total_return_pct * 100).toFixed(2) + '%';
+                    document.getElementById('simTrades').textContent = data.trades;
+
+                    if (data.total_return_pct >= 0) {
+                        document.getElementById('simReturn').classList.add('text-success');
+                        document.getElementById('simReturn').classList.remove('text-destructive');
+                    } else {
+                        document.getElementById('simReturn').classList.add('text-destructive');
+                        document.getElementById('simReturn').classList.remove('text-success');
+                    }
+                }
+            } catch (e) {
+                console.error(e);
+                alert('Failed to run simulation');
+            } finally {
+                btnRunSim.disabled = false;
+                btnRunSim.textContent = 'Run Simulation';
+            }
+        });
+    }
+
     const startBtn = document.getElementById('start-scalper-btn');
     const stopBtn = document.getElementById('stop-scalper-btn');
 
@@ -1344,3 +1404,9 @@ function updateActivityStatus(statusText) {
         }, 1000);
     }
 }
+
+function formatMoney(amount) {
+    if (typeof amount !== 'number') return '$0.00';
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+}
+

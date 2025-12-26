@@ -16,6 +16,7 @@ from src.notifications import notifier
 from main2 import trading_bot, kb, news_agg, trend_analyzer, strategy_researcher
 import main2  # Import module to access/modify globals like AI_REASONING_MODE
 from src.scalper import Scalper
+from src.simulation_engine import SimulatorEngine
 
 app = Flask(__name__)
 # Security: Load SECRET_KEY from environment variable
@@ -1002,6 +1003,32 @@ def get_history():
         return jsonify({'trades': []})
     except Exception as e:
         logger.error(f"Error fetching history: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/simulate', methods=['POST'])
+def run_simulation():
+    try:
+        data = request.json
+        start_date = data.get('start_date')
+        end_date = data.get('end_date')
+        initial_cash = float(data.get('initial_cash', 10000))
+        universe_str = data.get('universe', '')
+        universe = [s.strip().upper() for s in universe_str.split(',') if s.strip()]
+        
+        if not universe:
+            return jsonify({'error': 'No stocks selected'}), 400
+            
+        logger.info(f"Received Simulation Request: {universe} from {start_date} to {end_date}")
+        
+        # Instantiate and run
+        sim = SimulatorEngine(start_date, end_date, initial_cash, universe)
+        results = sim.run()
+        
+        return jsonify(results)
+    except Exception as e:
+        logger.error(f"Simulation error: {e}")
+        import traceback
+        traceback.print_exc()
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/config/update', methods=['POST'])

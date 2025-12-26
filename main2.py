@@ -75,51 +75,54 @@ def get_ai_amount_guidelines():
     return sell_guidelines, buy_guidelines
 
 
-# Make AI-based decisions on stock portfolio and watchlist
-def make_ai_decisions(account_info, portfolio_overview, watchlist_overview):
-    # Get active predictions for context
-    predictions = []
-    if globals().get('ENABLE_RESEARCH_BOT', False):
-        try:
-            predictions = kb.get_active_predictions()
-            logger.info(f"Loaded {len(predictions)} active predictions for AI context")
-        except Exception as e:
-            logger.error(f"Error loading predictions: {e}")
-
+# Pure function to generate AI decisions (Mockable for Simulation)
+def get_ai_decisions(context_date, account_info, portfolio_overview, watchlist_overview, predictions, risk_constraints, news_context=None):
+    """
+    Core AI logic decoupled from live data sources.
+    Accepted `news_context` list for historical simulation.
+    """
+    
     constraints = [
         f"- Initial budget: {account_info['buying_power']} USD",
         f"- Max portfolio size: {PORTFOLIO_LIMIT} stocks",
     ]
-    sell_guidelines, buy_guidelines = get_ai_amount_guidelines()
-    if sell_guidelines:
-        constraints.append(f"- Sell Amounts Guidelines: {sell_guidelines}")
-    if buy_guidelines:
-        constraints.append(f"- Buy Amounts Guidelines: {buy_guidelines}")
-    if len(TRADE_EXCEPTIONS) > 0:
-        constraints.append(f"- Excluded stocks: {', '.join(TRADE_EXCEPTIONS)}")
-
+    constraints.extend(risk_constraints)
+    
     # Select Prompt based on Mode
     reasoning_mode = globals().get('AI_REASONING_MODE', 'basic')
     
+    # Inject Historical News Context if available
+    news_section = ""
+    if news_context:
+        news_section = "**Daily News Context:**\n"
+        for article in news_context[:5]:
+            news_section += f"- {article.get('title')} ({article.get('source', 'Unknown')})\n"
+        news_section += "\n"
+
+    prediction_section = ""
+    if predictions:
+        prediction_section = "**Research & Predictions:**\n```json\n" + json.dumps([{'symbol': p['metadata']['symbol'], 'prediction': p['text'], 'confidence': p['metadata']['confidence']} for p in predictions], indent=1) + "\n```\n\n"
+
+    ai_prompt = ""
     if reasoning_mode == 'advanced':
         ai_prompt = (
             "**Context:**\n"
-            f"Today is {datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')}.{chr(10)}"
+            f"Simulation Date: {context_date.strftime('%Y-%m-%d') if isinstance(context_date, datetime) else context_date}.{chr(10)}"
             f"You are a sophisticated quantitative trading agent participating in 'Alpha Arena'.{chr(10)}"
             f"Your goal is to maximize PnL while managing risk capabilities.{chr(10)}{chr(10)}"
             "**Constraints:**\n"
             f"{chr(10).join(constraints)}"
             "\n\n"
+            f"{news_section}"
             f"{compile_prompt_data(account_info, portfolio_overview, watchlist_overview)}"
             "\n\n"
-            "**Research & Predictions:**\n"
-            "```json\n"
-            f"{json.dumps([{'symbol': p['metadata']['symbol'], 'prediction': p['text'], 'confidence': p['metadata']['confidence']} for p in predictions], indent=1)}{chr(10)}"
-            "```\n\n"
+            f"{prediction_section}"
             "**Instructions:**\n"
             "1. **Analyze** the market data, technical indicators (RSI, VWAP, SMA), and your current positions.\n"
-            "2. **Think Step-by-Step**: Write a 'Reasoning Trace' explaining your analysis for each asset. Consider trend, momentum, and risk.\n"
-            "3. **Decide**: Output your final trading decisions in JSON format.\n\n"
+            "2. **Find Opportunities**: Look for uptrends (Price > SMA200) with pullbacks (RSI < 50). This is the 'Golden Zone'.\n"
+            "3. **Manage Risk**: Use a **5% Trailing Stop** from the highest price since entry. Do not set arbitrary take-profit targets.\n"
+            "4. **Think Step-by-Step**: Write a 'Reasoning Trace' explaining your analysis for each asset.\n"
+            "5. **Decide**: Output your final trading decisions in JSON format.\n\n"
             "**Response Format:**\n"
             "Reasoning Trace:\n"
             "[Write your analysis here...]\n\n"
@@ -146,23 +149,20 @@ def make_ai_decisions(account_info, portfolio_overview, watchlist_overview):
             "- Return an empty array `[]` in the JSON block if no actions are necessary."
         )
     else:
-        # BASIC MODE (Original)
+        # BASIC MODE
         ai_prompt = (
             "**Context:**\n"
-            f"Today is {datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')}.{chr(10)}"
+            f"Date: {context_date}.{chr(10)}"
             f"You are a short-term investment advisor managing a stock portfolio.{chr(10)}"
-            f"You analyze market conditions every {RUN_INTERVAL_SECONDS} seconds and make investment decisions.{chr(10)}{chr(10)}"
             "**Constraints:**\n"
             f"{chr(10).join(constraints)}"
             "\n\n"
+            f"{news_section}"
             "**Stock Data:**\n"
             "```json\n"
             f"{json.dumps({**portfolio_overview, **watchlist_overview}, indent=1)}{chr(10)}"
             "```\n\n"
-            "**Research & Predictions:**\n"
-            "```json\n"
-            f"{json.dumps([{'symbol': p['metadata']['symbol'], 'prediction': p['text'], 'confidence': p['metadata']['confidence']} for p in predictions], indent=1)}{chr(10)}"
-            "```\n\n"
+            f"{prediction_section}"
             "**Response Format:**\n"
             "Return your decisions in a JSON array with this structure:\n"
             "```json\n"
@@ -174,15 +174,15 @@ def make_ai_decisions(account_info, portfolio_overview, watchlist_overview):
             "- <symbol>: Stock symbol.\n"
             "- <decision>: One of `buy`, `sell`, or `hold`.\n"
             "- <quantity>: Recommended transaction quantity.\n"
-            "- <reasoning>: Brief explanation (max 10 words) for the decision (e.g., 'Strong momentum + RSI oversold').\n\n"
+            "- <reasoning>: Brief explanation (max 10 words) for the decision.\n\n"
             "**Instructions:**\n"
             "- Provide only the JSON output with no additional text.\n"
             "- Return an empty array if no actions are necessary."
         )
 
-    logger.debug(f"AI making-decisions prompt:{chr(10)}{ai_prompt}")
+    logger.debug(f"AI making-decisions prompt ({reasoning_mode}):{chr(10)}{ai_prompt[:500]}...")
     ai_response = openai.make_ai_request(ai_prompt)
-    logger.debug(f"AI making-decisions response:{chr(10)}{ai_response.choices[0].message.content.strip()}")
+    logger.debug(f"AI making-decisions response:{chr(10)}{ai_response.choices[0].message.content.strip()[:200]}...")
     
     # Parse Response with access to raw trace
     decisions, raw_trace = openai.parse_ai_response(ai_response, return_raw=True)
@@ -192,6 +192,37 @@ def make_ai_decisions(account_info, portfolio_overview, watchlist_overview):
         comparison_logger.log_decision_cycle(raw_trace, decisions)
         
     return decisions
+
+# Make AI-based decisions on stock portfolio and watchlist
+def make_ai_decisions(account_info, portfolio_overview, watchlist_overview):
+    # Get active predictions for context
+    predictions = []
+    if globals().get('ENABLE_RESEARCH_BOT', False):
+        try:
+            predictions = kb.get_active_predictions()
+            logger.info(f"Loaded {len(predictions)} active predictions for AI context")
+        except Exception as e:
+            logger.error(f"Error loading predictions: {e}")
+
+    # Build Guidelines
+    risk_constraints = []
+    sell_guidelines, buy_guidelines = get_ai_amount_guidelines()
+    if sell_guidelines:
+        risk_constraints.append(f"- Sell Amounts Guidelines: {sell_guidelines}")
+    if buy_guidelines:
+        risk_constraints.append(f"- Buy Amounts Guidelines: {buy_guidelines}")
+    if len(TRADE_EXCEPTIONS) > 0:
+        risk_constraints.append(f"- Excluded stocks: {', '.join(TRADE_EXCEPTIONS)}")
+        
+    # Delegate to pure function
+    return get_ai_decisions(
+        context_date=datetime.now(),
+        account_info=account_info,
+        portfolio_overview=portfolio_overview,
+        watchlist_overview=watchlist_overview,
+        predictions=predictions,
+        risk_constraints=risk_constraints
+    )
 
 
 # Filter AI hallucinations

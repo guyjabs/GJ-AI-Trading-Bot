@@ -616,3 +616,60 @@ if __name__ == "__main__":
         except Exception as e:
             logger.error(f"Error checking catalyst for {symbol}: {e}")
             return {'has_catalyst': False, 'error': str(e)}
+
+    def get_news_for_date(self, target_date: datetime) -> List[Dict]:
+        """
+        Fetch news for a specific historical date.
+        
+        Args:
+            target_date: Date object
+            
+        Returns:
+            List of news articles from that day
+        """
+        articles = []
+        date_str = target_date.strftime('%Y-%m-%d')
+        next_date_str = (target_date + timedelta(days=1)).strftime('%Y-%m-%d')
+        
+        logger.info(f"📰 Fetching historical news for {date_str}...")
+        
+        # 1. NewsAPI (Historical)
+        if self.newsapi_key:
+            try:
+                url = "https://newsapi.org/v2/everything"
+                params = {
+                    'q': 'stock market OR economy OR finance OR fed OR inflation',
+                    'from': date_str,
+                    'to': date_str,
+                    'sortBy': 'popularity',
+                    'language': 'en',
+                    'apiKey': self.newsapi_key,
+                    'pageSize': 20
+                }
+                resp = self.session.get(url, params=params)
+                if resp.status_code == 200:
+                    data = resp.json()
+                    for item in data.get('articles', []):
+                         articles.append({
+                            'source': 'newsapi',
+                            'title': item.get('title'),
+                            'description': item.get('description'),
+                            'url': item.get('url'),
+                            'published_at': item.get('publishedAt')
+                        })
+            except Exception as e:
+                logger.error(f"NewsAPI history error: {e}")
+                
+        # 2. Add Market Context (Synthetic Fallback)
+        # If no news found (e.g. API limits), generate generic context based on date
+        # In a real system we might query polygon.io or cached database
+        if len(articles) < 5:
+             articles.append({
+                'source': 'market_context',
+                'title': f'Market Overview for {date_str}',
+                'description': f'Daily trading session analysis for {date_str}. Reviewing major index movements and sector performance.',
+                'url': '',
+                'published_at': date_str + 'T09:00:00Z'
+            })
+            
+        return articles
