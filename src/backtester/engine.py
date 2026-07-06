@@ -25,16 +25,20 @@ class BacktestEngine:
                 if self.alpaca:
                     logger.info(f"Fetching {symbol} from Alpaca...")
                     # Fetch daily bars for long term backtest
-                    df = self.alpaca.get_historical_data(symbol, interval="1day", span="year")
+                    # Use 5year to ensure ample warmup data for SMA200
+                    df = self.alpaca.get_historical_data(symbol, interval="1day", span="5year")
                 else:
                     # Fallback to yfinance
-                    start = self.start_date - timedelta(days=60)
+                    start = self.start_date - timedelta(days=365)
                     df = yf.download(symbol, start=start, end=self.end_date, progress=False)
                 
                 if not df.empty:
                     # Normalize columns if needed (Alpaca vs Yahoo)
-                    # Alpaca df usually has lowercase columns, Yahoo has Capitalized or MultiIndex
-                    df.columns = [c.lower() for c in df.columns]
+                    # Handle new yfinance MultiIndex columns
+                    if isinstance(df.columns, pd.MultiIndex):
+                        df.columns = [c[0].lower() for c in df.columns]
+                    else:
+                        df.columns = [c.lower() for c in df.columns]
                     
                     # Ensure index is DatetimeIndex and not MultiIndex
                     if isinstance(df.index, pd.MultiIndex):

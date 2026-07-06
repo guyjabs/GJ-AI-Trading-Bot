@@ -46,7 +46,7 @@ class MockBroker:
         return {
             'portfolio_equity': equity,
             'portfolio_cash': self.cash,
-            'buying_power': self.cash # Simplified
+            'buying_power': self.cash * 2.0 # 2x Margin for backtesting
         }
 
     def get_portfolio_stocks(self):
@@ -75,33 +75,58 @@ class MockBroker:
         cost = price * quantity
         
         if side == 'buy':
-            if self.cash >= cost:
+            current_qty = self.portfolio.get(symbol, {}).get('quantity', 0)
+            if self.cash * 2.0 >= cost or current_qty < 0:
                 self.cash -= cost
                 if symbol not in self.portfolio:
                     self.portfolio[symbol] = {'quantity': 0, 'avg_price': 0}
                 
-                # Update avg price
                 old_qty = self.portfolio[symbol]['quantity']
-                old_cost = old_qty * self.portfolio[symbol]['avg_price']
-                new_qty = old_qty + quantity
-                new_avg = (old_cost + cost) / new_qty
                 
-                self.portfolio[symbol]['quantity'] = new_qty
-                self.portfolio[symbol]['avg_price'] = new_avg
-                action = "BOUGHT"
+                if old_qty < 0:
+                    # Covering a short
+                    new_qty = old_qty + quantity
+                    self.portfolio[symbol]['quantity'] = new_qty
+                    if self.portfolio[symbol]['quantity'] == 0:
+                        del self.portfolio[symbol]
+                    action = "COVERED"
+                else:
+                    # Buying long
+                    old_cost = old_qty * self.portfolio[symbol]['avg_price']
+                    new_qty = old_qty + quantity
+                    new_avg = (old_cost + cost) / new_qty
+                    
+                    self.portfolio[symbol]['quantity'] = new_qty
+                    self.portfolio[symbol]['avg_price'] = new_avg
+                    action = "BOUGHT"
             else:
-                logger.warning(f"Backtest: Insufficient funds for {symbol}")
+                logger.warning(f"Backtest: Insufficient buying power for {symbol}")
                 return None
                 
         elif side == 'sell':
-            if symbol in self.portfolio and self.portfolio[symbol]['quantity'] >= quantity:
+            current_qty = self.portfolio.get(symbol, {}).get('quantity', 0)
+            if current_qty >= quantity:
                 self.cash += cost
                 self.portfolio[symbol]['quantity'] -= quantity
-                if self.portfolio[symbol]['quantity'] <= 0:
+                if self.portfolio[symbol]['quantity'] == 0:
                     del self.portfolio[symbol]
                 action = "SOLD"
+            elif self.cash * 2.0 >= cost:
+                # Short selling
+                self.cash += cost # Receive cash from short sale
+                if symbol not in self.portfolio:
+                    self.portfolio[symbol] = {'quantity': 0, 'avg_price': 0}
+                
+                old_qty = self.portfolio[symbol]['quantity']
+                old_value = abs(old_qty) * self.portfolio[symbol]['avg_price']
+                new_qty = old_qty - quantity
+                new_avg = (old_value + cost) / abs(new_qty)
+                
+                self.portfolio[symbol]['quantity'] = new_qty
+                self.portfolio[symbol]['avg_price'] = new_avg
+                action = "SHORTED"
             else:
-                logger.warning(f"Backtest: Insufficient shares for {symbol}")
+                logger.warning(f"Backtest: Insufficient shares/buying power for {symbol}")
                 return None
 
         # Record Order
@@ -122,7 +147,11 @@ class MockBroker:
         for sym, pos in self.portfolio.items():
             price = self.get_current_price(sym)
             if price:
-                equity += pos['quantity'] * price
+                if pos['quantity'] > 0:
+                    equity += pos['quantity'] * price
+                else:
+                    # Subtract the cost to buy back the short shares
+                    equity -= abs(pos['quantity']) * price
         return equity
 
     def _record_equity(self):

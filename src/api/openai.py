@@ -45,16 +45,17 @@ def make_ai_request(messages, model=OPENAI_MODEL_NAME, response_format=None):
 def parse_ai_response(ai_response, return_raw=False):
     content = ai_response.choices[0].message.content.strip()
     try:
-        # Try to find JSON block
-        json_match = re.search(r'```json\s*(\[.*?\])\s*```', content, re.DOTALL)
+        # Try to find JSON block (object or array)
+        json_match = re.search(r'```json\s*(.*?)```', content, re.DOTALL)
         if json_match:
-            json_str = json_match.group(1)
+            json_str = json_match.group(1).strip()
             decisions = json.loads(json_str)
         else:
-            # Fallback: try to find just the array
-            json_match = re.search(r'(\[.*\])', content, re.DOTALL)
-            if json_match:
-                json_str = json_match.group(1)
+            # Fallback: try to find just the array or object
+            # Look for [...] or {...}
+            bracket_match = re.search(r'(\[.*\]|\{.*\})', content, re.DOTALL)
+            if bracket_match:
+                json_str = bracket_match.group(1).strip()
                 decisions = json.loads(json_str)
             else:
                  # Last resort: try to parse the whole content if it's just JSON

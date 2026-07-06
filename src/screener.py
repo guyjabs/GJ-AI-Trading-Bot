@@ -12,6 +12,8 @@ import yfinance as yf
 from .data.stock_data import stock_data_provider
 from .utils import logger
 from .config_manager import config_manager
+from .research.crypto_discoverer import crypto_discoverer
+from .research.etoro_scraper import etoro_scraper
 
 # Stock universes
 SP500_SYMBOLS = [
@@ -418,6 +420,78 @@ class StockScreener:
         candidates.sort(key=lambda x: x[1], reverse=True)
         return candidates[:top_n]
     
+    def screen_speculative(self, top_n: int = 5, progress_callback=None) -> List[Tuple[str, float]]:
+        """
+        Speculative/DeGen strategy: Find low-priced stocks with extreme momentum and volume anomalies.
+        These are "leap of faith" trades. We look for:
+        - Price < $10
+        - High short-term momentum (RSI > 60 or massive daily change)
+        - Extreme volume spikes (Volume Ratio > 2.5)
+        - **NEW: High Social Consensus from eToro Top Investors**
+        """
+        candidates = []
+        
+        # Get social consensus to artificially boost trending retail stocks
+        social_consensus = etoro_scraper.get_trending_social_stocks(min_consensus_threshold=2)
+        
+        for symbol, data in self.stock_data.items():
+            try:
+                score = 0
+                price = data.get('current_price', 0)
+                
+                # Filter OUT expensive, safe stocks. We WANT penny/small caps.
+                if price == 0 or price > 15:
+                    continue
+                
+                vol_ratio = data.get('volume_ratio', 1.0)
+                rsi = data.get('rsi_14', 50)
+                change = data.get('day_change_pct', 0) * 100
+                
+                # Check 1: Volume Anomaly (Most important for penny stocks)
+                if vol_ratio > 3.0:
+                    score += 50
+                elif vol_ratio > 2.0:
+                    score += 25
+                elif vol_ratio < 1.0:
+                    continue # Ignore low volume penny stocks, too dangerous/illiquid
+                    
+                # Check 2: Momentum / RSI
+                if rsi > 70:
+                    # Normally bad, but in a pump, this is what we want
+                    score += 20
+                elif rsi > 60:
+                    score += 10
+                    
+                # Check 3: Daily Price Action
+                if change > 5.0:
+                    score += int(change) # Massive bumps for huge gains
+                elif change < 0:
+                    # Don't catch falling knives in penny stocks
+                    continue
+                    
+                # Check 4: eToro Social Consensus (Meta-Copier Bonus)
+                if symbol in social_consensus:
+                    score += 50 # Massive boost for trending social stocks
+                    if progress_callback:
+                        progress_callback(f"🔥 ETORO CONSENSUS MATCH: {symbol} is trending among Top Investors!", 0, 'detail')
+                    
+                if progress_callback:
+                    status_text = "PASS" if score > 0 else "FAIL"
+                    trend = "🟢" if change >= 0 else "🔴"
+                    price_str = f"${price:.2f} {trend} {change:+.2f}%"
+                    
+                    details = f"{price_str} | Vol={vol_ratio:.1f}x | RSI={rsi:.1f}"
+                    progress_callback(f"🎰 {symbol}: {details} -> {status_text} ({score:.1f})", 0, 'detail')
+
+                if score > 30: # Requires high conviction to pass
+                    candidates.append((symbol, score))
+            
+            except Exception as e:
+                logger.debug(f"Error screening {symbol} for speculative: {e}")
+        
+        candidates.sort(key=lambda x: x[1], reverse=True)
+        return candidates[:top_n]
+    
     def screen_crypto(self, progress_callback=None) -> Dict[str, List[Tuple[str, float]]]:
         """
         Screen crypto for multiple bots (Moonshot, Conservative, Custom).
@@ -441,6 +515,13 @@ class StockScreener:
             bot_name = bot['name']
             strategy = bot['strategy']
             universe = bot['symbols']
+            
+            # Dynamically inject trending cryptos if it's the DegenCrypto bot
+            if bot_name == 'DegenCrypto':
+                trending = crypto_discoverer.get_trending_symbols(format_suffix="/USD")
+                for coin in trending:
+                    if coin not in universe:
+                        universe.append(coin)
             
             logger.info(f"🤖 Running {bot_name} Bot ({strategy}) on {len(universe)} symbols...")
             
@@ -487,6 +568,36 @@ class StockScreener:
                         
                         rsi = data.get('rsi', 50)
                         if 40 <= rsi <= 70: score += 10
+                        
+                    # --- SPECULATIVE / DEGEN STRATEGY ---
+                    elif strategy == 'speculative':
+                        # Explicitly looking for penny cryptos with explosive momentum
+                        price = data.get('current_price', 0)
+                        if price > 5.0: # Ignore expensive coins
+                            continue
+                            
+                        vol_ratio = data.get('volume_ratio', 1.0)
+                        rsi = data.get('rsi', 50)
+                        change = data.get('price_change_24h', 0) # Fallback to a common key, or day_change_pct
+                        if 'day_change_pct' in data:
+                            change = data['day_change_pct'] * 100
+                            
+                        # High volume is required
+                        if vol_ratio > 3.0:
+                            score += 50
+                        elif vol_ratio > 2.0:
+                            score += 25
+                            
+                        # High RSI = momentum breakout
+                        if rsi > 70:
+                            score += 20
+                        elif rsi > 60:
+                            score += 10
+                            
+                        if change > 5.0:
+                            score += int(change)
+                        elif change < 0:
+                            continue # Don't buy dropping penny cryptos
                     
                     
                     # Logging
@@ -577,6 +688,9 @@ class StockScreener:
         growth_picks = self.screen_growth(top_n=int(base_picks * self.strategy_weights['growth']), progress_callback=progress_callback)
         value_picks = self.screen_value(top_n=int(base_picks * self.strategy_weights['value']), progress_callback=progress_callback)
         
+        # Screen Speculative (Fixed small number of top picks)
+        speculative_picks = self.screen_speculative(top_n=3, progress_callback=progress_callback)
+        
         # Screen Crypto (Returns dict of lists)
         crypto_picks = self.screen_crypto(progress_callback=progress_callback)
         
@@ -584,6 +698,7 @@ class StockScreener:
             'momentum': [x[0] for x in momentum_picks],
             'growth': [x[0] for x in growth_picks],
             'value': [x[0] for x in value_picks],
+            'speculative': [x[0] for x in speculative_picks],
             'crypto': {bot: [x[0] for x in picks] for bot, picks in crypto_picks.items()},
             'timestamp': datetime.now().isoformat(),
             'weights': self.strategy_weights,
@@ -591,12 +706,13 @@ class StockScreener:
         }
         
         # Combine unique symbols (stocks only for 'all' list to avoid confusion in main loop)
-        all_symbols = list(set(results['momentum'] + results['growth'] + results['value']))
+        all_symbols = list(set(results['momentum'] + results['growth'] + results['value'] + results['speculative']))
         results['all'] = all_symbols
         
         logger.info(f"Momentum picks ({len(momentum_picks)}): {results['momentum']}")
         logger.info(f"Growth picks ({len(growth_picks)}): {results['growth']}")
         logger.info(f"Value picks ({len(value_picks)}): {results['value']}")
+        logger.info(f"Speculative picks ({len(speculative_picks)}): {results['speculative']}")
         logger.info(f"Crypto picks ({len(crypto_picks)}): {results['crypto']}")
         
         self.save_screening_results(results)

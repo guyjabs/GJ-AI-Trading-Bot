@@ -131,13 +131,16 @@ class NewsAggregator:
             logger.error(f"Error fetching from NewsAPI: {e}")
             return []
     
-    def fetch_alphavantage_news(self, tickers: List[str] = None, topics: List[str] = None) -> List[Dict]:
+    def fetch_alphavantage_news(self, tickers: List[str] = None, topics: List[str] = None, 
+                                time_from: str = None, time_to: str = None) -> List[Dict]:
         """
         Fetch news from Alpha Vantage News & Sentiment API
         
         Args:
             tickers: List of stock tickers to fetch news for
             topics: List of topics (e.g., 'technology', 'finance', 'blockchain')
+            time_from: Start time YYYYMMDDTHHMM
+            time_to: End time YYYYMMDDTHHMM
             
         Returns:
             List of news articles
@@ -147,13 +150,20 @@ class NewsAggregator:
             return []
         
         try:
+            # Default time_from to today if not provided (and not historical)
+            if not time_from:
+                time_from = datetime.now().strftime('%Y%m%dT0000')
+
             url = "https://www.alphavantage.co/query"
             params = {
                 'function': 'NEWS_SENTIMENT',
                 'apikey': self.alphavantage_key,
                 'limit': 50,
-                'time_from': datetime.now().strftime('%Y%m%dT0000')
+                'time_from': time_from
             }
+            
+            if time_to:
+                params['time_to'] = time_to
             
             if tickers:
                 params['tickers'] = ','.join(tickers[:10])  # Max 10 tickers
@@ -242,6 +252,48 @@ class NewsAggregator:
             
         except Exception as e:
             logger.error(f"Error fetching from Finnhub: {e}")
+            return []
+            
+    def fetch_social_media(self, symbol: str) -> List[Dict]:
+        """
+        Fetch posts from crypto blogs (e.g. Cointelegraph RSS) to gauge sentiment and hype.
+        """
+        clean_symbol = symbol.replace("/USD", "").replace("-USD", "")
+        articles = []
+        
+        try:
+            import xml.etree.ElementTree as ET
+            
+            # Fetch from popular crypto blog RSS
+            url = "https://cointelegraph.com/rss"
+            response = self.session.get(url, timeout=10)
+            
+            if response.status_code == 200:
+                root = ET.fromstring(response.text)
+                items = root.findall('.//item')
+                
+                for item in items:
+                    title = item.findtext('title', '')
+                    description = item.findtext('description', '')
+                    
+                    # Check if our symbol is mentioned in this blog post
+                    if clean_symbol.upper() in title.upper() or clean_symbol.upper() in description.upper():
+                        articles.append({
+                            'source': 'blog',
+                            'title': f"[Blog] {title}",
+                            'summary': description[:500], # Truncate long descriptions
+                            'url': item.findtext('link', ''),
+                            'published_at': datetime.now().isoformat(), # Cointelegraph RSS dates are messy, use now
+                            'fetched_at': datetime.now().isoformat(),
+                            'source_name': 'Cointelegraph Blog',
+                            'sentiment_score': 0.0 # Will be evaluated by GPT-4
+                        })
+                        
+            logger.info(f"✅ Crypto Blogs: Found {len(articles)} posts mentioning {clean_symbol}")
+            return articles
+            
+        except Exception as e:
+            logger.warning(f"Error fetching crypto blogs for {symbol}: {e}")
             return []
     
     def deduplicate_articles(self, articles: List[Dict]) -> List[Dict]:
@@ -421,8 +473,12 @@ class NewsAggregator:
             
             if symbol.upper() in text or symbol.upper() in mentioned_tickers:
                 symbol_articles.append(article)
+                
+        # Also fetch social media directly for this symbol
+        social_posts = self.fetch_social_media(symbol)
+        symbol_articles.extend(social_posts)
         
-        logger.info(f"Found {len(symbol_articles)} articles for {symbol}")
+        logger.info(f"Found {len(symbol_articles)} articles (including social) for {symbol}")
         return symbol_articles
     
     def get_sentiment_summary(self, articles: List[Dict]) -> Dict:
@@ -463,58 +519,6 @@ class NewsAggregator:
         }
 
 
-# Test mode for standalone execution
-if __name__ == "__main__":
-    import sys
-    
-    # Load config
-    try:
-        from config import NEWSAPI_KEY, ALPHAVANTAGE_API_KEY, FINNHUB_API_KEY
-    except ImportError:
-        print("Error: config.py not found. Please create it from config.py.example")
-        sys.exit(1)
-    
-    print("=== News Aggregator Test Mode ===\n")
-    
-    aggregator = NewsAggregator(
-        newsapi_key=NEWSAPI_KEY if 'NEWSAPI_KEY' in dir() else None,
-        alphavantage_key=ALPHAVANTAGE_API_KEY if 'ALPHAVANTAGE_API_KEY' in dir() else None,
-        finnhub_key=FINNHUB_API_KEY if 'FINNHUB_API_KEY' in dir() else None
-    )
-    
-    # Fetch news
-    print("Fetching news from all sources...\n")
-    articles = aggregator.fetch_all_news(force_refresh=True)
-    
-    print(f"\nTotal articles fetched: {len(articles)}\n")
-    
-    # Show first 5 articles
-    print("=== Latest News ===\n")
-    for i, article in enumerate(articles[:5], 1):
-        print(f"{i}. {article.get('title', 'No title')}")
-        print(f"   Source: {article.get('source_name', 'Unknown')}")
-        print(f"   Published: {article.get('published_at', 'Unknown')}")
-        if 'sentiment_score' in article:
-            print(f"   Sentiment: {article['sentiment_score']:.2f} ({article.get('sentiment_label', 'N/A')})")
-        print(f"   URL: {article.get('url', 'N/A')}\n")
-    
-    # Test symbol-specific news
-    print("\n=== News for AAPL ===\n")
-    aapl_news = aggregator.get_news_for_symbol('AAPL')
-    print(f"Found {len(aapl_news)} articles mentioning AAPL\n")
-    
-    for i, article in enumerate(aapl_news[:3], 1):
-        print(f"{i}. {article.get('title', 'No title')}")
-        print(f"   {article.get('url', 'N/A')}\n")
-    
-    # Sentiment summary
-    print("\n=== Overall Sentiment ===\n")
-    sentiment = aggregator.get_sentiment_summary(articles)
-    print(f"Total articles: {sentiment['total']}")
-    print(f"Positive: {sentiment['positive']} ({sentiment['positive']/sentiment['total']*100:.1f}%)")
-    print(f"Negative: {sentiment['negative']} ({sentiment['negative']/sentiment['total']*100:.1f}%)")
-    print(f"Neutral: {sentiment['neutral']} ({sentiment['neutral']/sentiment['total']*100:.1f}%)")
-    print(f"Average sentiment: {sentiment['average']:.3f}")
     def get_catalyst_for_symbol(self, symbol: str, hours: int = 24) -> Dict:
         """
         Check if there is a news catalyst for a specific symbol.
@@ -633,8 +637,26 @@ if __name__ == "__main__":
         
         logger.info(f"📰 Fetching historical news for {date_str}...")
         
-        # 1. NewsAPI (Historical)
-        if self.newsapi_key:
+        # 1. Alpha Vantage (Primary for History)
+        # Alpha Vantage supports deeper history than free NewsAPI
+        if self.alphavantage_key:
+            try:
+                # Format: YYYYMMDDTHHMM
+                time_from = target_date.strftime('%Y%m%dT0000')
+                time_to = target_date.strftime('%Y%m%dT2359')
+                
+                av_articles = self.fetch_alphavantage_news(
+                    topics=['finance', 'technology', 'economy_macro', 'financial_markets'], 
+                    time_from=time_from,
+                    time_to=time_to
+                )
+                articles.extend(av_articles)
+                logger.info(f"✅ Historical News (AlphaVantage): Found {len(av_articles)} articles")
+            except Exception as e:
+                logger.error(f"Alpha Vantage history error: {e}")
+
+        # 2. NewsAPI (Secondary - often limited to 1 month)
+        if self.newsapi_key and len(articles) < 5:
             try:
                 url = "https://newsapi.org/v2/everything"
                 params = {
@@ -649,14 +671,17 @@ if __name__ == "__main__":
                 resp = self.session.get(url, params=params)
                 if resp.status_code == 200:
                     data = resp.json()
+                    na_articles = []
                     for item in data.get('articles', []):
-                         articles.append({
+                         na_articles.append({
                             'source': 'newsapi',
                             'title': item.get('title'),
                             'description': item.get('description'),
                             'url': item.get('url'),
                             'published_at': item.get('publishedAt')
                         })
+                    logger.info(f"✅ Historical News (NewsAPI): Found {len(na_articles)} articles")
+                    articles.extend(na_articles)
             except Exception as e:
                 logger.error(f"NewsAPI history error: {e}")
                 
@@ -673,3 +698,57 @@ if __name__ == "__main__":
             })
             
         return articles
+
+
+# Test mode for standalone execution
+if __name__ == "__main__":
+    import sys
+    
+    # Load config
+    try:
+        from config import NEWSAPI_KEY, ALPHAVANTAGE_API_KEY, FINNHUB_API_KEY
+    except ImportError:
+        print("Error: config.py not found. Please create it from config.py.example")
+        sys.exit(1)
+    
+    print("=== News Aggregator Test Mode ===\\n")
+    
+    aggregator = NewsAggregator(
+        newsapi_key=NEWSAPI_KEY if 'NEWSAPI_KEY' in dir() else None,
+        alphavantage_key=ALPHAVANTAGE_API_KEY if 'ALPHAVANTAGE_API_KEY' in dir() else None,
+        finnhub_key=FINNHUB_API_KEY if 'FINNHUB_API_KEY' in dir() else None
+    )
+    
+    # Fetch news
+    print("Fetching news from all sources...\\n")
+    articles = aggregator.fetch_all_news(force_refresh=True)
+    
+    print(f"\\nTotal articles fetched: {len(articles)}\\n")
+    
+    # Show first 5 articles
+    print("=== Latest News ===\\n")
+    for i, article in enumerate(articles[:5], 1):
+        print(f"{i}. {article.get('title', 'No title')}")
+        print(f"   Source: {article.get('source_name', 'Unknown')}")
+        print(f"   Published: {article.get('published_at', 'Unknown')}")
+        if 'sentiment_score' in article:
+            print(f"   Sentiment: {article['sentiment_score']:.2f} ({article.get('sentiment_label', 'N/A')})")
+        print(f"   URL: {article.get('url', 'N/A')}\\n")
+    
+    # Test symbol-specific news
+    print("\\n=== News for AAPL ===\\n")
+    aapl_news = aggregator.get_news_for_symbol('AAPL')
+    print(f"Found {len(aapl_news)} articles mentioning AAPL\\n")
+    
+    for i, article in enumerate(aapl_news[:3], 1):
+        print(f"{i}. {article.get('title', 'No title')}")
+        print(f"   {article.get('url', 'N/A')}\\n")
+    
+    # Sentiment summary
+    print("\\n=== Overall Sentiment ===\\n")
+    sentiment = aggregator.get_sentiment_summary(articles)
+    print(f"Total articles: {sentiment['total']}")
+    print(f"Positive: {sentiment['positive']} ({sentiment['positive']/sentiment['total']*100:.1f}%)")
+    print(f"Negative: {sentiment['negative']} ({sentiment['negative']/sentiment['total']*100:.1f}%)")
+    print(f"Neutral: {sentiment['neutral']} ({sentiment['neutral']/sentiment['total']*100:.1f}%)")
+    print(f"Average sentiment: {sentiment['average']:.3f}")

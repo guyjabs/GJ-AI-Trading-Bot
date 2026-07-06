@@ -22,9 +22,14 @@ def calculate_indicators(broker):
         data_so_far = df.loc[mask].copy()
         
         if len(data_so_far) < 200:
+            if len(df) > 0:
+                 logger.warning(f"⚠️ {symbol}: insufficient history ({len(data_so_far)} < 200). Data range: {df.index[0]} to {df.index[-1]}. Current time: {current_time}")
+            else:
+                 logger.warning(f"⚠️ {symbol}: Empty dataframe")
             continue
             
         close = data_so_far['close']
+        current_price = close.iloc[-1]
         
         # SMA 200 & 50
         sma200 = close.rolling(window=200).mean().iloc[-1]
@@ -38,8 +43,10 @@ def calculate_indicators(broker):
         rsi = 100 - (100 / (1 + rs))
         rsi_val = rsi.iloc[-1]
         
+        # logger.info(f"debug: {symbol} price={current_price:.2f} rsi={rsi_val:.2f}")
+        
         indicators[symbol] = {
-            'price': close.iloc[-1],
+            'price': current_price,
             'sma200': sma200,
             'sma50': sma50,
             'rsi': rsi_val
@@ -112,25 +119,50 @@ def ai_simulation_strategy(broker, timestamp):
         # 4. Execute Decisions
         for d in decisions:
             symbol = d.get('symbol')
+            # STRICT UNIVERSE CHECK
+            if symbol not in broker.universe:
+                logger.warning(f"🚫 AI Hallucination: {symbol} not in universe {broker.universe}. Skipping.")
+                continue
+
             action = d.get('decision')
             quantity = d.get('quantity', 0)
             
             if action == 'buy':
                 # Re-check cash in case AI hallucinated
                 price = indicators.get(symbol, {}).get('price', 0)
+                if price <= 0:
+                     logger.warning(f"⚠️ Price 0 for {symbol}, skipping buy.")
+                     continue
+                
+                # RUTHLESS SIZING LOGIC FOR SIMULATION
+                conviction = float(d.get('conviction', 5.0))
+                conviction = max(1.0, min(10.0, conviction))
+                
+                buying_power = account['portfolio_cash'] # In sim, cash is buying power
+                max_allocation_usd = buying_power * 0.20
+                trade_allocation_usd = max_allocation_usd * (conviction / 10.0)
+                
+                if trade_allocation_usd < 100:
+                    continue
+                    
+                quantity = int(trade_allocation_usd / price)
+                     
                 cost = price * quantity
-                if account['portfolio_cash'] >= cost:
+                if account['portfolio_cash'] >= cost and quantity > 0:
                      broker.submit_order(symbol, quantity, 'buy')
-                     logger.info(f"🤖 AI SIM BUY {symbol}: {quantity} @ {price:.2f}")
+                     logger.info(f"🤖 AI SIM BUY {symbol}: {quantity} @ {price:.2f} (C:{conviction}, ${cost:.2f})")
             
             elif action == 'sell':
                 if symbol in positions:
                     # Validate quantity
                     qty_owned = positions[symbol]['quantity']
-                    qty_to_sell = min(quantity, qty_owned)
-                    if qty_to_sell > 0:
-                        broker.submit_order(symbol, qty_to_sell, 'sell')
-                        logger.info(f"🤖 AI SIM SELL {symbol}: {qty_to_sell}")
+                    # Sell full position if conviction is high or not specified?
+                    # The prompt says "sell means close/reduce". 
+                    # Let's assume sell = CLOSE FULL POSITION for now to be ruthless.
+                    # Or use conviction to scale out.
+                    
+                    broker.submit_order(symbol, qty_owned, 'sell')
+                    logger.info(f"🤖 AI SIM SELL {symbol}: {qty_owned}")
                         
     except Exception as e:
         logger.error(f"AI Simulation Error on {current_date}: {e}")
@@ -165,6 +197,9 @@ class SimulatorEngine:
         # 2. Get Current Weights (Logging only, not used in AI logic)
         current_weights = ml_engine.strategy_weights
         logger.info(f"Starting Realistic AI Simulation ({self.start_date} to {self.end_date})")
+        
+        # Monkey-patch universe into broker for the strategy to use
+        engine.broker.universe = self.universe
         
         # 3. Define Strategy Callback
         # We pass the function directly

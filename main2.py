@@ -22,6 +22,12 @@ from src.research import NewsAggregator, KnowledgeBase, TrendAnalyzer, StrategyR
 from src.config_manager import config_manager
 from src.utils.data_harness import compile_prompt_data
 from src.utils.comparison_logger import comparison_logger
+from src.ai.brain import AIBrain
+from src.ai.macro_analyst import MacroAnalyst
+
+# Initialize Brain & Macro
+ai_brain = AIBrain()
+macro_analyst = MacroAnalyst()
 
 # Initialize Alpaca Client
 robinhood = get_alpaca_client(
@@ -79,149 +85,33 @@ def get_ai_amount_guidelines():
 def get_ai_decisions(context_date, account_info, portfolio_overview, watchlist_overview, predictions, risk_constraints, news_context=None):
     """
     Core AI logic decoupled from live data sources.
-    Accepted `news_context` list for historical simulation.
+    Uses the new Statistical/Quantitative AIBrain instead of LLM guessing.
     """
+    logger.info("🧠 Requesting decisions from Quant AIBrain...")
     
-    constraints = [
-        f"- Initial budget: {account_info['buying_power']} USD",
-        f"- Max portfolio size: {PORTFOLIO_LIMIT} stocks",
-    ]
-    constraints.extend(risk_constraints)
+    # Get Macro Context
+    macro_context = macro_analyst.analyze_macro_context()
     
-    # Select Prompt based on Mode
-    reasoning_mode = globals().get('AI_REASONING_MODE', 'basic')
+    # Run the new Brain
+    decisions = ai_brain.analyze(
+        account_info=account_info,
+        portfolio=portfolio_overview,
+        candidates=watchlist_overview,
+        macro_context=macro_context
+    )
     
-    # Inject Historical News Context if available
-    news_section = ""
-    if news_context:
-        news_section = "**Daily News Context:**\n"
-        for article in news_context[:5]:
-            news_section += f"- {article.get('title')} ({article.get('source', 'Unknown')})\n"
-        news_section += "\n"
-
-    prediction_section = ""
-    if predictions:
-        prediction_section = "**Research & Predictions:**\n```json\n" + json.dumps([{'symbol': p['metadata']['symbol'], 'prediction': p['text'], 'confidence': p['metadata']['confidence']} for p in predictions], indent=1) + "\n```\n\n"
-
-    ai_prompt = ""
-    if reasoning_mode == 'advanced':
-        ai_prompt = (
-            "**Context:**\n"
-            f"Simulation Date: {context_date.strftime('%Y-%m-%d') if isinstance(context_date, datetime) else context_date}.{chr(10)}"
-            f"You are a sophisticated quantitative trading agent participating in 'Alpha Arena'.{chr(10)}"
-            f"Your goal is to maximize PnL while managing risk capabilities.{chr(10)}{chr(10)}"
-            "**Constraints:**\n"
-            f"{chr(10).join(constraints)}"
-            "\n\n"
-            f"{news_section}"
-            f"{compile_prompt_data(account_info, portfolio_overview, watchlist_overview)}"
-            "\n\n"
-            f"{prediction_section}"
-            "**Instructions:**\n"
-            "1. **Analyze** the market data, technical indicators (RSI, VWAP, SMA), and your current positions.\n"
-            "2. **Find Opportunities**: Look for uptrends (Price > SMA200) with pullbacks (RSI < 50). This is the 'Golden Zone'.\n"
-            "3. **Manage Risk**: Use a **5% Trailing Stop** from the highest price since entry. Do not set arbitrary take-profit targets.\n"
-            "4. **Think Step-by-Step**: Write a 'Reasoning Trace' explaining your analysis for each asset.\n"
-            "5. **Decide**: Output your final trading decisions in JSON format.\n\n"
-            "**Response Format:**\n"
-            "Reasoning Trace:\n"
-            "[Write your analysis here...]\n\n"
-            "```json\n"
-            "[\n"
-            "  {\n"
-            '    "symbol": "AAPL",\n'
-            '    "decision": "buy",\n'
-            '    "quantity": 10,\n'
-            '    "reasoning": "RSI oversold at 30, price bouncing off SMA200 support.",\n'
-            '    "stop_loss": 145.50,\n'
-            '    "profit_target": 155.00,\n'
-            '    "confidence": 0.8\n'
-            "  }\n"
-            "]\n"
-            "```\n"
-            "- <symbol>: Stock symbol.\n"
-            "- <decision>: One of `buy`, `sell`, or `hold`.\n"
-            "- <quantity>: Recommended transaction quantity.\n"
-            "- <reasoning>: Brief explanation for the decision.\n"
-            "- <stop_loss>: Recommended stop loss price (optional, null if not applicable).\n"
-            "- <profit_target>: Recommended profit target price (optional, null if not applicable).\n"
-            "- <confidence>: Confidence score between 0.0 and 1.0.\n\n"
-            "- Return an empty array `[]` in the JSON block if no actions are necessary."
-        )
-    else:
-        # BASIC MODE
-        ai_prompt = (
-            "**Context:**\n"
-            f"Date: {context_date}.{chr(10)}"
-            f"You are a short-term investment advisor managing a stock portfolio.{chr(10)}"
-            "**Constraints:**\n"
-            f"{chr(10).join(constraints)}"
-            "\n\n"
-            f"{news_section}"
-            "**Stock Data:**\n"
-            "```json\n"
-            f"{json.dumps({**portfolio_overview, **watchlist_overview}, indent=1)}{chr(10)}"
-            "```\n\n"
-            f"{prediction_section}"
-            "**Response Format:**\n"
-            "Return your decisions in a JSON array with this structure:\n"
-            "```json\n"
-            "[\n"
-            '  {"symbol": <symbol>, "decision": <decision>, "quantity": <quantity>, "reasoning": <short_explanation>},\n'
-            "  ...\n"
-            "]\n"
-            "```\n"
-            "- <symbol>: Stock symbol.\n"
-            "- <decision>: One of `buy`, `sell`, or `hold`.\n"
-            "- <quantity>: Recommended transaction quantity.\n"
-            "- <reasoning>: Brief explanation (max 10 words) for the decision.\n\n"
-            "**Instructions:**\n"
-            "- Provide only the JSON output with no additional text.\n"
-            "- Return an empty array if no actions are necessary."
-        )
-
-    logger.debug(f"AI making-decisions prompt ({reasoning_mode}):{chr(10)}{ai_prompt[:500]}...")
-    ai_response = openai.make_ai_request(ai_prompt)
-    logger.debug(f"AI making-decisions response:{chr(10)}{ai_response.choices[0].message.content.strip()[:200]}...")
-    
-    # Parse Response with access to raw trace
-    decisions, raw_trace = openai.parse_ai_response(ai_response, return_raw=True)
-    
-    # Log to comparison logger if in Advanced mode
-    if reasoning_mode == 'advanced':
-        comparison_logger.log_decision_cycle(raw_trace, decisions)
-        
     return decisions
 
 # Make AI-based decisions on stock portfolio and watchlist
 def make_ai_decisions(account_info, portfolio_overview, watchlist_overview):
-    # Get active predictions for context
-    predictions = []
-    if globals().get('ENABLE_RESEARCH_BOT', False):
-        try:
-            predictions = kb.get_active_predictions()
-            logger.info(f"Loaded {len(predictions)} active predictions for AI context")
-        except Exception as e:
-            logger.error(f"Error loading predictions: {e}")
-
-    # Build Guidelines
-    risk_constraints = []
-    sell_guidelines, buy_guidelines = get_ai_amount_guidelines()
-    if sell_guidelines:
-        risk_constraints.append(f"- Sell Amounts Guidelines: {sell_guidelines}")
-    if buy_guidelines:
-        risk_constraints.append(f"- Buy Amounts Guidelines: {buy_guidelines}")
-    if len(TRADE_EXCEPTIONS) > 0:
-        risk_constraints.append(f"- Excluded stocks: {', '.join(TRADE_EXCEPTIONS)}")
-        
     # Delegate to pure function
     return get_ai_decisions(
         context_date=datetime.now(),
         account_info=account_info,
         portfolio_overview=portfolio_overview,
         watchlist_overview=watchlist_overview,
-        predictions=predictions,
-        risk_constraints=risk_constraints
+        predictions=[],
+        risk_constraints=[]
     )
 
 
@@ -232,21 +122,10 @@ def filter_ai_hallucinations(account_info, portfolio_overview, watchlist_overvie
     for decision in decisions_data:
         symbol = decision.get('symbol')
         decision_type = decision.get('decision')
-        quantity = decision.get('quantity', 0)
 
         # Filter decisions for stocks in TRADE_EXCEPTIONS
         if symbol in TRADE_EXCEPTIONS:
             logger.debug(f"Filtering out {decision_type} decision for {symbol} - in TRADE_EXCEPTIONS")
-            continue
-
-        # Filter sell decisions with 0 quantity
-        if decision_type == "sell" and quantity == 0:
-            logger.debug(f"Filtering out sell decision for {symbol} with 0 quantity")
-            continue
-
-        # Filter buy decisions with 0 quantity
-        if decision_type == "buy" and quantity == 0:
-            logger.debug(f"Filtering out buy decision for {symbol} with 0 quantity")
             continue
 
         # Get stock data from either portfolio or watchlist
@@ -332,16 +211,13 @@ def get_screened_crypto():
         return []
 
 from src.data.db import db
+from src.trade_journal import trade_journal
 
 # Log trade to DB (replaces overnight report file)
 def log_overnight_trade(trade_data):
     try:
-        # Collect features for ML if not present
-        if 'features' not in trade_data and trade_data.get('symbol'):
-            trade_data['features'] = feature_collector.get_features(
-                trade_data['symbol'], 
-                current_price=trade_data.get('price')
-            )
+        # Features should now come pre-computed from QuantModel/AIBrain
+        features = trade_data.get('features', {})
 
         # Normalize keys for DB (Trade History)
         db_trade = {
@@ -356,16 +232,23 @@ def log_overnight_trade(trade_data):
         }
         db.log_trade(db_trade)
         
-        # Also record for ML Engine (Performance Tracking)
+        # Also record for QuantModel (Performance Tracking)
         if trade_data.get('action', '').upper() == 'BUY':
-            ml_engine.record_trade(
-                symbol=trade_data['symbol'],
-                decision='buy',
-                quantity=trade_data.get('quantity'),
-                entry_price=trade_data.get('price'),
-                strategy=trade_data.get('asset', 'unknown'),
-                market_condition='normal',
-                features=trade_data.get('features')
+            trade_journal.log_entry(
+                symbol=trade_data.get('symbol'),
+                price=trade_data.get('price'),
+                shares=trade_data.get('quantity'),
+                strategy="quant_model",
+                feature_vector=features
+            )
+        elif trade_data.get('action', '').upper() == 'SELL':
+            trade_journal.log_exit(
+                symbol=trade_data.get('symbol'),
+                price=trade_data.get('price'),
+                pnl=0.0,
+                pnl_pct=0.0,
+                notes=trade_data.get('reason', ''),
+                exit_reason="signal_exit"
             )
             
     except Exception as e:
@@ -484,6 +367,7 @@ def trading_bot(event_callback=None, progress_callback=None):
     
     # Select Candidates
     top_stocks = screener_results.get('momentum', [])[:5] + screener_results.get('growth', [])[:3] + screener_results.get('value', [])[:2]
+    speculative_stocks = screener_results.get('speculative', [])[:3]
     
     # Handle Multi-Bot Crypto Results (Dict -> List)
     crypto_results = screener_results.get('crypto', {})
@@ -496,7 +380,7 @@ def trading_bot(event_callback=None, progress_callback=None):
     
     crypto_picks = list(set(crypto_picks))[:10] # Cap total crypto candidates
     
-    all_candidates = list(set(top_stocks + crypto_picks))
+    all_candidates = list(set(top_stocks + speculative_stocks + crypto_picks))
     
     # Emit screener results
     emit_event('screener', {
@@ -522,10 +406,15 @@ def trading_bot(event_callback=None, progress_callback=None):
             if is_crypto:
                 quote = robinhood.get_crypto_quote(symbol)
                 current_price = float(quote['mark_price'])
+                
+                # Apply speculative "leap of faith" mode to penny cryptos (< $5)
+                crypto_mode = 'speculative' if current_price < 5.0 else 'standard'
+                
                 watchlist_overview[symbol] = {
                     'price': current_price,
                     'current_price': current_price,
-                    'type': 'crypto'
+                    'type': 'crypto',
+                    'mode': crypto_mode
                 }
             else:
                 # Stock Data
@@ -533,7 +422,8 @@ def trading_bot(event_callback=None, progress_callback=None):
                 watchlist_overview[symbol] = {
                     'price': current_price, 
                     'current_price': current_price, 
-                    'type': 'stock'
+                    'type': 'stock',
+                    'mode': 'speculative' if symbol in speculative_stocks else 'standard'
                 }
                 
                 # Fetch detailed data only for stocks for now
@@ -596,8 +486,8 @@ def trading_bot(event_callback=None, progress_callback=None):
     for decision_data in decisions_data:
         symbol = decision_data['symbol']
         decision = decision_data['decision']
-        quantity = decision_data['quantity']
         reasoning = decision_data.get('reasoning', 'AI Decision')
+        features = decision_data.get('features', {})
         
         is_crypto = watchlist_overview.get(symbol, {}).get('type') == 'crypto' or portfolio_stocks.get(symbol, {}).get('type') == 'crypto'
         asset_type = "CRYPTO" if is_crypto else "STOCK"
@@ -606,44 +496,77 @@ def trading_bot(event_callback=None, progress_callback=None):
         report_step(f"Executing [{asset_type}] {decision.upper()} {symbol}...", 90, 'in-progress')
         
         # Emit decision event
-        emit_event('ai_decision', {'symbol': symbol, 'decision': decision, 'quantity': quantity, 'reasoning': reasoning})
+        emit_event('ai_decision', {'symbol': symbol, 'decision': decision, 'reasoning': reasoning})
         
         try:
             if decision == 'buy':
-                # Check buying power again
+                # ---------------------------------------------------------
+                # RUTHLESS POSITION SIZING LOGIC
+                # ---------------------------------------------------------
+                # 1. Get Conviction (Default to 5/10 if missing)
+                conviction = float(decision_data.get('conviction', 5.0))
+                conviction = max(1.0, min(10.0, conviction)) # Clamp 1-10
+                conviction = max(1.0, min(10.0, conviction))
+                total_buying_power = float(account_info.get('buying_power', 0))
+                
+                # Position Sizing
+                mode = watchlist_overview.get(symbol, {}).get('mode', 'standard')
+                if mode == 'speculative':
+                    max_allocation_usd = total_buying_power * 0.02 # Max 2% on highly speculative plays
+                    logger.info(f"🎰 {symbol} is a speculative play. Hard capping allocation to 2% (${max_allocation_usd:.2f})")
+                else:
+                    max_allocation_usd = total_buying_power * 0.20 # Up to 20% on standard plays
+
+                trade_allocation_usd = max_allocation_usd * (conviction / 10.0)
+                
+                # Enforce minimums
+                if trade_allocation_usd < 100:
+                    logger.info(f"⏭️ Skipping {symbol}: Allocation ${trade_allocation_usd:.2f} too small.")
+                    continue
+                    
+                logger.info(f"🧠 {symbol} Conviction: {conviction}/10 => Allocating ${trade_allocation_usd:.2f}")
+
+                # Execute Trade
                 cost = 0
                 price = 0
+                buying_power = total_buying_power
+                
                 if is_crypto:
-                     price = watchlist_overview.get(symbol, {}).get('price', 0)
-                     cost = 50.0 # Fixed $50 for crypto demo
-                     if buying_power > cost:
-                         logger.info(f"🚀 BUYING CRYPTO: {symbol} (${cost})")
-                         robinhood.buy_crypto(symbol, cost)
-                         notifier.notify_trade(symbol, "BUY", cost/price, price, f"{bot_name} Bot (Crypto) - {reasoning}")
-                         trading_results[symbol] = {'decision': 'buy', 'result': 'success', 'quantity': cost/price, 'details': reasoning}
-                         log_overnight_trade({'symbol': symbol, 'action': 'BUY', 'quantity': cost/price, 'price': price, 'asset': 'CRYPTO', 'reason': reasoning, 'bot': bot_name})
+                    price = watchlist_overview.get(symbol, {}).get('price', 0)
+                    cost = trade_allocation_usd 
+                    if buying_power > cost and price > 0:
+                        logger.info(f"🚀 BUYING CRYPTO: {symbol} (${cost:.2f})")
+                        robinhood.buy_crypto(symbol, cost)
+                        notifier.notify_trade(symbol, "BUY", cost/price, price, f"{reasoning} (C:{conviction})")
+                        trading_results[symbol] = {'decision': 'buy', 'result': 'success', 'quantity': cost/price, 'details': reasoning}
+                        log_overnight_trade({'symbol': symbol, 'action': 'BUY', 'quantity': cost/price, 'price': price, 'asset': 'CRYPTO', 'reason': reasoning, 'bot': 'Crypto'})
                 else:
                     price = watchlist_overview.get(symbol, {}).get('price', 0)
-                    cost = price * quantity
-                    if buying_power > cost:
-                        logger.info(f"🚀 BUYING STOCK: {symbol} ({quantity} shares)")
-                        robinhood.buy_stock(symbol, quantity)
-                        notifier.notify_trade(symbol, "BUY", quantity, price, f"AI Decision - {reasoning}")
-                        trading_results[symbol] = {'decision': 'buy', 'result': 'success', 'quantity': quantity, 'details': reasoning}
-                        log_overnight_trade({'symbol': symbol, 'action': 'BUY', 'quantity': quantity, 'price': price, 'asset': 'STOCK', 'reason': reasoning})
+                    if price > 0:
+                        quantity = int(trade_allocation_usd / price) # Floor to whole shares
+                        
+                        if quantity > 0 and buying_power > (quantity * price):
+                            logger.info(f"🚀 BUYING STOCK: {symbol} ({quantity} shares @ ${price})")
+                            robinhood.buy_stock(symbol, quantity)
+                            notifier.notify_trade(symbol, "BUY", quantity, price, f"{reasoning} (C:{conviction})")
+                            trading_results[symbol] = {'decision': 'buy', 'result': 'success', 'quantity': quantity, 'details': reasoning}
+                            log_overnight_trade({'symbol': symbol, 'action': 'BUY', 'quantity': quantity, 'price': price, 'asset': 'STOCK', 'reason': reasoning})
+                        else:
+                            logger.warning(f"⚠️ Insufficient BP for {symbol} or qty 0. Qty: {quantity}, BP: {buying_power}")
             
             elif decision == 'sell':
                 if symbol in portfolio_stocks:
                     if is_crypto:
                          logger.info(f"📉 SELLING CRYPTO: {symbol}")
-                         amount = portfolio_stocks[symbol]['equity']
+                         amount = float(portfolio_stocks[symbol]['equity'])
                          robinhood.sell_crypto(symbol, amount)
                          notifier.notify_trade(symbol, "SELL", amount, 0, f"AI Decision (Crypto) - {reasoning}")
-                         trading_results[symbol] = {'decision': 'sell', 'result': 'success', 'quantity': amount, 'details': reasoning}
+                         
                          sell_price = watchlist_overview.get(symbol, {}).get('price', 0)
                          trading_results[symbol] = {'decision': 'sell', 'result': 'success', 'quantity': amount, 'details': reasoning}
                          log_overnight_trade({'symbol': symbol, 'action': 'SELL', 'quantity': amount, 'price': sell_price, 'asset': 'CRYPTO', 'reason': reasoning, 'bot': 'CryptoBot'})
                     else:
+                         quantity = portfolio_stocks[symbol].get('quantity', 0)
                          logger.info(f"📉 SELLING STOCK: {symbol} ({quantity} shares)")
                          robinhood.sell_stock(symbol, quantity)
                          notifier.notify_trade(symbol, "SELL", quantity, 0, f"AI Decision - {reasoning}")

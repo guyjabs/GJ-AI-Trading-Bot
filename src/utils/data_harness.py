@@ -1,9 +1,10 @@
 import json
 from datetime import datetime
 
-def format_market_data(watchlist_overview):
+def format_market_data(watchlist_overview, fundamental_data=None):
     """
     Format market data for the AI prompt, similar to the 'Alpha Arena' style.
+    Includes Fundamentals if available.
     """
     output = []
     output.append("### CURRENT MARKET STATE FOR WATCHLIST\n")
@@ -12,27 +13,25 @@ def format_market_data(watchlist_overview):
         price = data.get('price', 0)
         rsi = data.get('rsi', 'N/A')
         vwap = data.get('vwap', 'N/A')
+        
         # Format strings for technicals
-        if isinstance(rsi, (int, float)):
-            rsi_str = f"{rsi:.2f}"
-        else:
-            rsi_str = str(rsi)
-            
-        if isinstance(vwap, (int, float)):
-            vwap_str = f"{vwap:.2f}"
-        else:
-            vwap_str = str(vwap)
+        rsi_str = f"{rsi:.2f}" if isinstance(rsi, (int, float)) else str(rsi)
+        vwap_str = f"{vwap:.2f}" if isinstance(vwap, (int, float)) else str(vwap)
 
+        # Fundamentals (Lynch)
+        fund_str = ""
+        if fundamental_data and symbol in fundamental_data:
+            fd = fundamental_data[symbol]
+            pe = fd.get('pe_ratio', 'N/A')
+            rev = fd.get('revenue_growth_yoy', 'N/A')
+            fund_str = f" | PE: {pe} | RevGrowth: {rev}"
+            
         output.append(f"**{symbol}**")
-        output.append(f"Current Price: {price}")
-        output.append(f"RSI (14): {rsi_str}")
-        output.append(f"VWAP: {vwap_str}")
+        output.append(f"Price: {price} | RSI: {rsi_str}{fund_str}")
         
         # Add SMA if available
         if 'sma_200' in data:
             output.append(f"SMA 200: {data['sma_200']:.2f}")
-        if 'sma_50' in data:
-            output.append(f"SMA 50: {data['sma_50']:.2f}")
             
         output.append("---")
     
@@ -45,9 +44,9 @@ def format_account_info(account_info):
     output = []
     output.append("### ACCOUNT INFORMATION & PERFORMANCE\n")
     
-    buying_power = account_info.get('buying_power', 0)
-    portfolio_value = account_info.get('portfolio_value', 0)
-    cash = account_info.get('portfolio_cash', 0)
+    buying_power = float(account_info.get('buying_power', 0))
+    portfolio_value = float(account_info.get('portfolio_value', 0))
+    cash = float(account_info.get('portfolio_cash', 0))
     
     output.append(f"**Current Account Value:** {portfolio_value:.2f}")
     output.append(f"Available Cash/Buying Power: {buying_power:.2f}")
@@ -73,7 +72,10 @@ def format_positions(portfolio_stocks):
             
             # Calculate unrealized PnL
             unrealized_pnl = equity - (qty * avg_price)
-            pnl_pct = (unrealized_pnl / (qty * avg_price)) * 100 if (qty * avg_price) != 0 else 0
+            if qty * avg_price != 0:
+                pnl_pct = (unrealized_pnl / (qty * avg_price)) * 100 
+            else:
+                pnl_pct = 0
             
             output.append(f"**{symbol}**")
             output.append(f"Quantity: {qty}")
@@ -84,14 +86,14 @@ def format_positions(portfolio_stocks):
             
     return "\n".join(output)
 
-def compile_prompt_data(account_info, portfolio_stocks, watchlist_overview):
+def compile_prompt_data(account_info, portfolio_stocks, watchlist_overview, fundamental_data=None):
     """
     Compile all sections into the final data string for the prompt.
     """
     sections = []
     
     # 1. Market Data (Context)
-    sections.append(format_market_data(watchlist_overview))
+    sections.append(format_market_data(watchlist_overview, fundamental_data))
     sections.append("\n")
     
     # 2. Account Info

@@ -46,6 +46,13 @@ DEFAULT_METRICS_CONFIG = {
             "strategy": "custom", 
             "symbols": ["LINK/USD"], # User can edit this list
             "max_position_size_usd": 500
+        },
+        {
+            "name": "DegenCrypto",
+            "enabled": True,
+            "strategy": "speculative", 
+            "symbols": ["DOGE/USD", "SHIB/USD", "PEPE/USD", "BONK/USD", "WIF/USD"],
+            "max_position_size_usd": 200
         }
     ]
 }

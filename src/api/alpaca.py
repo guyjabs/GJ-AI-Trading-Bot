@@ -149,29 +149,34 @@ class AlpacaClient:
         try:
             end = datetime.now()
             start = end - timedelta(days=1)
-            timeframe = TimeFrame.Minute
             
-            if span == "year":
-                start = end - timedelta(days=365)
+            # Map interval first
+            timeframe = TimeFrame.Minute
+            if interval == "1day" or interval == "day":
                 timeframe = TimeFrame.Day
+            elif interval == "1hour" or interval == "hour":
+                timeframe = TimeFrame.Hour
+            
+            # Calculate Start Date based on Span
+            if span == "5year":
+                 start = end - timedelta(days=365*5)
+                 # Force Day timeframe for long spans if not specified
+                 if interval == "5minute": 
+                     timeframe = TimeFrame.Day
+            elif span == "year" or span == "1year":
+                start = end - timedelta(days=365)
+                if interval == "5minute":
+                    timeframe = TimeFrame.Day
             elif span == "day":
-                start = end - timedelta(days=1) # Or business day
-                timeframe = TimeFrame.Minute # 5 min approximation
+                start = end - timedelta(days=1)
             elif span.endswith("d"):
                 try:
                     days = int(span[:-1])
                     start = end - timedelta(days=days)
-                    # If looking back many days, day bars might be better, but if interval is specified, use that.
-                    # Default to Minute if not specified or "5minute"
-                    timeframe = TimeFrame.Minute
                 except:
                     start = end - timedelta(days=1)
             elif span == "month" or span.endswith("mo"):
                  start = end - timedelta(days=30)
-                 timeframe = TimeFrame.Minute
-
-            
-            # Map interval string to TimeFrame if needed, for now simplified
             
             req = StockBarsRequest(
                 symbol_or_symbols=symbol,
@@ -181,11 +186,6 @@ class AlpacaClient:
             )
             bars = self.stock_data_client.get_stock_bars(req)
             df = bars.df
-            # Reset index to get 'timestamp' as column if needed, or keep as is.
-            # The bot expects specific columns likely.
-            # Robinhood usually returns list of dicts. We'll convert DF to that if needed, 
-            # but the enrichment functions below expect DF or list.
-            # Let's return DataFrame as it's easier for enrichment.
             return df
         except Exception as e:
             logger.error(f"Error getting historical data for {symbol}: {e}")

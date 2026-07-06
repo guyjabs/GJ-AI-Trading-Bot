@@ -13,17 +13,20 @@ class RiskManager:
     def __init__(self, 
                  stop_loss_pct: float = 0.05, 
                  take_profit_pct: float = 0.10,
+                 trailing_stop_pct: float = 0.05,
                  max_daily_loss_pct: float = 0.02):
         """
         Initialize Risk Manager.
         
         Args:
             stop_loss_pct: Percentage drop to trigger sell (e.g., 0.05 for 5%)
-            take_profit_pct: Percentage gain to trigger sell (e.g., 0.10 for 10%)
+            take_profit_pct: (Deprecated/Legacy) Percentage gain to trigger sell (e.g., 0.10 for 10%)
+            trailing_stop_pct: Percentage drop from peak to lock in profits
             max_daily_loss_pct: Max daily portfolio loss before halting trading
         """
         self.stop_loss_pct = stop_loss_pct
         self.take_profit_pct = take_profit_pct
+        self.trailing_stop_pct = trailing_stop_pct
         self.max_daily_loss_pct = max_daily_loss_pct
         self.daily_starting_balance = 0.0
         self.trading_halted = False
@@ -31,6 +34,8 @@ class RiskManager:
         
         # Track initial entry prices for positions if not available from API
         self.position_entry_prices = {}
+        # Track highest price reached since entry for trailing stop
+        self.highest_prices = {}
 
     def set_starting_balance(self, balance: float):
         """Set the portfolio balance at the start of the day"""
@@ -58,7 +63,7 @@ class RiskManager:
 
     def check_position_risk(self, symbol: str, current_price: float, avg_buy_price: float, quantity: float) -> Optional[str]:
         """
-        Check if a position has hit stop-loss or take-profit levels.
+        Check if a position has hit stop-loss or trailing stop-loss levels.
         
         Args:
             symbol: Stock symbol
@@ -68,7 +73,7 @@ class RiskManager:
             
         Returns:
             'sell_stop_loss' if stop loss triggered
-            'sell_take_profit' if take profit triggered
+            'sell_take_profit' if trailing stop-loss triggered
             None if position is safe
         """
         if self.trading_halted:
@@ -77,17 +82,38 @@ class RiskManager:
         if avg_buy_price <= 0:
             return None
 
-        # Calculate percentage change
+        # Update highest price for trailing stop
+        if symbol not in self.highest_prices:
+            self.highest_prices[symbol] = max(current_price, avg_buy_price)
+        else:
+            self.highest_prices[symbol] = max(self.highest_prices[symbol], current_price)
+            
+        highest_price = self.highest_prices[symbol]
+
+        # Calculate percentage change from entry
         pct_change = (current_price - avg_buy_price) / avg_buy_price
         
-        # Check Stop Loss
-        if pct_change <= -self.stop_loss_pct:
+        # Calculate pullback from highest price
+        pullback_pct = (highest_price - current_price) / highest_price
+        
+        # Dynamic risk parameters based on stock type (penny stocks need wider bands)
+        sl_pct = self.stop_loss_pct
+        tsl_pct = self.trailing_stop_pct
+        
+        if avg_buy_price < 10.0:
+            # Speculative/Penny stocks have extreme volatility.
+            sl_pct = max(0.15, self.stop_loss_pct)
+            # Use a wider trailing stop for penny stocks (e.g. 15% pullback from peak)
+            tsl_pct = 0.15
+        
+        # Check Stop Loss (if price is below entry by sl_pct)
+        if pct_change <= -sl_pct:
             logger.warning(f"🛑 STOP-LOSS TRIGGERED for {symbol}: {pct_change:.2%} drop (Price: ${current_price}, Buy: ${avg_buy_price})")
             return 'sell_stop_loss'
             
-        # Check Take Profit
-        if pct_change >= self.take_profit_pct:
-            logger.info(f"💰 TAKE-PROFIT TRIGGERED for {symbol}: {pct_change:.2%} gain (Price: ${current_price}, Buy: ${avg_buy_price})")
+        # Check Trailing Stop (only if we are currently profitable overall)
+        if pct_change > 0 and pullback_pct >= tsl_pct:
+            logger.info(f"💰 TRAILING STOP-LOSS TRIGGERED for {symbol}: Pulled back {pullback_pct:.2%} from peak ${highest_price:.2f} (Price: ${current_price}, Buy: ${avg_buy_price})")
             return 'sell_take_profit'
             
         return None
