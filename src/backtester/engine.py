@@ -67,14 +67,16 @@ class BacktestEngine:
         if not self.broker.historical_data:
             self.load_data()
             
-        # Generate timeline (Daily bars for now, at market close)
-        # Using SPY as calendar reference
         spy_data = self.broker.historical_data.get('SPY')
         if spy_data is None:
              logger.error("No SPY data to sync timeline")
              return
-
-        timeline = spy_data.index[spy_data.index >= self.start_date]
+            
+        # Ensure timezone-naive comparison to avoid dtype comparison errors
+        spy_index_naive = spy_data.index.tz_localize(None) if spy_data.index.tz is not None else spy_data.index
+        start_date_naive = self.start_date.tz_localize(None) if self.start_date.tz is not None else self.start_date
+        
+        timeline = spy_data.index[spy_index_naive >= start_date_naive]
         
         logger.info(f"Starting Backtest: {len(timeline)} periods")
         
