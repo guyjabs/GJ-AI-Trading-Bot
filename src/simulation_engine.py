@@ -78,6 +78,22 @@ def ai_simulation_strategy(broker, timestamp):
     positions = broker.get_portfolio_stocks()
     account = broker.get_account_info()
     
+    # Helper to fetch and format timezone-aligned history slice for indicators calculation
+    def get_history_slice(symbol):
+        df = broker.historical_data.get(symbol)
+        if df is not None:
+            mask = df.index <= broker.current_time
+            slice_df = df.loc[mask].copy()
+            rename_map = {
+                'open': 'Open',
+                'high': 'High',
+                'low': 'Low',
+                'close': 'Close',
+                'volume': 'Volume'
+            }
+            return slice_df.rename(columns={k: v for k, v in rename_map.items() if k in slice_df.columns})
+        return None
+
     # Watchlist Overview (Current Prices + Indicators)
     indicators = calculate_indicators(broker)
     watchlist_overview = {}
@@ -87,7 +103,8 @@ def ai_simulation_strategy(broker, timestamp):
             'current_price': data['price'],
             'sma200': data['sma200'],
             'rsi': data['rsi'],
-            'type': 'stock'
+            'type': 'stock',
+            'history': get_history_slice(symbol)
         }
     
     # Simple formatting for portfolio overview
@@ -97,7 +114,8 @@ def ai_simulation_strategy(broker, timestamp):
             'quantity': pos['quantity'],
             'average_buy_price': pos['average_buy_price'],
             'equity': pos['quantity'] * indicators.get(sym, {}).get('price', 0),
-            'price': indicators.get(sym, {}).get('price', 0)
+            'price': indicators.get(sym, {}).get('price', 0),
+            'history': get_history_slice(sym)
         }
 
     # 2. Fetch Historical News
