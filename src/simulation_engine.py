@@ -190,9 +190,9 @@ class SimulatorEngine:
             start_date=self.start_date,
             end_date=self.end_date,
             initial_cash=self.initial_cash,
-            alpaca_client=self.client
         )
-        engine.universe = self.universe
+        # Ensure SPY is in the backtester universe for timeline calendar reference
+        engine.universe = list(set(self.universe + ['SPY']))
         
         # 2. Get Current Weights (Logging only, not used in AI logic)
         current_weights = ml_engine.strategy_weights
