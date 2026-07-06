@@ -484,6 +484,29 @@ function setupEventListeners() {
         addLog('Research', data.message, 'info');
     });
 
+    socket.on('sim_log', (data) => {
+        const simLogList = document.getElementById('simLogList');
+        if (simLogList) {
+            // If it's the initial placeholder, clear it
+            if (simLogList.innerHTML.includes('Ready to run') || simLogList.innerHTML.includes('Logs cleared')) {
+                simLogList.innerHTML = '';
+            }
+
+            const div = document.createElement('div');
+            let color = 'text-foreground/90';
+            if (data.level === 'warning') color = 'text-warning';
+            if (data.level === 'error') color = 'text-destructive';
+            if (data.level === 'success') color = 'text-success';
+
+            const time = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            div.className = `${color} leading-relaxed animate-in fade-in slide-in-from-bottom-1 duration-150`;
+            div.innerHTML = `<span class="text-muted-foreground/60 select-none mr-2">[${time}]</span>${data.message}`;
+
+            simLogList.appendChild(div);
+            simLogList.scrollTop = simLogList.scrollHeight;
+        }
+    });
+
     socket.on('status_update', (data) => {
         // Update Header Stats
         // Balance = Cash + Portfolio Value
@@ -1113,6 +1136,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
+            // Clear logs on start of simulation run
+            const simLogList = document.getElementById('simLogList');
+            if (simLogList) simLogList.innerHTML = '<div class="text-primary font-semibold">Initializing backtest engine...</div>';
+
             btnRunSim.disabled = true;
             btnRunSim.textContent = 'Running Simulation (this may take a while)...';
 
@@ -1140,11 +1167,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.getElementById('simTrades').textContent = data.trades;
 
                     if (data.total_return_pct >= 0) {
-                        document.getElementById('simReturn').classList.add('text-success');
-                        document.getElementById('simReturn').classList.remove('text-destructive');
+                         document.getElementById('simReturn').classList.add('text-success');
+                         document.getElementById('simReturn').classList.remove('text-destructive');
                     } else {
-                        document.getElementById('simReturn').classList.add('text-destructive');
-                        document.getElementById('simReturn').classList.remove('text-success');
+                         document.getElementById('simReturn').classList.add('text-destructive');
+                         document.getElementById('simReturn').classList.remove('text-success');
                     }
                 }
             } catch (e) {
@@ -1153,6 +1180,17 @@ document.addEventListener('DOMContentLoaded', () => {
             } finally {
                 btnRunSim.disabled = false;
                 btnRunSim.textContent = 'Run Simulation';
+            }
+        });
+    }
+
+    // Clear Simulation Logs Button
+    const btnClearSimLogs = document.getElementById('btnClearSimLogs');
+    if (btnClearSimLogs) {
+        btnClearSimLogs.addEventListener('click', () => {
+            const simLogList = document.getElementById('simLogList');
+            if (simLogList) {
+                simLogList.innerHTML = '<div class="text-muted-foreground">Logs cleared.</div>';
             }
         });
     }

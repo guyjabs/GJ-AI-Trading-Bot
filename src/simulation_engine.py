@@ -6,6 +6,26 @@ from src.api.alpaca import get_alpaca_client
 from src.backtester.engine import BacktestEngine
 from src.ml_engine import ml_engine
 
+def emit_sim_log(message, level='info'):
+    """Log locally and emit to Web GUI over Socket.IO if active"""
+    if level == 'info':
+        logger.info(message)
+    elif level == 'warning':
+        logger.warning(message)
+    elif level == 'error':
+        logger.error(message)
+    elif level == 'critical':
+        logger.critical(message)
+        
+    try:
+        from gui2 import socketio
+        socketio.emit('sim_log', {
+            'message': message,
+            'level': level
+        })
+    except Exception:
+        pass
+
 def calculate_indicators(broker):
     """
     Calculate RSI and SMA for all symbols in the universe based on historical data up to current_time.
@@ -78,6 +98,9 @@ def ai_simulation_strategy(broker, timestamp):
     positions = broker.get_portfolio_stocks()
     account = broker.get_account_info()
     
+    # Log daily progress to console/GUI
+    emit_sim_log(f"📅 Date: {current_date} | Cash: ${account['portfolio_cash']:.2f} | Holdings: {len(positions)}")
+    
     # Helper to fetch and format timezone-aligned history slice for indicators calculation
     def get_history_slice(symbol):
         df = broker.historical_data.get(symbol)
@@ -98,6 +121,8 @@ def ai_simulation_strategy(broker, timestamp):
     indicators = calculate_indicators(broker)
     watchlist_overview = {}
     for symbol, data in indicators.items():
+        if symbol not in broker.universe:
+            continue
         watchlist_overview[symbol] = {
             'price': data['price'],
             'current_price': data['price'],
@@ -139,7 +164,7 @@ def ai_simulation_strategy(broker, timestamp):
             symbol = d.get('symbol')
             # STRICT UNIVERSE CHECK
             if symbol not in broker.universe:
-                logger.warning(f"🚫 AI Hallucination: {symbol} not in universe {broker.universe}. Skipping.")
+                emit_sim_log(f"🚫 AI Hallucination: {symbol} not in universe {broker.universe}. Skipping.", 'warning')
                 continue
 
             action = d.get('decision')
@@ -149,7 +174,7 @@ def ai_simulation_strategy(broker, timestamp):
                 # Re-check cash in case AI hallucinated
                 price = indicators.get(symbol, {}).get('price', 0)
                 if price <= 0:
-                     logger.warning(f"⚠️ Price 0 for {symbol}, skipping buy.")
+                     emit_sim_log(f"⚠️ Price 0 for {symbol}, skipping buy.", 'warning')
                      continue
                 
                 # RUTHLESS SIZING LOGIC FOR SIMULATION
@@ -168,7 +193,7 @@ def ai_simulation_strategy(broker, timestamp):
                 cost = price * quantity
                 if account['portfolio_cash'] >= cost and quantity > 0:
                      broker.submit_order(symbol, quantity, 'buy')
-                     logger.info(f"🤖 AI SIM BUY {symbol}: {quantity} @ {price:.2f} (C:{conviction}, ${cost:.2f})")
+                     emit_sim_log(f"🤖 AI SIM BUY {symbol}: {quantity} @ {price:.2f} (C:{conviction}, ${cost:.2f})", 'info')
             
             elif action == 'sell':
                 if symbol in positions:
@@ -180,10 +205,10 @@ def ai_simulation_strategy(broker, timestamp):
                     # Or use conviction to scale out.
                     
                     broker.submit_order(symbol, qty_owned, 'sell')
-                    logger.info(f"🤖 AI SIM SELL {symbol}: {qty_owned}")
+                    emit_sim_log(f"🤖 AI SIM SELL {symbol}: {qty_owned}", 'info')
                         
     except Exception as e:
-        logger.error(f"AI Simulation Error on {current_date}: {e}")
+        emit_sim_log(f"AI Simulation Error on {current_date}: {e}", 'error')
 
 class SimulatorEngine:
     def __init__(self, start_date, end_date, initial_cash, universe):
@@ -201,7 +226,7 @@ class SimulatorEngine:
     def run(self):
         """Run the simulation and return results"""
         
-        logger.info(f"Starting Simulation: {self.start_date} -> {self.end_date}, ${self.initial_cash}")
+        emit_sim_log(f"🚀 Starting Simulation: {self.start_date} -> {self.end_date}, ${self.initial_cash}", 'info')
         
         # 1. Setup Engine
         engine = BacktestEngine(
@@ -214,7 +239,9 @@ class SimulatorEngine:
         
         # 2. Get Current Weights (Logging only, not used in AI logic)
         current_weights = ml_engine.strategy_weights
-        logger.info(f"Starting Realistic AI Simulation ({self.start_date} to {self.end_date})")
+        emit_sim_log(f"📈 Current Strategy Weights: {current_weights}", 'info')
+        emit_sim_log(f"💼 Target Stocks: {self.universe}", 'info')
+        emit_sim_log(f"⚡ Loading historical bars and aligning timezone metrics...", 'info')
         
         # Monkey-patch universe into broker for the strategy to use
         engine.broker.universe = self.universe
@@ -227,6 +254,8 @@ class SimulatorEngine:
         
         # 5. Format Results
         stats = engine.get_stats()
+        
+        emit_sim_log(f"🏁 Simulation complete! Final Equity: ${stats.get('final_equity', self.initial_cash):,.2f}", 'info')
         
         return {
             'final_balance': stats.get('final_equity', self.initial_cash),
