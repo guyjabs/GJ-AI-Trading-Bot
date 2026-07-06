@@ -1,107 +1,121 @@
 # GJ AI Trading Bot: The "Dual-Threat" Autonomous Trading System
 
-## 🚀 System Overview
-The **GJ AI Trading Bot** is a fully autonomous, multi-agent AI trading system designed to navigate modern financial markets. Rather than relying entirely on slow, traditional financial models, this bot was engineered from the ground up with a **"Dual-Threat"** philosophy:
+## 🚀 System Architecture & Mathematical Models
+The **GJ AI Trading Bot** is a fully autonomous, multi-agent AI trading system. It operates on a **"Dual-Threat"** framework, applying strict mathematical screening for standard equities while utilizing behavioral, social, and momentum-driven metrics for high-risk speculative plays.
 
-1. **The Steady Quant:** A highly mathematical, risk-averse engine that trades blue-chip stocks and top-tier cryptos based on deep fundamental and technical analysis.
-2. **The "Smart Money" Speculator:** A highly aggressive engine that tracks viral retail momentum, scrapes crypto forums, and monitors the portfolios of top eToro traders to execute high-conviction "DeGen" plays right as the hype begins.
-
-The system is fully self-learning. Every night, it reviews its own trades, calculates its win rate, and retrains its **XGBoost Machine Learning Model** to adapt to shifting market conditions.
+The pipeline executes through 5 distinct engines:
 
 ---
 
-## 🧠 Core Architecture & Intelligence
+## 1. The Multi-Strategy Screener (`src/screener.py`)
+The screener iterates through a universe of assets (S&P 500, Russell 2000, and Crypto) and scores them based on three foundational quantitative models.
 
-### 1. The Multi-Strategy Screener (`src/screener.py`)
-The bot does not randomly look at tickers. It runs a multi-layered screening pipeline across the entire S&P 500, Russell 2000, and major Crypto markets to filter down thousands of assets into a curated watchlist of ~20 actionable setups.
-- **Momentum Strategy:** Looks for explosive volume anomalies (>1.5x average) and RSI breakouts.
-- **Growth Strategy:** Filters for companies with >10% EPS growth and >15% revenue growth.
-- **Value Strategy:** Scans for cash-cows with low P/E ratios and high Free Cash Flow relative to industry peers.
-- **Speculative Strategy:** Explicitly hunts for sub-$10 penny stocks and altcoins experiencing massive, sudden volume spikes.
+### A. Momentum Strategy
+Hunts for trend continuation and explosive breakouts.
+**Mathematical Criteria:**
+* **`market_cap`** > $1B
+* **`price`** > $5.00
+* **`volume_ratio`** (Current Volume / 20-Day Average Volume) > 1.5x
+* **`price_change_5d`** > 5.0%
+* **`current_price`** > 50-day Simple Moving Average (SMA)
 
-### 2. Social Consensus Tracking (`src/research/etoro_scraper.py`)
-To prevent buying into fake hype, the bot uses an **eToro Meta-Copier**.
-- It continuously scrapes the portfolios of eToro's "Popular Investors".
-- It filters out the gamblers by enforcing strict criteria: only tracking traders with a **>60% Win Rate**, **<15% Max Drawdown**, and at least **52 weeks** of history.
-- When multiple "smart money" steady traders quietly buy the same asset, the bot artificially boosts that asset's conviction score.
-
-### 3. GPT-4 Sentiment & Catalyst Engine (`src/ai/sentiment_engine.py`)
-The bot reads the news like a human analyst.
-- It aggregates thousands of articles daily across **NewsAPI**, **AlphaVantage**, and **Finnhub**.
-- For crypto, it explicitly scrapes **Cointelegraph RSS** and niche crypto blogs to detect retail hype.
-- The top 15 most relevant articles/forum posts for an asset are sent to **GPT-4**.
-- GPT-4 is prompted to heavily factor in "retail hype" and return a numerical `sentiment_score` (-1.0 to 1.0), along with a structured list of key catalysts and risk factors.
-
-### 4. The XGBoost Quant Model (`src/signals/quant_model.py`)
-After the Screener and Sentiment Engine find a target, the data is passed to the Quant Model.
-- A 23-feature vector is generated for every ticker, combining technicals (RSI, MACD, Bollinger Bands, Volume Trend), fundamentals (P/E, Revenue Growth), Macro (VIX, SPY trend), and News Sentiment.
-- An **XGBoost Classifier** evaluates this vector and outputs a strict probability of the trade being profitable.
-- If the probability is too low, the bot rejects the trade and holds cash.
-
-### 5. The Self-Learning Loop (`src/self_improvement/improvement_loop.py`)
-The bot gets smarter every single day.
-- Every executed trade (both simulated and live) is logged into `data/trade_journal.db`.
-- Once the bot accrues enough trades, it triggers a **Granular Retraining Event**.
-- It feeds its past winners and losers back into the XGBoost algorithm, adjusting its weights dynamically. If MACD crossovers stop working in a sideways market, the bot will mathematically demote MACD and prioritize RSI automatically.
-
----
-
-## 🛠 Project Structure
-
-```text
-GJ-AI-Trading-Bot/
-├── main.py                     # Entry point for single AI decision tests
-├── main2.py                    # Multi-agent coordination and decision pipeline
-├── run_legendary_sim.py        # 1-year historical simulation script
-├── config.py                   # API Keys and System Configurations
-├── data/                       
-│   ├── trade_journal.db        # SQLite database of all historical trades
-│   └── quant_model.xgb         # The trained XGBoost machine learning model
-├── src/
-│   ├── ai/
-│   │   ├── sentiment_engine.py # GPT-4 news analysis
-│   │   ├── macro_analyst.py    # Market-wide health checks (SPY/VIX)
-│   │   └── fundamentalist.py   # Deep financial analysis
-│   ├── research/
-│   │   ├── news_aggregator.py  # API fetchers for Finnhub/AlphaVantage
-│   │   └── etoro_scraper.py    # Smart Money social consensus tracking
-│   ├── screener.py             # Stock universe filtering
-│   ├── signals/
-│   │   ├── signal_generator.py # 23-feature math vector generation
-│   │   └── quant_model.py      # XGBoost prediction model
-│   ├── self_improvement/
-│   │   └── improvement_loop.py # The nightly learning and retraining cycle
-│   └── execution/
-│       └── executor.py         # Broker integration for final execution
-└── requirements.txt            # Python dependencies
+**Scoring Formula:**
+```python
+score = (price_change_5d * 5) + ((volume_ratio - 1) * 20)
+if price > SMA_50:
+    score += ((price - SMA_50) / SMA_50) * 50
+if 50 <= RSI_14 <= 70:
+    score += 15 # Rewards a healthy trend
+elif RSI_14 > 70:
+    score -= (RSI_14 - 70) * 1.5 # Penalizes overbought exhaustion
 ```
 
-## ⚙️ Setup & Execution
+### B. Growth Strategy
+Focuses on scaling companies with outperforming top and bottom lines.
+**Mathematical Criteria:**
+* **`market_cap`** > $500M
+* **`earnings_growth`** (YoY) > 10% AND **`revenue_growth`** (YoY) > 10%
 
-**1. Clone & Install**
-```bash
-git clone <repository>
-cd GJ-AI-Trading-Bot
-pip install -r requirements.txt
+**Scoring Formula:**
+```python
+score = (earnings_growth * 100) + (revenue_growth * 80)
+if recommendation in ['buy', 'strong_buy']:
+    score += 20
 ```
 
-**2. API Configuration**
-Rename `config.py.example` to `config.py` and input your keys:
-- OpenAI API Key (For Sentiment Analysis)
-- Alpaca API Key (For Market Data & Paper Trading)
-- Finnhub / AlphaVantage / NewsAPI (For News Aggregation)
+### C. Value Strategy
+Finds cash-cows trading at discounts to their sector peers.
+**Mathematical Criteria:**
+* Computes industry averages dynamically (`avg_pe`, `avg_peg`, `avg_fcf_share`).
+* **`debt_to_equity`** < 0.5
+* **`pe_ratio`** < Industry Average
+* **`peg_ratio`** < 2.0
 
-**3. Run the Bot (Simulation Mode)**
-To see the bot analyze today's market without risking real capital:
-```bash
-python main2.py
-```
-
-**4. Train the AI (Historical Learning)**
-To force the bot to run through a historical simulation and train its XGBoost model:
-```bash
-python run_legendary_sim.py
+**Scoring Formula:**
+```python
+if pe_ratio < avg_pe: 
+    score += (avg_pe - pe_ratio) * 5
+if peg_ratio < 2.0: 
+    score += (2.0 - peg_ratio) * 20
+if fcf_per_share > avg_fcf: 
+    score += 30 # Bonus for beating industry average cash flow
 ```
 
 ---
-*Built to eliminate human emotion from the market. Ruthless execution. Continuous adaptation.*
+
+## 2. Speculative & Social Consensus Tracking (`src/research/etoro_scraper.py`)
+For Penny Stocks and Cryptos, fundamentals do not matter. The bot ignores P/E and focuses purely on volume, momentum, and Social Consensus.
+
+### The eToro "Smart Money" Filter
+The bot queries eToro's "Popular Investors" database to see what top retail traders are buying. However, to filter out gamblers, the bot strictly enforces these metrics before adding an investor to the tracking pool:
+* **`win_rate_pct` >= 60.0%**
+* **`max_drawdown_pct` <= 15.0%**
+* **`active_weeks` >= 52**
+
+If multiple traders in this highly elite subset buy the same speculative asset, it is flagged as a `Social Consensus Asset` and receives a massive +50 point bonus to its momentum score, forcing the bot to pay attention to it.
+
+---
+
+## 3. The GPT-4 Sentiment Engine (`src/ai/sentiment_engine.py`)
+News is fetched from **NewsAPI**, **AlphaVantage**, and **Finnhub** (including Cointelegraph RSS for crypto hype).
+
+The bot passes the 15 most recent articles directly to **GPT-4** (via `gpt-4o-mini`), bypassing simple NLP libraries like VADER. 
+
+**The Prompt & Processing:**
+The AI is instructed to *"Factor in retail hype from forums heavily for cryptos"* and must return a strict JSON object containing:
+1. `sentiment_score`: A continuous float `[-1.0, 1.0]`.
+2. `confidence`: A confidence weight `[0.0, 1.0]`.
+3. `key_catalysts`: An array of explicit reasons for the pump.
+4. `risk_factors`: An array of bearish threats.
+
+---
+
+## 4. The 23-Feature Quant Model (`src/signals/quant_model.py`)
+Once an asset passes the screener, it is converted into a 23-dimensional feature vector in `src/signals/signal_generator.py`.
+
+**The 23 Input Features:**
+* **Momentum:** `rsi_14`, `rsi_divergence`, `macd_histogram`, `macd_crossover`, `stochastic_k`
+* **Volatility:** `bb_position`, `bb_squeeze`, `atr_pct`
+* **Trend:** `sma_20_50_cross`, `price_vs_sma200`, `adx`
+* **Volume:** `obv_trend`, `volume_ratio`, `volume_trend`
+* **Fundamentals:** `pe_ratio`, `peg_ratio`, `revenue_growth`, `profit_margin`
+* **Macro:** `vix_level`, `spy_trend`, `macro_regime`
+* **AI Sentiment:** `news_sentiment`, `news_volume`
+
+**The XGBoost Engine:**
+These 23 features are fed into an **XGBoost Classifier** (`max_depth=4`, `learning_rate=0.05`, `n_estimators=200`, `subsample=0.8`). 
+The XGBoost model outputs a raw probability (`0.0` to `1.0`) of the trade being profitable based on historical training data.
+* **Conviction Conversion:** `conviction = 1.0 + (probability * 9.0)` (Scaling to a 1-10 score).
+
+*(Note: If running in "Speculative/DeGen" mode, the XGBoost model is bypassed entirely in favor of an extreme-momentum mathematical rule system that rewards riding upper Bollinger bands (`bb_position > 0.9`) and extreme volume anomalies (`volume_ratio > 3.0`)).*
+
+---
+
+## 5. The Self-Learning Loop (`src/self_improvement/improvement_loop.py`)
+The system adapts daily. Every completed trade is stored in `data/trade_journal.db`.
+1. The bot pulls all historical trades.
+2. It extracts the 23-feature vector that was recorded *at the exact moment* the trade was taken.
+3. It maps the vector to a binary classification label (`1` if the trade ended in profit, `0` if it took a loss).
+4. The XGBoost model is refitted to the new dataset. 
+
+If market regimes shift (e.g., Value investing starts beating Growth, or MACD crossovers stop working), the internal decision trees adapt automatically without human intervention, altering the mathematical weights of the 23 features over time.
