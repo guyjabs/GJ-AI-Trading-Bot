@@ -192,7 +192,7 @@ function setupEventListeners() {
     // Note: In index_v2.html, we need to add data-view attributes to sidebar buttons first
     // For now, I'll select by text content or icon if needed, but the plan is to add attributes.
     // Assuming attributes are added:
-    document.querySelectorAll('aside nav button').forEach(btn => {
+    document.querySelectorAll('aside nav button.nav-link').forEach(btn => {
         btn.addEventListener('click', (e) => {
             // Traverse up to button if icon clicked
             const button = e.target.closest('button');
@@ -201,6 +201,14 @@ function setupEventListeners() {
             // Use data-view attribute for reliable navigation
             const view = button.dataset.view;
             if (!view) return;
+
+            // Update active state on all nav links
+            document.querySelectorAll('aside nav button.nav-link').forEach(b => {
+                b.classList.remove('active', 'bg-accent', 'text-accent-foreground');
+                b.classList.add('text-muted-foreground', 'hover:bg-muted', 'hover:text-foreground');
+            });
+            button.classList.add('active', 'bg-accent', 'text-accent-foreground');
+            button.classList.remove('text-muted-foreground', 'hover:bg-muted', 'hover:text-foreground');
 
             switchView(view);
         });
@@ -1300,11 +1308,55 @@ window.removeFromWatchlist = function (symbol) {
 
 
 // Load Watchlist Data
+// Load Watchlist Data
 async function loadWatchlistData() {
     try {
         const response = await fetch('/api/watchlist');
         const data = await response.json();
         const watchlist = data.watchlist || [];
+
+        // Dynamic Ticker Tape Logic
+        const tickerBar = document.getElementById('tickerBar');
+        if (tickerBar) {
+            let tickerItems = [...watchlist];
+            
+            // Fallbacks for the ticker tape if watchlist is small or empty to keep it looking lively
+            if (tickerItems.length < 5) {
+                const fallbacks = [
+                    { symbol: 'BTC/USD', price: 65420.50, change: 2.45 },
+                    { symbol: 'ETH/USD', price: 3480.20, change: -1.15 },
+                    { symbol: 'SPY', price: 542.30, change: 0.85 },
+                    { symbol: 'NVDA', price: 125.80, change: 4.62 },
+                    { symbol: 'SOL/USD', price: 142.10, change: 5.12 },
+                    { symbol: 'AAPL', price: 210.60, change: -0.32 }
+                ];
+                fallbacks.forEach(item => {
+                    if (!tickerItems.some(i => i.symbol === item.symbol)) {
+                        tickerItems.push(item);
+                    }
+                });
+            }
+
+            // Create two copies of the ticker items to enable seamless infinite loop scrolling
+            const doubledItems = [...tickerItems, ...tickerItems];
+            
+            tickerBar.innerHTML = doubledItems.map(item => {
+                const price = item.price || 0;
+                const change = item.change || 0;
+                const changeColor = change >= 0 ? 'text-success' : 'text-destructive';
+                const changeIcon = change >= 0 ? '▲' : '▼';
+                const changeSign = change >= 0 ? '+' : '';
+                return `
+                    <div class="inline-flex items-center gap-1.5 px-6 h-8 border-r border-border/50">
+                        <span class="text-[12px] font-semibold text-foreground">${item.symbol}</span>
+                        <span class="text-[12px] font-mono text-foreground font-medium">$${price.toFixed(2)}</span>
+                        <span class="inline-flex items-center gap-0.5 text-[11px] font-mono ${changeColor}">
+                            ${changeIcon} ${changeSign}${change.toFixed(2)}%
+                        </span>
+                    </div>
+                `;
+            }).join('');
+        }
 
         const tbody = document.getElementById('watchlistBody');
         if (!tbody) return;
@@ -1343,6 +1395,37 @@ async function loadWatchlistData() {
     } catch (error) {
         console.error('Error loading watchlist:', error);
     }
+}
+
+// Request initial data
+function requestInitialData() {
+    socket.emit('get_status');
+    socket.emit('get_portfolio');
+
+    // HTTP Fallback to ensure data loads
+    fetch('/api/status/data')
+        .then(response => response.json())
+        .then(data => {
+            if (!data.error) {
+                console.log("HTTP Status Data:", data);
+                const balance = (data.buying_power || 0) + (data.portfolio_value || 0);
+                const elBalance = document.getElementById('headerBalance');
+                if (elBalance) elBalance.innerText = formatMoney(balance);
+
+                const elUnrealizedPL = document.getElementById('headerUnrealizedPL');
+                if (elUnrealizedPL) {
+                    elUnrealizedPL.innerText = (data.total_pl >= 0 ? '+' : '') + formatMoney(data.total_pl);
+                    elUnrealizedPL.className = `text-sm font-semibold font-mono ${data.total_pl >= 0 ? 'text-success' : 'text-destructive'}`;
+                }
+
+                const elDayPL = document.getElementById('headerDayPL');
+                if (elDayPL) {
+                    elDayPL.innerText = (data.total_pl >= 0 ? '+' : '') + formatMoney(data.total_pl);
+                    elDayPL.className = `text-sm font-semibold font-mono ${data.total_pl >= 0 ? 'text-success' : 'text-destructive'}`;
+                }
+            }
+        })
+        .catch(err => console.error("HTTP Status Error:", err));
 }
 
 function addLog(source, message, level = 'info') {
