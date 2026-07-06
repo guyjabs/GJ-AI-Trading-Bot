@@ -859,7 +859,7 @@ function updateNews(articles) {
         const sentimentLabel = sentiment > 0.1 ? 'Pos' : sentiment < -0.1 ? 'Neg' : 'Neu';
         const sentimentClass = sentiment > 0.1 ? 'text-success bg-success/10' : sentiment < -0.1 ? 'text-destructive bg-destructive/10' : 'text-muted-foreground bg-muted';
 
-        const date = new Date(article.published_at || article.datetime);
+        const date = parseAVDate(article.published_at || article.datetime);
         const timeAgo = getTimeAgo(date);
 
         return `
@@ -870,7 +870,7 @@ function updateNews(articles) {
                 </div>
                 <a href="${article.url}" target="_blank" class="block text-xs font-medium text-foreground hover:underline mb-1 line-clamp-2">${article.title}</a>
                 <div class="flex justify-between items-center text-[10px] text-muted-foreground">
-                    <span>${timeAgo}</span>
+                    <span title="${date.toLocaleString()}">${timeAgo}</span>
                     <span>${article.tickers?.join(', ') || ''}</span>
                 </div>
             </div>
@@ -878,8 +878,30 @@ function updateNews(articles) {
     }).join('');
 }
 
+function parseAVDate(dateStr) {
+    if (!dateStr) return new Date();
+    
+    // Check if it matches Alpha Vantage date format: 20260706T161459
+    if (typeof dateStr === 'string' && dateStr.length === 15 && dateStr.charAt(8) === 'T') {
+        const y = dateStr.substring(0, 4);
+        const m = dateStr.substring(4, 6);
+        const d = dateStr.substring(6, 8);
+        const h = dateStr.substring(9, 11);
+        const min = dateStr.substring(11, 13);
+        const s = dateStr.substring(13, 15);
+        return new Date(`${y}-${m}-${d}T${h}:${min}:${s}Z`);
+    }
+    
+    const parsed = new Date(dateStr);
+    if (!isNaN(parsed.getTime())) {
+        return parsed;
+    }
+    return new Date();
+}
+
 function getTimeAgo(date) {
     const seconds = Math.floor((new Date() - date) / 1000);
+    if (isNaN(seconds)) return 'Unknown time';
     if (seconds < 60) return 'Just now';
     if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
     if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
